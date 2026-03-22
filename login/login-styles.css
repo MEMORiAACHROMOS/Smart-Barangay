@@ -1,0 +1,110 @@
+/* Reset default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Full screen background with image */
+body {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: url('healthcentersample.jpg') no-repeat center center/cover;
+}
+
+/* Login container */
+.login-container {
+    background-color: rgba(7, 130, 81, 0.95); /* slightly transparent for style */
+    padding: 50px 40px;
+    border-radius: 20px;
+    box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+    width: 400px; /* bigger box */
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.login-container:hover {
+    transform: scale(1.02); /* subtle hover animation */
+}
+
+/* Logo */
+.logo-holder img {
+    width: 100px;
+    margin-bottom: 25px;
+}
+
+/* Title */
+h1 {
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff; /* changed to white for better contrast */
+    margin-bottom: 35px;
+    line-height: 1.4;
+}
+
+/* Form inputs */
+.login-form input {
+    width: 100%;
+    padding: 14px 18px;
+    margin-bottom: 25px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    font-size: 15px;
+    outline: none;
+    transition: border 0.3s, box-shadow 0.3s;
+}
+
+.login-form input:focus {
+    border-color: #4facfe;
+    box-shadow: 0 0 8px rgba(79, 172, 254, 0.5);
+}
+
+/* Password wrapper */
+.password-wrapper {
+    position: relative;
+}
+
+.password-wrapper .fa {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #fff; /* matches login box */
+    font-size: 20px;
+    transition: color 0.3s, transform 0.2s;
+}
+
+.password-wrapper .fa:hover {
+    color: #ffd700; /* subtle hover effect */
+    transform: scale(1.2);
+}
+
+/* Login button */
+.login-form button {
+    width: 100%;
+    padding: 14px;
+    background: #00c368;
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 17px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.login-form button:hover {
+    background: #00f2fe;
+    transform: scale(1.03);
+}
+
+/* Responsive for smaller screens */
+@media (max-width: 450px) {
+    .login-container {
+        width: 90%;
+        padding: 40px 25px;
+    }
+}
