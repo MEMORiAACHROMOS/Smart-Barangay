@@ -4,31 +4,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - Smart Barangay Health Information System</title>
+
+    <!-- Styles -->
     <link rel="stylesheet" href="login-styles.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
+    <!-- Font Awesome (optional if you still use it) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
 </head>
+
 <body>
-    <div class="login-container">
-        <!-- Logo Section -->
-        <div class="logo-holder">
-            <img src="logo.png" alt="Barangay Logo">
-        </div>
 
-        <!-- Title -->
-        <h1>SMART BARANGAY HEALTH INFORMATION SYSTEM</h1>
+    <!-- Header -->
+    <header class="main-header">
+        <h2>ADMIN LOGIN</h2>
+    </header>
 
-        <!-- Login Form -->
-        <div class="login-form">
-            <input type="text" placeholder="Username" id="username">
-
-            <div class="password-wrapper">
-                <input type="password" placeholder="Password" id="password">
-                <i class="fa fa-eye" id="togglePassword"></i>
+    <!-- Main Content -->
+    <main>
+        <div class="login-container">
+            
+            <!-- Logo -->
+            <div class="logo-holder">
+                <img src="image.png" alt="Barangay Logo">
             </div>
 
-            <button type="button" id="loginButton">Login</button>
+            <!-- Title -->
+            <h1>
+                SMART BARANGAY:<br>
+                HEALTH INFORMATION SYSTEM
+            </h1>
+
+            <!-- Login Form -->
+            <div class="login-form">
+                <input type="text" placeholder="Enter Username" id="username">
+
+                <div class="password-wrapper">
+                    <input type="password" placeholder="Enter Password" id="password">
+                    <i class="fa fa-eye" id="togglePassword"></i>
+                </div>
+
+                <button type="button" id="loginButton">Login</button>
+            </div>
+
         </div>
-    </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <p>&copy; 2026 Smart Barangay Health Information System | All Rights Reserved</p>
+    </footer>
+
+    <!-- Script -->
     <script src="login-script.js"></script>
+
 </body>
 </html>

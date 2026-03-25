@@ -1,0 +1,183 @@
+/* Reset default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* Full height layout */
+body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: row;
+    background: #f0f4f3; /* subtle light background */
+}
+
+/* Header Banner */
+.main-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 60px;
+    background: #065f46;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    padding: 0 20px;
+    font-size: 20px;
+    font-weight: 600;
+    z-index: 1000;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+/* Sidebar */
+.sidebar {
+    position: fixed;
+    top: 60px; /* below header */
+    left: 0;
+    width: 220px;
+    height: calc(100vh - 60px);
+    background: rgba(7,130,81,0.95);
+    padding-top: 20px;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+
+.sidebar ul {
+    list-style: none;
+     flex: 1; /* takes all vertical space */
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    position: relative;
+}
+
+.sidebar ul li {
+    margin-bottom: 10px;
+}
+
+.sidebar ul li a {
+    display: block;
+    padding: 12px 20px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 15px;
+    border-radius: 8px;
+    transition: background 0.3s, color 0.3s;
+}
+
+.sidebar ul li a:hover {
+    background: rgba(5, 100, 62, 0.95);
+    color: #fff;
+}
+.sidebar ul li.logout-btn {
+    margin-top: auto; /* pushes it to bottom */
+}
+
+.sidebar ul li.logout-btn a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 20px;
+    background: rgba(7,130,81,0.95); /* dark green logout button */
+    color: #fff;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: background 0.3s;
+}
+
+.sidebar ul li.logout-btn a i {
+    margin-left: 8px; /* icon spacing */
+}
+
+.sidebar ul li.logout-btn a:hover {
+    background: rgba(5, 100, 62, 0.95);
+    color: #fff;
+}
+/* Main content */
+main {  
+    margin-left: 220px; /* space for sidebar */
+    padding: 80px 40px 40px 40px; /* space for header */
+    flex: 1;
+}
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* align content at top */
+    align-items: center;         /* keep content horizontally centered */
+    min-height: calc(100vh - 100px); /* full height minus header/footer */
+    text-align: center;
+    padding: 40px 20px 20px 20px; /* top padding for spacing from header */
+}
+.dashboard-container h1 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #065f46;
+    margin-top: -25px;
+    margin-bottom: 20px;
+}
+
+/* Footer Banner */
+.main-footer {
+    position: fixed;
+    bottom: 0;
+    left: 220px; /* next to sidebar */
+    width: calc(100% - 220px);
+    background: #065f46;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 14px;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
+}
+
+/* Scrollbar for sidebar */
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background-color: #00c267;
+    border-radius: 3px;
+}
+/* Active menu item */
+.sidebar ul li a.active {
+    background:rgba(5, 100, 62, 0.95);; /* darker green for active */
+    color: #fff;
+    font-weight: 600;
+}
+/* Responsive */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 60px;
+    }
+
+    .sidebar ul li a {
+        padding: 12px 10px;
+        font-size: 0;
+        text-align: center;
+    }
+
+    .sidebar ul li a::after {
+        content: attr(title);
+        font-size: 12px;
+        display: block;
+        margin-top: 5px;
+        color: #fff;
+    }
+
+    main {
+        margin-left: 60px;
+        padding: 80px 20px 40px 20px;
+    }
+
+    .main-footer {
+        left: 60px;
+        width: calc(100% - 60px);
+    }
+}

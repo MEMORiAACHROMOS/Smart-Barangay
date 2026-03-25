@@ -1,34 +1,45 @@
+document.addEventListener("DOMContentLoaded", function () {
 
-function togglePassword() {
     const password = document.getElementById('password');
     const toggleIcon = document.getElementById('togglePassword');
+    const loginBtn = document.getElementById('loginButton');
+    const usernameInput = document.getElementById('username');
 
-    if (password.type === 'password') {
-        password.type = 'text';
-        toggleIcon.classList.remove('fa-eye');
-        toggleIcon.classList.add('fa-eye-slash');
-    } else {
-        password.type = 'password';
-        toggleIcon.classList.remove('fa-eye-slash');
-        toggleIcon.classList.add('fa-eye');
+    // Toggle password visibility
+    toggleIcon.addEventListener('click', function () {
+        if (password.type === 'password') {
+            password.type = 'text';
+            toggleIcon.classList.remove('fa-eye');
+            toggleIcon.classList.add('fa-eye-slash');
+        } else {
+            password.type = 'password';
+            toggleIcon.classList.remove('fa-eye-slash');
+            toggleIcon.classList.add('fa-eye');
+        }
+    });
+
+    // Login function
+    function login() {
+        const username = usernameInput.value;
+        const pass = password.value;
+
+        if (username === "admin" && pass === "12345") {
+            alert("Login Successful!");
+        } else {
+            alert("Invalid username or password!");
+        }
     }
-}
 
-function login() {
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
+    // Button click
+    loginBtn.addEventListener('click', login);
 
-    if (username === "admin" && password === "12345") {
-        alert("Login Successful!");
-    } else {
-        alert("Invalid username or password!");
-    }
-}
+    // Press Enter to login
+    password.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') login();
+    });
 
-// Optional: Press Enter to login
-document.getElementById('password').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') login();
-});
-document.getElementById('username').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') login();
+    usernameInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') login();
+    });
+
 });
