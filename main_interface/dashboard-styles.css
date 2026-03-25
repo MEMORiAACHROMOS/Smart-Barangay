@@ -38,8 +38,8 @@ body {
     top: 60px; /* below header */
     left: 0;
     width: 220px;
-    height: calc(100vh - 60px);
-    background: rgba(7,130,81,0.95);
+    height: calc(100vh - 60px); 
+    background: #0f8a51;
     padding-top: 20px;
     box-shadow: 2px 0 10px rgba(0,0,0,0.1);
     overflow-y: auto;
@@ -84,7 +84,7 @@ body {
     align-items: center;
     justify-content: center;
     padding: 12px 20px;
-    background: rgba(7,130,81,0.95); /* dark green logout button */
+    background:#0f8a51; /* dark green logout button */
     color: #fff;
     border-radius: 8px;
     font-weight: 600;
@@ -118,7 +118,7 @@ main {
     font-size: 24px;
     font-weight: 600;
     color: #065f46;
-    margin-top: -25px;
+    margin-top: -30px;
     margin-bottom: 20px;
 }
 
