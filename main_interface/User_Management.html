@@ -30,7 +30,7 @@
         <li><a href="Appointments.html">Appointments</a></li>
         <li><a href="Immunization_and_Programs.html">Immunization and Programs</a></li>
         <li><a href="Inventory.html">Inventory</a></li>
-        <li><a href="main_interface/Analytics.html">Reports and Analytics</a></li>
+        <li><a href="Analytics.html">Reports and Analytics</a></li>
 
         <li class="logout-btn">
             <a href="logout.html">Logout <i class="fa fa-sign-out-alt"></i></a>
@@ -39,12 +39,67 @@
 </div>
     <!-- Main Content -->
     <main>
-        <h1>USER LIST</h1>
-        <div class="user-management-container" >
-    
+        <h1>USER ACCOUNTS</h1>
+
             <!-- User Management Dashboard content goes here -->
+ <!-- ACTION BAR -->
+    <div class="top-bar">
 
+        <input type="text" placeholder="Search username...">
 
+        <select>
+            <option>All Roles</option>
+            <option>Admin</option>
+            <option>Staff</option>
+            <option>Nurse</option>
+        </select>
+
+        <button class="add-btn">+ Add User</button>
+
+    </div>
+
+    <!-- TABLE -->
+    <div class="user-management-container">
+
+        <table>
+
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Password</th>
+                    <th>Role</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                <tr>
+                    <td>admin01</td>
+                    <td>••••••••</td>
+                    <td><span class="badge admin">Admin</span></td>
+                    <td><span class="status active">Active</span></td>
+                    <td>
+                        <button class="edit">Edit</button>
+                        <button class="delete">Delete</button>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>nurse01</td>
+                    <td>••••••••</td>
+                    <td><span class="badge nurse">Nurse</span></td>
+                    <td><span class="status active">Active</span></td>
+                    <td>
+                        <button class="edit">Edit</button>
+                        <button class="delete">Delete</button>
+                    </td>
+                </tr>
+
+            </tbody>
+
+        </table>
 
             
         </div>

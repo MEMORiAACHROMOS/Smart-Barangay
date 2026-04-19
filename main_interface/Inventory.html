@@ -5,47 +5,93 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inventory - Smart Barangay Health Information System</title>
 
-    <!-- Styles -->
-    <link rel="stylesheet" href="-styles.css">
- <link rel="stylesheet" href="css/headerandfooter.css">
+    <link rel="stylesheet" href="css/inventory-styles.css">
+    <link rel="stylesheet" href="css/headerandfooter.css">
     <link rel="stylesheet" href="css/sidebar.css">
     <link rel="stylesheet" href="css/global.css">
 
-    <!-- Font Awesome (optional if you still use it) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-
 </head>
+
 <body>
 
     <!-- Header -->
     <header class="main-header">
-         <h2>INVENTORY</h2>
+        <h2>INVENTORY</h2>
     </header>
-<div class="sidebar">
-    <ul>
-      <li><a href="Dashboard.html">Dashboard</a></li>
-        <li><a href="User_Management.html">User Management</a></li>
-        <li><a href="Patient_Records.html">Patient Records</a></li>
-        <li><a href="Appointments.html">Appointments</a></li>
-        <li><a href="Immunization_and_Programs.html">Immunization and Programs</a></li>
-        <li><a href="Inventory.html">Inventory</a></li>
-        <li><a href="Analytics.html">Reports and Analytics</a></li>
 
-        <li class="logout-btn">
-            <a href="logout.html">Logout <i class="fa fa-sign-out-alt"></i></a>
-        </li>
-    </ul>
-</div>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <ul>
+            <li><a href="Dashboard.html">Dashboard</a></li>
+            <li><a href="User_Management.html">User Management</a></li>
+            <li><a href="Patient_Records.html">Patient Records</a></li>
+            <li><a href="Appointments.html">Appointments</a></li>
+            <li><a href="Immunization_and_Programs.html">Immunization and Programs</a></li>
+            <li><a href="Inventory.html">Inventory</a></li>
+            <li><a href="Analytics.html">Reports and Analytics</a></li>
+
+            <li class="logout-btn">
+                <a href="logout.html">Logout <i class="fa fa-sign-out-alt"></i></a>
+            </li>
+        </ul>
+    </div>
+
     <!-- Main Content -->
     <main>
-           <h1>INVENTORY LIST</h1>
-        <div class="dashboard-container" >
-     
-            <!-- Inventory Dashboard content goes here -->
+        <h1>INVENTORY MANAGEMENT</h1>
 
+        <div class="inventory-container">
 
+            <!-- TOP BAR -->
+            <div class="inventory-topbar">
+                <input type="text" id="searchInput" placeholder="Search item..." onkeyup="searchInventory()">
+                <button class="btn" onclick="openModal()">➕ Add Item</button>
+            </div>
 
-            
+            <!-- TABLE -->
+            <div class="section">
+                <table id="inventoryTable">
+
+                    <tr>
+                        <th>Item</th>
+                        <th>Category</th>
+                        <th>Qty</th>
+                        <th>Unit</th>
+                        <th>Status</th>
+                        <th>Expiry</th>
+                        <th>Actions</th>
+                    </tr>
+
+                    <tr>
+                        <td>Paracetamol</td>
+                        <td>Medicine</td>
+                        <td>10</td>
+                        <td>Box</td>
+                        <td><span class="status-low">Low</span></td>
+                        <td>2026-05-01</td>
+                        <td>
+                            <button class="btn">Edit</button>
+                            <button class="btn">Delete</button>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td>Vitamin C</td>
+                        <td>Medicine</td>
+                        <td>50</td>
+                        <td>Bottle</td>
+                        <td><span class="status-normal">Normal</span></td>
+                        <td>2026-12-01</td>
+                        <td>
+                            <button class="btn">Edit</button>
+                            <button class="btn">Delete</button>
+                        </td>
+                    </tr>
+
+                </table>
+            </div>
+
         </div>
     </main>
 
@@ -54,7 +100,9 @@
         <p>&copy; 2026 Smart Barangay Health Information System | All Rights Reserved</p>
     </footer>
 
-    <!-- Script -->
+    <!-- Scripts -->
     <script src="dashboard-script.js"></script>
     <script src="js/sidebar-script.js"></script>
+
+</body>
 </html>

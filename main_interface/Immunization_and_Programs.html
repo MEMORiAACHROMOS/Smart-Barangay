@@ -6,7 +6,7 @@
     <title>Immunization and Programs - Smart Barangay Health Information System</title>
 
     <!-- Styles -->
-    <link rel="stylesheet" href="-styles.css">
+    <link rel="stylesheet" href="css/immunizations-styles.css">
  <link rel="stylesheet" href="css/headerandfooter.css">
     <link rel="stylesheet" href="css/sidebar.css">
     <link rel="stylesheet" href="css/global.css">
@@ -38,10 +38,88 @@
 </div>
     <!-- Main Content -->
     <main>
-        <div class="dashboard-container" >
-        <h1>IMMUNIZATION AND PROGRAMS SCHEDULE LIST</h1>
+        <h1>IMMUNIZATION AND OTHER PROGRAMS SCHEDULE LIST</h1>
             <!-- Immunization and Programs Dashboard content goes here -->
+  <div class="programs-container">
 
+        <!-- TOP BAR -->
+        <div class="programs-topbar">
+
+            <input type="text" id="searchInput" placeholder="Search event..." onkeyup="searchPrograms()">
+
+            <button class="btn" onclick="openModal()">➕ Add Event</button>
+
+        </div>
+
+        <!-- EVENTS TABLE -->
+        <div class="section">
+
+            <table id="programsTable">
+
+                <tr>
+                    <th>Event Name</th>
+                    <th>Type</th>
+                    <th>Date</th>
+                    <th>Location</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+
+                <tr>
+                    <td>Child Immunization Drive</td>
+                    <td>Immunization</td>
+                    <td>2026-05-10</td>
+                    <td>Barangay Hall</td>
+                    <td><span class="status-normal">Upcoming</span></td>
+                    <td>
+                        <button class="btn">Edit</button>
+                        <button class="btn">Delete</button>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td>Blood Donation Drive</td>
+                    <td>Blood Donation</td>
+                    <td>2026-05-15</td>
+                    <td>Health Center</td>
+                    <td><span class="status-low">Scheduled</span></td>
+                    <td>
+                        <button class="btn">Edit</button>
+                        <button class="btn">Delete</button>
+                    </td>
+                </tr>
+
+            </table>
+
+        </div>
+
+    </div>
+</main>
+
+<!-- MODAL -->
+<div id="eventModal" class="modal">
+
+    <div class="modal-content">
+
+        <h2>Add New Event</h2>
+
+        <input type="text" placeholder="Event Name">
+        
+        <select>
+            <option>Immunization</option>
+            <option>Blood Donation</option>
+            <option>Medical Mission</option>
+            <option>Health Screening</option>
+        </select>
+
+        <input type="date">
+        <input type="text" placeholder="Location">
+        <input type="text" placeholder="Status">
+
+        <button class="btn">Save</button>
+        <button class="btn" onclick="closeModal()">Cancel</button>
+
+    </div>
 
 
             

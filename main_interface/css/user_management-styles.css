@@ -1,0 +1,101 @@
+/* =========================
+   PAGE TITLE
+========================= */
+main h1 {
+    font-size: 24px;
+    color: #065f46;
+    margin-bottom: 20px;
+}
+
+/* =========================
+   TOP BAR (SEARCH + FILTER)
+========================= */
+.top-bar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.top-bar input,
+.top-bar select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.add-btn {
+    background: #065f46;
+    color: white;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* =========================
+   TABLE
+========================= */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th {
+    background: #065f46;
+    color: white;
+    text-align: left;
+    padding: 10px;
+}
+
+td {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+/* =========================
+   BADGES
+========================= */
+.badge {
+    padding: 4px 8px;
+    border-radius: 5px;
+    color: white;
+    font-size: 12px;
+}
+
+.admin { background: #d9534f; }
+.staff { background: #0275d8; }
+.nurse { background: #5cb85c; }
+
+/* STATUS */
+.status {
+    padding: 4px 8px;
+    border-radius: 5px;
+    font-size: 12px;
+}
+
+.active { background: #5cb85c; color: white; }
+.inactive { background: #999; color: white; }
+
+/* =========================
+   ACTION BUTTONS
+========================= */
+.edit {
+    background: #0275d8;
+    color: white;
+    border: none;
+    padding: 5px 8px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.delete {
+    background: #d9534f;
+    color: white;
+    border: none;
+    padding: 5px 8px;
+    border-radius: 5px;
+    cursor: pointer;
+}

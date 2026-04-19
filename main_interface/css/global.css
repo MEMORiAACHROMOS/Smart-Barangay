@@ -12,6 +12,10 @@
    BODY LAYOUT
 ========================= */
 body {
+   
+    margin: 0;
+    display: block;
+
     min-height: 100vh;
     display: flex;
     flex-direction: row;
@@ -24,6 +28,7 @@ body {
 ========================= */
 main {
     margin-left: 220px;
+    padding-top: 80px;
     padding: 80px 40px 60px 40px;
     flex: 1;
 }
