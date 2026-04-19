@@ -1,47 +1,130 @@
-/* Reset */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-}
-
-/* Body layout */
-body {
-    min-height: 100vh;
-    display: flex;
-    flex-direction: row;
-    background: #f0f4f3;
-}
-
-/* Main content */
-main {  
-    margin-left: 220px;
-    padding: 80px 40px 60px 40px; /* extra bottom space for footer */
-    flex: 1;
-}
-
-/* Footer layout (CRITICAL) */
-.main-footer {
-    left: 220px;
-    width: calc(100% - 220px);
-}
-
-/* Dashboard */
-.dashboard-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    min-height: calc(100vh - 100px);
-    text-align: center;
-    padding: 40px 20px 20px 20px;
-}
-
-.dashboard-container h1 {
+/* =========================
+   DASHBOARD TITLE
+========================= */
+main h1 {
     font-size: 24px;
     font-weight: 600;
     color: #065f46;
-    margin-top: -30px;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
+    text-align: center;
 }
 
+/* =========================
+   DASHBOARD WRAPPER
+========================= */
+.dashboard-container {
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+/* =========================
+   SUMMARY CARDS
+========================= */
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    gap: 15px;
+}
+
+.card {
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 10px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    transition: 0.2s ease;
+}
+
+.card:hover {
+    transform: translateY(-3px);
+}
+
+.card h3 {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 8px;
+}
+
+.card p {
+    font-size: 22px;
+    font-weight: bold;
+    color: #065f46;
+}
+
+/* =========================
+   SECTIONS
+========================= */
+.section {
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+}
+
+.section h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* =========================
+   QUICK ACTION BUTTONS
+========================= */
+.button-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.btn {
+    display: block;
+    padding: 10px;
+    background: #065f46;
+    color: white;
+    text-align: center;
+    border-radius: 8px;
+    text-decoration: none;
+    transition: 0.2s ease;
+}
+
+.btn:hover {
+    background: #0a7a58;
+}
+
+/* =========================
+   TABLE STYLE
+========================= */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+table th {
+    background: #065f46;
+    color: white;
+    text-align: left;
+    padding: 10px;
+}
+
+table td {
+    padding: 10px;
+    border-bottom: 1px solid #eee;
+}
+
+/* =========================
+   LIST (Inventory)
+========================= */
+ul {
+    margin-top: 10px;
+    padding-left: 20px;
+}
+
+ul li {
+    padding: 5px 0;
+}
