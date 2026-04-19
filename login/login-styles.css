@@ -12,7 +12,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background: url('healthcentersample.jpg') no-repeat center center/cover;
+    background: url('healthcenter-sample.png') no-repeat center center/cover;
     padding-top: 80px;   /* space for header */
     padding-bottom: 60px; /* space for footer */
 }

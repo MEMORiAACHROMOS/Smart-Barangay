@@ -1,0 +1,106 @@
+/* Sidebar */
+.sidebar {
+    position: fixed;
+    top: 60px; /* below header */
+    left: 0;
+    width: 220px;
+    height: calc(100vh - 60px); 
+    background: #0f8a51;
+    padding-top: 20px;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+}
+
+.sidebar ul {
+    list-style: none;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    position: relative;
+}
+
+.sidebar ul li {
+    margin-bottom: 10px;
+}
+
+.sidebar ul li a {
+    display: block;
+    padding: 12px 20px;
+    color: #fff;
+    text-decoration: none;
+    font-size: 15px;
+    border-radius: 8px;
+    transition: background 0.3s, color 0.3s;
+}
+
+.sidebar ul li a:hover {
+    background: rgba(5, 100, 62, 0.95);
+    color: #fff;
+}
+
+/* Logout button */
+.sidebar ul li.logout-btn {
+    margin-top: auto;
+}
+
+.sidebar ul li.logout-btn a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 12px 20px;
+    background:#0f8a51;
+    color: #fff;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: background 0.3s;
+}
+
+.sidebar ul li.logout-btn a i {
+    margin-left: 8px;
+}
+
+.sidebar ul li.logout-btn a:hover {
+    background: rgba(5, 100, 62, 0.95);
+    color: #fff;
+}
+
+/* Active menu */
+.sidebar ul li a.active {
+    background: rgba(5, 100, 62, 0.95);
+    color: #fff;
+    font-weight: 600;
+}
+
+/* Scrollbar */
+.sidebar::-webkit-scrollbar {
+    width: 6px;
+}
+
+.sidebar::-webkit-scrollbar-thumb {
+    background-color: #00c267;
+    border-radius: 3px;
+}
+
+/* Responsive sidebar */
+@media (max-width: 768px) {
+    .sidebar {
+        width: 60px;
+    }
+
+    .sidebar ul li a {
+        padding: 12px 10px;
+        font-size: 0;
+        text-align: center;
+    }
+
+    .sidebar ul li a::after {
+        content: attr(title);
+        font-size: 12px;
+        display: block;
+        margin-top: 5px;
+        color: #fff;
+    }
+}
