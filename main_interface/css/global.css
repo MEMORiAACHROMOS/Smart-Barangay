@@ -14,12 +14,18 @@
 body {
    
     margin: 0;
-    display: block;
-
-    min-height: 100vh;
     display: flex;
+    min-height: 100vh;
     flex-direction: row;
-    background: #f0f4f3;
+
+
+    /* BACKGROUND IMAGE */
+    background-image: url("healthcenter-sample.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+
 }
 
 /* =========================

@@ -6,7 +6,7 @@
     <title>Patient Records - Smart Barangay Health Information System</title>
 
     <!-- Styles -->
-    <link rel="stylesheet" href="-styles.css">
+    <link rel="stylesheet" href="css/patient-styles.css">
      <link rel="stylesheet" href="css/headerandfooter.css">
     <link rel="stylesheet" href="css/sidebar.css">
     <link rel="stylesheet" href="css/global.css">
@@ -43,7 +43,125 @@
         <div class="dashboard-container" >
        
             <!-- Patient Records Dashboard content goes here -->
+  <div class="patient-container">
 
+        <!-- TOP BAR -->
+        <div class="patient-topbar">
+
+            <input type="text" id="searchInput" placeholder="Search patient..." onkeyup="searchPatient()">
+
+            <button class="btn" onclick="openPatientModal()">➕ Add Patient</button>
+
+        </div>
+
+        <!-- PATIENT TABLE -->
+        <div class="section">
+
+            <table id="patientTable">
+
+                <tr>
+                    <th>Name</th>
+                    <th>Age</th>
+                    <th>Sex</th>
+                    <th>Contact</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+
+                <tr>
+                    <td>Juan Dela Cruz</td>
+                    <td>34</td>
+                    <td>Male</td>
+                    <td>09123456789</td>
+                    <td><span class="status-normal">Active</span></td>
+                    <td>
+                        <button class="btn">View</button>
+                        <button class="btn">Edit</button>
+                        <button class="btn">Delete</button>
+                        <button class="btn" onclick="openHistory()">History</button>
+                    </td>
+                </tr>
+
+            </table>
+
+        </div>
+
+    </div>
+</main>
+
+<!-- =========================
+     ADD PATIENT MODAL
+========================= -->
+<div id="patientModal" class="modal">
+
+    <div class="modal-content">
+
+        <h2>Add Patient</h2>
+
+        <input type="text" placeholder="Full Name">
+        <input type="number" placeholder="Age">
+
+        <select>
+            <option>Male</option>
+            <option>Female</option>
+        </select>
+
+        <input type="text" placeholder="Contact Number">
+
+        <button class="btn">Save</button>
+        <button class="btn" onclick="closePatientModal()">Cancel</button>
+
+    </div>
+
+</div>
+
+<!-- =========================
+     PATIENT HISTORY MODAL
+========================= -->
+<div id="historyModal" class="modal">
+
+    <div class="modal-content">
+
+        <h2>Patient History</h2>
+
+        <div class="section">
+
+            <p><b>Date:</b> 2026-04-10</p>
+            <p><b>Reason:</b> Minor Accident</p>
+            <p><b>Description:</b> Fell while walking, treated with bandage.</p>
+
+            <hr>
+
+            <p><b>Date:</b> 2026-03-15</p>
+            <p><b>Reason:</b> Fever</p>
+            <p><b>Description:</b> Given medication and rest advised.</p>
+
+        </div>
+
+        <button class="btn" onclick="openAddRecord()">➕ Add New Record</button>
+        <button class="btn" onclick="closeHistory()">Close</button>
+
+    </div>
+
+</div>
+
+<!-- =========================
+     ADD HISTORY RECORD MODAL
+========================= -->
+<div id="addRecordModal" class="modal">
+
+    <div class="modal-content">
+
+        <h2>Add Medical Record</h2>
+
+        <input type="date">
+        <input type="text" placeholder="Reason (Accident, Fever, etc.)">
+        <input type="text" placeholder="Description">
+
+        <button class="btn">Save</button>
+        <button class="btn" onclick="closeAddRecord()">Cancel</button>
+
+    </div>
 
 
             

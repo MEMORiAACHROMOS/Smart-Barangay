@@ -6,7 +6,7 @@
     <title>Appointments - Smart Barangay Health Information System</title>
 
     <!-- Styles -->
-    <link rel="stylesheet" href="-styles.css">
+    <link rel="stylesheet" href="css/appointments-styles.css">
  <link rel="stylesheet" href="css/headerandfooter.css">
     <link rel="stylesheet" href="css/sidebar.css">
     <link rel="stylesheet" href="css/global.css">
@@ -39,10 +39,115 @@
     <!-- Main Content -->
     <main>
           <h1>LIST OF APPOINTMENTS</h1>
-        <div class="dashboard-container" >
       
             <!-- Appointments Dashboard content goes here -->
+  <div class="appointments-container">
 
+        <!-- TOP BAR -->
+        <div class="appointments-topbar">
+
+            <input type="text" id="searchInput" placeholder="Search patient..." onkeyup="searchAppointments()">
+
+            <select id="filterStatus">
+                <option value="all">All</option>
+                <option value="pending">Pending</option>
+                <option value="approved">Approved</option>
+                <option value="completed">Completed</option>
+                <option value="cancelled">Cancelled</option>
+            </select>
+
+            <button class="btn" onclick="openAppointmentModal()">➕ Add Appointment</button>
+
+        </div>
+
+        <!-- SUMMARY CARDS -->
+        <div class="card-container">
+
+            <div class="card">
+                <h3>Today</h3>
+                <p>0</p>
+            </div>
+
+            <div class="card">
+                <h3>Pending</h3>
+                <p>0</p>
+            </div>
+
+            <div class="card">
+                <h3>Completed</h3>
+                <p>0</p>
+            </div>
+
+            <div class="card">
+                <h3>Cancelled</h3>
+                <p>0</p>
+            </div>
+
+        </div>
+
+        <!-- APPOINTMENT TABLE -->
+        <div class="section">
+
+            <table id="appointmentTable">
+
+                <tr>
+                    <th>Patient</th>
+                    <th>Date</th>
+                    <th>Time</th>
+                    <th>Type</th>
+                    <th>Purpose</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+
+                <tr>
+                    <td>Juan Dela Cruz</td>
+                    <td>2026-04-20</td>
+                    <td>10:00 AM</td>
+                    <td>Walk-in</td>
+                    <td>Check-up</td>
+                    <td><span class="status-pending">Pending</span></td>
+                    <td>
+                        <button class="btn">Approve</button>
+                        <button class="btn">Reject</button>
+                        <button class="btn">Complete</button>
+                    </td>
+                </tr>
+
+            </table>
+
+        </div>
+
+    </div>
+
+</main>
+
+<!-- =========================
+     ADD APPOINTMENT MODAL
+========================= -->
+<div id="appointmentModal" class="modal">
+
+    <div class="modal-content">
+
+        <h2>Add Appointment (Walk-in)</h2>
+
+        <input type="text" placeholder="Patient Name">
+        <input type="date">
+        <input type="time">
+
+        <select>
+            <option>Check-up</option>
+            <option>Immunization</option>
+            <option>Emergency</option>
+            <option>Consultation</option>
+        </select>
+
+        <textarea placeholder="Notes (optional)"></textarea>
+
+        <button class="btn">Save Appointment</button>
+        <button class="btn" onclick="closeAppointmentModal()">Cancel</button>
+
+    </div>
 
 
             
