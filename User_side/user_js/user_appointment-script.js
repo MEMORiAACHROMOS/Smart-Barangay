@@ -3,9 +3,12 @@ const submitBtn = document.getElementById("submitAppointment");
 
 submitBtn.addEventListener("click", function () {
 
+    // Prevent spam clicking
+    submitBtn.disabled = true;
+    submitBtn.innerText = "Submitting...";
+
     // Get values
     const fullname = document.getElementById("fullname").value.trim();
-    const email = document.getElementById("email").value.trim();
     const contact = document.getElementById("contact").value.trim();
     const date = document.getElementById("date").value;
     const time = document.getElementById("time").value;
@@ -13,20 +16,16 @@ submitBtn.addEventListener("click", function () {
     const reason = document.getElementById("reason").value.trim();
 
     // Validation
-    if (!fullname || !email || !contact || !date || !time || !service || !reason) {
+    if (!fullname || !contact || !date || !time || !service || !reason) {
         alert("Please fill in all fields.");
+        resetButton();
         return;
     }
 
-    // Email format check
-    if (!validateEmail(email)) {
-        alert("Please enter a valid email address.");
-        return;
-    }
-
-    // Contact number check (basic)
-    if (!/^[0-9]{10,13}$/.test(contact)) {
-        alert("Enter a valid contact number (10-13 digits).");
+    // Contact number check (PH friendly)
+    if (!/^09\d{9}$/.test(contact) && !/^\+639\d{9}$/.test(contact)) {
+        alert("Enter a valid Philippine contact number (e.g. 09123456789).");
+        resetButton();
         return;
     }
 
@@ -34,38 +33,41 @@ submitBtn.addEventListener("click", function () {
     const today = new Date().toISOString().split("T")[0];
     if (date < today) {
         alert("Please select a valid future date.");
+        resetButton();
         return;
     }
 
-    // Simulate sending data
-    const appointmentData = {
-        fullname,
-        email,
-        contact,
-        date,
-        time,
-        service,
-        reason
-    };
+    // Simulated request delay (like real API)
+    setTimeout(() => {
 
-    console.log("Appointment Request:", appointmentData);
+        const appointmentData = {
+            fullname,
+            contact,
+            date,
+            time,
+            service,
+            reason
+        };
 
-    // Success message
-    alert("Appointment request submitted successfully!");
+        console.log("Appointment Request:", appointmentData);
 
-    // Clear form
-    document.getElementById("fullname").value = "";
-    document.getElementById("email").value = "";
-    document.getElementById("contact").value = "";
-    document.getElementById("date").value = "";
-    document.getElementById("time").value = "";
-    document.getElementById("service").value = "";
-    document.getElementById("reason").value = "";
+        alert("Appointment request submitted successfully!");
+
+        // Clear form
+        document.getElementById("fullname").value = "";
+        document.getElementById("contact").value = "";
+        document.getElementById("date").value = "";
+        document.getElementById("time").value = "";
+        document.getElementById("service").value = "";
+        document.getElementById("reason").value = "";
+
+        resetButton();
+
+    }, 1000); // 1 second delay
 });
 
-
-// Email validation function
-function validateEmail(email) {
-    const re = /^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/;
-    return re.test(email);
+// Reset button state
+function resetButton() {
+    submitBtn.disabled = false;
+    submitBtn.innerText = "Submit Request";
 }

@@ -6,7 +6,7 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Full screen background with image */
+/* Full screen background */
 body {
     min-height: 100vh;
     display: flex;
@@ -17,7 +17,7 @@ body {
     padding-bottom: 60px;
 }
 
-/* Header Banner */
+/* Header */
 .main-header {
     position: fixed;
     top: 0;
@@ -32,7 +32,7 @@ body {
     z-index: 1000;
 }
 
-/* Footer Banner */
+/* Footer */
 .main-footer {
     position: fixed;
     bottom: 0;
@@ -45,15 +45,15 @@ body {
     box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
 }
 
-/* Container */
+/* Container (you can rename later) */
 .login-container {
     background-color: rgba(7, 130, 81, 0.95);
     padding: 40px 35px;
     border-radius: 20px;
     box-shadow: 0 15px 40px rgba(0,0,0,0.3);
     width: 420px;
-    max-height: 85vh; /* 👈 prevents overflow */
-    overflow-y: auto; /* 👈 scroll if form is long */
+    max-height: 85vh;
+    overflow-y: auto;
     text-align: center;
     transition: transform 0.3s ease;
 }
@@ -77,7 +77,7 @@ h1 {
     line-height: 1.4;
 }
 
-/* Form inputs (shared) */
+/* Inputs */
 .login-form input,
 .login-form select,
 .login-form textarea {
@@ -91,6 +91,12 @@ h1 {
     transition: border 0.3s, box-shadow 0.3s;
 }
 
+/* Fix date/time appearance */
+input[type="date"],
+input[type="time"] {
+    cursor: pointer;
+}
+
 /* Focus effect */
 .login-form input:focus,
 .login-form select:focus,
@@ -99,10 +105,10 @@ h1 {
     box-shadow: 0 0 8px rgba(79, 172, 254, 0.5);
 }
 
-/* Textarea specific */
+/* Textarea */
 .login-form textarea {
     resize: none;
-    height: 80px;
+    height: 90px;
 }
 
 /* Button */
@@ -115,15 +121,23 @@ h1 {
     color: #fff;
     font-size: 16px;
     cursor: pointer;
-    transition: background 0.3s, transform 0.2s;
+    transition: background 0.3s, transform 0.2s, opacity 0.3s;
 }
 
+/* Hover */
 .login-form button:hover {
     background: #00a558;
     transform: scale(1.03);
 }
 
-/* Scrollbar (optional clean look) */
+/* Disabled state (for JS later 🔥) */
+.login-form button:disabled {
+    background: #999;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Scrollbar */
 .login-container::-webkit-scrollbar {
     width: 6px;
 }
@@ -137,5 +151,9 @@ h1 {
     .login-container {
         width: 90%;
         padding: 30px 20px;
+    }
+
+    h1 {
+        font-size: 16px;
     }
 }
