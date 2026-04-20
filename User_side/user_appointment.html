@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appointment Request - Smart Barangay Health Information System</title>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="user_css/user_appointment-styles.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="main-header">
+        <h2>APPOINTMENT REQUEST</h2>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="login-container">
+            
+            <!-- Logo -->
+            <div class="logo-holder">
+                <img src="image.png" alt="Barangay Logo">
+            </div>
+
+            <!-- Title -->
+            <h1>
+                SMART BARANGAY:<br>
+                HEALTH INFORMATION SYSTEM
+            </h1>
+
+            <!-- Appointment Form -->
+            <div class="login-form">
+
+                <input type="text" placeholder="Full Name" id="fullname">
+
+                <input type="email" placeholder="Email Address" id="email">
+
+                <input type="text" placeholder="Contact Number" id="contact">
+
+                <input type="date" id="date">
+
+                <input type="time" id="time">
+
+                <select id="service">
+                    <option value="">Select Service</option>
+                    <option value="checkup">General Checkup</option>
+                    <option value="vaccination">Vaccination</option>
+                    <option value="consultation">Consultation</option>
+                    <option value="maternal">Maternal Care</option>
+                </select>
+
+                <textarea placeholder="Reason for Appointment" id="reason"></textarea>
+
+                <button type="button" id="submitAppointment">
+                    Submit Request
+                </button>
+
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <p>&copy; 2026 Smart Barangay Health Information System | All Rights Reserved</p>
+    </footer>
+
+    <!-- Script -->
+    <script src="user_js/user_appointment-script.js"></script>
+
+</body>
+</html>
