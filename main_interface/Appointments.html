@@ -58,7 +58,40 @@
 
             <button class="btn" onclick="openAppointmentModal()">➕ Add Appointment</button>
 
-        </div>
+                </div>
+                <!-- Modal for Add Appointment (single instance, hidden by default) -->
+                <!-- Added/updated by Copilot: Modal structure for Add Appointment -->
+                <div id="addAppointmentModal" class="modal">
+                    <div class="modal-content">
+                        <h2>Add Appointment</h2>
+                        <form id="addAppointmentForm">
+                            <!-- Patient Name -->
+                            <label for="appointmentPatient">Patient Name</label>
+                            <input type="text" id="appointmentPatient" name="appointmentPatient" required>
+
+                            <!-- Date -->
+                            <label for="appointmentDate">Date</label>
+                            <input type="date" id="appointmentDate" name="appointmentDate" required>
+
+                            <!-- Time -->
+                            <label for="appointmentTime">Time</label>
+                            <input type="time" id="appointmentTime" name="appointmentTime" required>
+
+                            <!-- Purpose -->
+                            <label for="appointmentPurpose">Purpose</label>
+                            <input type="text" id="appointmentPurpose" name="appointmentPurpose" required>
+
+                            <!-- Status (default Pending, disabled) -->
+                            <label for="appointmentStatus">Status</label>
+                            <input type="text" id="appointmentStatus" name="appointmentStatus" value="Pending" readonly disabled>
+
+                            <div class="modal-actions">
+                                <button type="submit" class="btn modal-save">Save</button>
+                                <button type="button" class="btn modal-cancel" id="closeAddAppointmentModal">Cancel</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
 
         <!-- SUMMARY CARDS -->
         <div class="card-container">
@@ -122,36 +155,8 @@
 
 </main>
 
-<!-- =========================
-     ADD APPOINTMENT MODAL
-========================= -->
-<div id="appointmentModal" class="modal">
-
-    <div class="modal-content">
-
-        <h2>Add Appointment (Walk-in)</h2>
-
-        <input type="text" placeholder="Patient Name">
-        <input type="date">
-        <input type="time">
-
-        <select>
-            <option>Check-up</option>
-            <option>Immunization</option>
-            <option>Emergency</option>
-            <option>Consultation</option>
-        </select>
-
-        <textarea placeholder="Notes (optional)"></textarea>
-
-        <button class="btn">Save Appointment</button>
-        <button class="btn" onclick="closeAppointmentModal()">Cancel</button>
-
-    </div>
 
 
-            
-        </div>
     </main>
 
    <!-- Footer -->
@@ -168,5 +173,7 @@
         window.location.href = '../login/login.html';
     }
     </script>
+    <!-- appointments.js handles modal logic -->
+    <script src="js/appointments.js"></script>
 </body>
 </html>

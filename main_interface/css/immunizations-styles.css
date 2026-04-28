@@ -85,6 +85,17 @@ table td {
     background: #0a7a58;
 }
 
+/* View Details button style */
+.btn.view-details {
+    background: #0275d8;
+    color: #fff;
+    margin-left: 4px;
+}
+
+.btn.view-details:hover {
+    background: #0256a3;
+}
+
 /* =========================
    STATUS COLORS
 ========================= */
@@ -124,7 +135,8 @@ table td {
     background: #fff;
     padding: 20px;
     border-radius: 10px;
-    width: 320px;
+    width: 420px;
+    max-width: 95vw;
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -148,9 +160,72 @@ table td {
     border-color: #065f46;
 }
 
+/* Modal actions row for Add Event modal */
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+/* Save and Cancel button styles for modal */
+.btn.modal-save {
+    background: #065f46;
+    color: #fff;
+}
+.btn.modal-cancel {
+    background: #d9534f;
+    color: #fff;
+}
+.btn.modal-save:hover {
+    background: #0a7a58;
+}
+.btn.modal-cancel:hover {
+    background: #a12d2a;
+}
+
 /* =========================
    ACTION BUTTON GROUP (optional cleaner spacing)
 ========================= */
 table td button {
     margin-right: 5px;
+}
+
+/* Allocated Medicines/Vaccines dynamic list styles */
+#allocatedList {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 8px;
+}
+.allocated-row {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+.allocated-name {
+    flex: 2;
+}
+.allocated-qty {
+    flex: 1;
+    min-width: 60px;
+}
+.allocated-add {
+    background: #0275d8;
+    color: #fff;
+    margin-bottom: 10px;
+}
+.allocated-remove {
+    background: #d9534f;
+    color: #fff;
+    padding: 0 10px;
+    font-size: 18px;
+    border-radius: 6px;
+    min-width: 32px;
+}
+.allocated-add:hover {
+    background: #0256a3;
+}
+.allocated-remove:hover {
+    background: #a12d2a;
 }

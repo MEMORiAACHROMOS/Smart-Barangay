@@ -74,6 +74,7 @@
                     <td>
                         <button class="btn">Edit</button>
                         <button class="btn">Delete</button>
+                        <button class="btn view-details">View Details</button>
                     </td>
                 </tr>
 
@@ -86,6 +87,7 @@
                     <td>
                         <button class="btn">Edit</button>
                         <button class="btn">Delete</button>
+                        <button class="btn view-details">View Details</button>
                     </td>
                 </tr>
 
@@ -96,35 +98,61 @@
     </div>
 </main>
 
-<!-- MODAL -->
-<div id="eventModal" class="modal">
+<!-- Add Event Modal (hidden by default) -->
+<div id="addEventModal" class="modal">
+  <div class="modal-content">
+    <h2>Add New Event</h2>
+    <form id="addEventForm">
+      <!-- Event Name -->
+      <label for="eventName">Event Name</label>
+      <input type="text" id="eventName" name="eventName" required>
 
-    <div class="modal-content">
+      <!-- Type of Event -->
+      <label for="eventType">Type of Event</label>
+      <select id="eventType" name="eventType" required>
+        <option value="Immunization">Immunization</option>
+        <option value="Blood Donation">Blood Donation</option>
+        <option value="Medical Mission">Medical Mission</option>
+        <option value="Health Screening">Health Screening</option>
+      </select>
 
-        <h2>Add New Event</h2>
+      <!-- Date -->
+      <label for="eventDate">Date</label>
+      <input type="date" id="eventDate" name="eventDate" required>
 
-        <input type="text" placeholder="Event Name">
-        
-        <select>
-            <option>Immunization</option>
-            <option>Blood Donation</option>
-            <option>Medical Mission</option>
-            <option>Health Screening</option>
-        </select>
+      <!-- Location -->
+      <label for="eventLocation">Location</label>
+      <input type="text" id="eventLocation" name="eventLocation" required>
 
-        <input type="date">
-        <input type="text" placeholder="Location">
-        <input type="text" placeholder="Status">
+      <!-- Status -->
+      <label for="eventStatus">Status</label>
+      <select id="eventStatus" name="eventStatus" required>
+        <option value="Upcoming">Upcoming</option>
+        <option value="Scheduled">Scheduled</option>
+        <option value="Ongoing">Ongoing</option>
+        <option value="Done">Done</option>
+      </select>
 
-        <button class="btn">Save</button>
-        <button class="btn" onclick="closeModal()">Cancel</button>
-
-    </div>
-
-
-            
+      <!-- Allocated Medicines/Vaccines (dynamic list) -->
+      <label>Allocated (Medicines/Vaccines)</label>
+      <div id="allocatedList">
+        <div class="allocated-row">
+          <input type="text" class="allocated-name" name="allocatedName[]" placeholder="Medicine/Vaccine Name" required>
+          <input type="number" class="allocated-qty" name="allocatedQty[]" min="1" placeholder="Qty" required>
+          <button type="button" class="btn allocated-remove" style="display:none">&minus;</button>
         </div>
-    </main>
+      </div>
+      <button type="button" class="btn allocated-add" id="addAllocatedBtn">+ Add More</button>
+      <!-- End Allocated Medicines/Vaccines -->
+
+      <div class="modal-actions">
+        <button type="submit" class="btn modal-save">Save</button>
+        <button type="button" class="btn modal-cancel" id="closeAddEventModal">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+<!-- End Add Event Modal -->
 
     <!-- Footer -->
     <footer class="main-footer">
@@ -140,5 +168,6 @@
         window.location.href = '../login/login.html';
     }
     </script>
+    <script src="js/immunization-programs.js"></script>
 </body>
 </html>
