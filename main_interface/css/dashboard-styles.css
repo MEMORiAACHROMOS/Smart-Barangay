@@ -15,7 +15,22 @@ main h1 {
 .dashboard-container {
     display: flex;
     flex-direction: column;
-    gap: 25px;
+    gap: 25px; /* Space between main dashboard sections */
+}
+
+/* Add gap between all main dashboard boxes */
+/* This targets each .section (the white boxes) and adds margin for vertical spacing */
+.section {
+    background: #ffffff;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    margin-bottom: 15px; /* Added: space between boxes */
+}
+
+/* If you want to remove the last margin for the last box, you can use: */
+.section:last-child {
+    margin-bottom: 0;
 }
 
 /* =========================
@@ -25,6 +40,7 @@ main h1 {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
     gap: 15px;
+    margin-bottom: 20px; /* Added: space below summary cards */
 }
 
 .card {
@@ -64,7 +80,7 @@ main h1 {
 
 .section h2 {
     font-size: 18px;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
     color: #333;
 }
 

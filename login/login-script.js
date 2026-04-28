@@ -24,7 +24,8 @@ document.addEventListener("DOMContentLoaded", function () {
         const pass = password.value;
 
         if (username === "admin" && pass === "12345") {
-            alert("Login Successful!");
+            // Redirect to dashboard on successful login
+            window.location.href = "../main_interface/dashboard.html";
         } else {
             alert("Invalid username or password!");
         }

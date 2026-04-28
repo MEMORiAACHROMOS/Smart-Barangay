@@ -33,7 +33,7 @@
         <li><a href="Analytics.html">Reports and Analytics</a></li>
 
         <li class="logout-btn">
-            <a href="logout.html">Logout <i class="fa fa-sign-out-alt"></i></a>
+            <a href="#" onclick="logout()">Logout <i class="fa fa-sign-out-alt"></i></a>
         </li>
     </ul>
 </div>
@@ -54,7 +54,7 @@
             <option>Nurse</option>
         </select>
 
-        <button class="add-btn">+ Add User</button>
+        <button class="add-btn" id="openAddUserModal">+ Add User</button>
 
     </div>
 
@@ -113,4 +113,43 @@
     <!-- Script -->
     <script src="dashboard-script.js"></script>
     <script src="js/sidebar-script.js"></script>
+    <script>
+    // Logout function: redirect to login page
+    function logout() {
+        window.location.href = '../login/login.html';
+    }
+    </script>
+    <!-- Add User Modal (hidden by default) -->
+    <div id="addUserModal" class="modal-overlay" style="display:none;">
+      <div class="modal-window">
+        <h2>Register New User</h2>
+        <form id="addUserForm">
+          <label for="newUsername">Username</label>
+          <input type="text" id="newUsername" name="username" required>
+
+          <label for="newPassword">Password</label>
+          <input type="password" id="newPassword" name="password" required>
+
+          <label for="newRole">Role</label>
+          <select id="newRole" name="role" required>
+            <option value="Admin">Admin</option>
+            <option value="Staff">Staff</option>
+            <option value="Nurse">Nurse</option>
+          </select>
+
+          <label for="newStatus">Status</label>
+          <select id="newStatus" name="status" required>
+            <option value="Active">Active</option>
+            <option value="Inactive">Inactive</option>
+          </select>
+
+          <div class="modal-actions">
+            <button type="submit" class="modal-save">Register</button>
+            <button type="button" class="modal-cancel" id="closeAddUserModal">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+    <script src="js/user-management.js"></script>
+</body>
 </html>
