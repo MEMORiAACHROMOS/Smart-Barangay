@@ -4,151 +4,91 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Management - Smart Barangay Health Information System</title>
-
-    <!-- Styles -->
     <link rel="stylesheet" href="css/user_management-styles.css">
-     <link rel="stylesheet" href="css/headerandfooter.css">
+    <link rel="stylesheet" href="css/headerandfooter.css">
     <link rel="stylesheet" href="css/sidebar.css">
     <link rel="stylesheet" href="css/global.css">
-
-
-    <!-- Font Awesome (optional if you still use it) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.38.0"></script>
 </head>
 <body>
-
-    <!-- Header -->
     <header class="main-header">
-         <h2>USER MANAGEMENT</h2>
+        <h2>USER MANAGEMENT</h2>
     </header>
-<div class="sidebar">
-    <ul>
-        <li><a href="Dashboard.html">Dashboard</a></li>
-        <li><a href="User_Management.html">User Management</a></li>
-        <li><a href="Patient_Records.html">Patient Records</a></li>
-        <li><a href="Appointments.html">Appointments</a></li>
-        <li><a href="Immunization_and_Programs.html">Immunization and Programs</a></li>
-        <li><a href="Inventory.html">Inventory</a></li>
-        <li><a href="Analytics.html">Reports and Analytics</a></li>
-
-        <li class="logout-btn">
-            <a href="#" onclick="logout()">Logout <i class="fa fa-sign-out-alt"></i></a>
-        </li>
-    </ul>
-</div>
-    <!-- Main Content -->
+    <div class="sidebar">
+        <ul>
+            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="User_Management.html">User Management</a></li>
+            <li><a href="Patient_Records.html">Patient Records</a></li>
+            <li><a href="Appointments.html">Appointments</a></li>
+            <li><a href="Immunization_and_Programs.html">Immunization and Programs</a></li>
+            <li><a href="Inventory.html">Inventory</a></li>
+            <li><a href="Analytics.html">Reports and Analytics</a></li>
+            <li class="logout-btn">
+                <a href="#" onclick="logout()">Logout <i class="fa fa-sign-out-alt"></i></a>
+            </li>
+        </ul>
+    </div>
     <main>
         <h1>USER ACCOUNTS</h1>
-
-            <!-- User Management Dashboard content goes here -->
- <!-- ACTION BAR -->
-    <div class="top-bar">
-
-        <input type="text" placeholder="Search username...">
-
-        <select>
-            <option>All Roles</option>
-            <option>Admin</option>
-            <option>Staff</option>
-            <option>Nurse</option>
-        </select>
-
-        <button class="add-btn" id="openAddUserModal">+ Add User</button>
-
-    </div>
-
-    <!-- TABLE -->
-    <div class="user-management-container">
-
-        <table>
-
-            <thead>
-                <tr>
-                    <th>Username</th>
-                    <th>Password</th>
-                    <th>Role</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-
-            <tbody>
-
-                <tr>
-                    <td>admin01</td>
-                    <td>••••••••</td>
-                    <td><span class="badge admin">Admin</span></td>
-                    <td><span class="status active">Active</span></td>
-                    <td>
-                        <button class="edit">Edit</button>
-                        <button class="delete">Delete</button>
-                    </td>
-                </tr>
-
-                <tr>
-                    <td>nurse01</td>
-                    <td>••••••••</td>
-                    <td><span class="badge nurse">Nurse</span></td>
-                    <td><span class="status active">Active</span></td>
-                    <td>
-                        <button class="edit">Edit</button>
-                        <button class="delete">Delete</button>
-                    </td>
-                </tr>
-
-            </tbody>
-
-        </table>
-
-            
+        <div class="top-bar">
+            <input type="text" placeholder="Search username...">
+            <select>
+                <option value="All Roles">All Roles</option>
+                <option value="Admin">Admin</option>
+                <option value="Nurse">Nurse</option>
+                <option value="Doctor">Doctor</option>
+            </select>
+            <button class="add-btn" id="openAddUserModal">+ Add User</button>
+        </div>
+        <div class="user-management-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Password</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
         </div>
     </main>
-
-    <!-- Footer -->
     <footer class="main-footer">
         <p>&copy; 2026 Smart Barangay Health Information System | All Rights Reserved</p>
     </footer>
-
-    <!-- Script -->
-    <script src="dashboard-script.js"></script>
+    <script src="js/dashboard-script.js"></script>
     <script src="js/sidebar-script.js"></script>
     <script>
-    // Logout function: redirect to login page
-    function logout() {
-        window.location.href = '../login/login.html';
-    }
+        function logout() { window.location.href = '../login/login.html'; }
     </script>
-    <!-- Add User Modal (hidden by default) -->
     <div id="addUserModal" class="modal-overlay" style="display:none;">
-      <div class="modal-window">
-        <h2>Register New User</h2>
-        <form id="addUserForm">
-          <label for="newUsername">Username</label>
-          <input type="text" id="newUsername" name="username" required>
-
-          <label for="newPassword">Password</label>
-          <input type="password" id="newPassword" name="password" required>
-
-          <label for="newRole">Role</label>
-          <select id="newRole" name="role" required>
-            <option value="Admin">Admin</option>
-            <option value="Staff">Staff</option>
-            <option value="Nurse">Nurse</option>
-          </select>
-
-          <label for="newStatus">Status</label>
-          <select id="newStatus" name="status" required>
-            <option value="Active">Active</option>
-            <option value="Inactive">Inactive</option>
-          </select>
-
-          <div class="modal-actions">
-            <button type="submit" class="modal-save">Register</button>
-            <button type="button" class="modal-cancel" id="closeAddUserModal">Cancel</button>
-          </div>
-        </form>
-      </div>
+        <div class="modal-window">
+            <h2>Register New User</h2>
+            <form id="addUserForm">
+                <label for="newUsername">Username</label>
+                <input type="text" id="newUsername" placeholder="Enter username" required>
+                <label for="newPassword">Password</label>
+                <input type="password" id="newPassword" placeholder="Enter password" required>
+                <label for="newRole">Role</label>
+                <select id="newRole" required>
+                    <option value="Admin">Admin</option>
+                    <option value="Nurse">Nurse</option>
+                    <option value="Doctor">Doctor</option>
+                </select>
+                <label for="newStatus">Status</label>
+                <select id="newStatus" required>
+                    <option value="active">Active</option>
+                    <option value="inactive">Inactive</option>
+                </select>
+                <div class="modal-actions">
+                    <button type="submit" class="modal-save">Register</button>
+                    <button type="button" class="modal-cancel" id="closeAddUserModal">Cancel</button>
+                </div>
+            </form>
+        </div>
     </div>
     <script src="js/user-management.js"></script>
 </body>

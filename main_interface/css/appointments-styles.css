@@ -1,6 +1,5 @@
 /* =========================
-   MODAL STYLES (Add Appointment)
-   Added/updated by Copilot
+   MODAL STYLES
 ========================= */
 .modal {
     display: none;
@@ -19,48 +18,91 @@
 }
 .modal-content {
     background: #fff;
-    padding: 24px 20px;
-    border-radius: 12px;
-    width: 400px;
+    padding: 28px 24px;
+    border-radius: 16px;
+    width: 460px;
     max-width: 90vw;
     display: flex;
     flex-direction: column;
+    gap: 14px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+}
+
+/* ADDED: Modal header with icon + subtitle */
+.modal-header {
+    text-align: center;
+    padding-bottom: 12px;
+    border-bottom: 2px solid #f0fdf4;
+}
+.modal-icon {
+    font-size: 34px;
+}
+.modal-header h2 {
+    margin: 6px 0 2px 0;
+    font-size: 20px;
+    color: #065f46;
+}
+.modal-subtitle {
+    font-size: 12px;
+    color: #888;
+    margin: 0;
+}
+
+/* ADDED: Two fields side by side */
+.form-row {
+    display: flex;
     gap: 12px;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.15);
 }
-.modal-content label {
-    font-weight: 500;
-    margin-bottom: 2px;
+.form-row .form-group {
+    flex: 1;
 }
-.modal-content input,
-.modal-content select,
-.modal-content textarea {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
+
+/* ADDED: Individual field wrapper */
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.form-group label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #065f46;
+}
+.form-group input,
+.form-group select {
+    padding: 10px 12px;
+    border: 1.5px solid #e5e7eb;
+    border-radius: 8px;
+    font-size: 14px;
     outline: none;
+    transition: border-color 0.2s;
+    background: #f9fafb;
+    width: 100%;
+    box-sizing: border-box;
     font-family: inherit;
-    font-size: 15px;
 }
-.modal-content input:focus,
-.modal-content select:focus,
-.modal-content textarea:focus {
+.form-group input:focus,
+.form-group select:focus {
     border-color: #065f46;
+    background: #fff;
 }
+.form-group input:disabled {
+    background: #f3f4f6;
+    color: #aaa;
+    cursor: not-allowed;
+}
+
 .modal-actions {
     display: flex;
     gap: 10px;
     justify-content: flex-end;
-    margin-top: 10px;
+    margin-top: 6px;
 }
-.modal-save {
-    background: #065f46;
-    color: #fff;
-}
-.modal-cancel {
-    background: #e5e7eb;
-    color: #222;
-}
+.modal-save { background: #065f46; color: #fff; }
+.modal-cancel { background: #d9534f; color: #fff; }
+.modal-save:hover { background: #0a7a58; }
+.modal-cancel:hover { background: #a12d2a; }
+
 /* =========================
    APPOINTMENTS WRAPPER
 ========================= */
@@ -71,7 +113,7 @@
 }
 
 /* =========================
-   TOP BAR (SEARCH + FILTER + BUTTON)
+   TOP BAR
 ========================= */
 .appointments-topbar {
     display: flex;
@@ -80,18 +122,22 @@
     gap: 10px;
     flex-wrap: wrap;
 }
-
-.appointments-topbar input,
-.appointments-topbar select {
+.topbar-left {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.topbar-left input,
+.topbar-left select {
     padding: 10px;
     border: 1px solid #ddd;
     border-radius: 8px;
     outline: none;
-    min-width: 180px;
+    min-width: 200px;
 }
-
-.appointments-topbar input:focus,
-.appointments-topbar select:focus {
+.topbar-left input:focus,
+.topbar-left select:focus {
     border-color: #065f46;
 }
 
@@ -109,10 +155,7 @@
     transition: 0.2s ease;
     font-size: 14px;
 }
-
-.btn:hover {
-    background: #0a7a58;
-}
+.btn:hover { background: #0a7a58; }
 
 /* =========================
    SUMMARY CARDS
@@ -122,7 +165,6 @@
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 15px;
 }
-
 .card {
     background: #ffffff;
     padding: 15px;
@@ -131,22 +173,9 @@
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
     transition: 0.2s ease;
 }
-
-.card:hover {
-    transform: translateY(-3px);
-}
-
-.card h3 {
-    font-size: 14px;
-    color: #666;
-    margin-bottom: 8px;
-}
-
-.card p {
-    font-size: 22px;
-    font-weight: bold;
-    color: #065f46;
-}
+.card:hover { transform: translateY(-3px); }
+.card h3 { font-size: 14px; color: #666; margin-bottom: 8px; }
+.card p { font-size: 22px; font-weight: bold; color: #065f46; }
 
 /* =========================
    TABLE STYLE
@@ -159,7 +188,6 @@ table {
     overflow: hidden;
     margin-top: 10px;
 }
-
 table th {
     background: #065f46;
     color: white;
@@ -167,7 +195,6 @@ table th {
     text-align: left;
     font-size: 14px;
 }
-
 table td {
     padding: 12px;
     border-bottom: 1px solid #eee;
@@ -175,80 +202,12 @@ table td {
 }
 
 /* =========================
-   STATUS LABELS (FIXED)
+   STATUS LABELS
 ========================= */
-.status-pending {
-    color: orange;
-    font-weight: bold;
-}
-
-.status-approved {
-    color: #2563eb; /* blue */
-    font-weight: bold;
-}
-
-.status-completed {
-    color: green;
-    font-weight: bold;
-}
-
-.status-cancelled {
-    color: red;
-    font-weight: bold;
-}
-
-/* =========================
-   MODAL SYSTEM
-========================= */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 999;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-
-    justify-content: center;
-    align-items: center;
-}
-
-.modal.active {
-    display: flex;
-}
-
-.modal-content {
-    background: white;
-    padding: 20px;
-    border-radius: 12px;
-    width: 400px;
-    max-width: 90%;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.modal-content input,
-.modal-content select,
-.modal-content textarea {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 6px;
-    outline: none;
-    font-family: inherit;
-}
-
-.modal-content input:focus,
-.modal-content select:focus,
-.modal-content textarea:focus {
-    border-color: #065f46;
-}
-
-.modal-content textarea {
-    resize: none;
-    min-height: 80px;
-}
+.status-pending   { color: orange;   font-weight: bold; }
+.status-approved  { color: #16a34a;  font-weight: bold; }
+.status-completed { color: #2563eb;  font-weight: bold; }
+.status-cancelled { color: #dc2626;  font-weight: bold; }
 
 /* =========================
    ACTION BUTTONS IN TABLE
@@ -257,73 +216,4 @@ table .btn {
     padding: 6px 8px;
     font-size: 12px;
     margin-right: 5px;
-}
-
-/* Modal styles for Add Appointment */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.5);
-    justify-content: center;
-    align-items: center;
-}
-
-.modal-content {
-    background: #fff;
-    padding: 24px 24px 18px 24px;
-    border-radius: 12px;
-    width: 350px;
-    max-width: 95vw;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.modal-content h2 {
-    margin-bottom: 10px;
-    color: #065f46;
-    text-align: center;
-}
-
-.modal-content label {
-    font-weight: 500;
-    color: #333;
-}
-
-.modal-content input[type="text"],
-.modal-content input[type="date"],
-.modal-content input[type="time"] {
-    width: 100%;
-    padding: 8px 10px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    font-size: 15px;
-}
-
-.modal-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 10px;
-    margin-top: 10px;
-}
-
-.btn.modal-save {
-    background: #065f46;
-    color: #fff;
-}
-.btn.modal-cancel {
-    background: #d9534f;
-    color: #fff;
-}
-.btn.modal-save:hover {
-    background: #0a7a58;
-}
-.btn.modal-cancel:hover {
-    background: #a12d2a;
 }

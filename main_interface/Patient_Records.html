@@ -4,183 +4,160 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Patient Records - Smart Barangay Health Information System</title>
-
-    <!-- Styles -->
     <link rel="stylesheet" href="css/patient-styles.css">
-     <link rel="stylesheet" href="css/headerandfooter.css">
+    <link rel="stylesheet" href="css/headerandfooter.css">
     <link rel="stylesheet" href="css/sidebar.css">
     <link rel="stylesheet" href="css/global.css">
-
-
-    <!-- Font Awesome (optional if you still use it) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.38.0"></script>
 </head>
 <body>
 
-    <!-- Header -->
     <header class="main-header">
-         <h2>PATIENT RECORDS</h2>
+        <h2>PATIENT RECORDS</h2>
     </header>
-<div class="sidebar">
-    <ul>
-   <li><a href="Dashboard.html">Dashboard</a></li>
-        <li><a href="User_Management.html">User Management</a></li>
-        <li><a href="Patient_Records.html">Patient Records</a></li>
-        <li><a href="Appointments.html">Appointments</a></li>
-        <li><a href="Immunization_and_Programs.html">Immunization and Programs</a></li>
-        <li><a href="Inventory.html">Inventory</a></li>
-        <li><a href="Analytics.html">Reports and Analytics</a></li>
 
-        <li class="logout-btn">
-            <a href="#" onclick="logout()">Logout <i class="fa fa-sign-out-alt"></i></a>
-        </li>
-    </ul>
-</div>
-    <!-- Main Content -->
+    <div class="sidebar">
+        <ul>
+            <li><a href="Dashboard.html">Dashboard</a></li>
+            <li><a href="User_Management.html">User Management</a></li>
+            <li><a href="Patient_Records.html">Patient Records</a></li>
+            <li><a href="Appointments.html">Appointments</a></li>
+            <li><a href="Immunization_and_Programs.html">Immunization and Programs</a></li>
+            <li><a href="Inventory.html">Inventory</a></li>
+            <li><a href="Analytics.html">Reports and Analytics</a></li>
+            <li class="logout-btn">
+                <a href="#" onclick="logout()">Logout <i class="fa fa-sign-out-alt"></i></a>
+            </li>
+        </ul>
+    </div>
+
     <main>
-         <h1>PATIENT LIST</h1>
-        <div class="dashboard-container" >
-       
-            <!-- Patient Records Dashboard content goes here -->
-  <div class="patient-container">
+        <h1>PATIENT LIST</h1>
+        <div class="patient-container">
 
-        <!-- TOP BAR -->
-        <div class="patient-topbar">
+            <div class="patient-topbar">
+                <input type="text" id="searchInput" placeholder="Search patient..." oninput="searchPatient()">
+                <button class="btn" id="addPatientBtn">➕ Add Patient</button>
+            </div>
 
-            <input type="text" id="searchInput" placeholder="Search patient..." onkeyup="searchPatient()">
+            <div class="section">
+                <table id="patientTable">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Date of Birth</th>
+                            <th>Sex</th>
+                            <th>Contact</th>
+                            <th>Address</th>
+                            <th>Blood Type</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="patientTableBody">
+                        <tr><td colspan="7" style="text-align:center;">No patients yet.</td></tr>
+                    </tbody>
+                </table>
+            </div>
 
-            <button class="btn" onclick="openPatientModal()">➕ Add Patient</button>
-
-        </div>
-
-        <!-- PATIENT TABLE -->
-        <div class="section">
-
-            <table id="patientTable">
-
-                <tr>
-                    <th>Name</th>
-                    <th>Date of Birth</th>
-                    <th>Sex</th>
-                    <th>Contact</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-
-                <tr>
-                    <td>Juan Dela Cruz</td>
-                    <td>09-15-2006</td>
-                    <td>Male</td>
-                    <td>09123456789</td>
-                    <td><span class="status-normal">Active</span></td>
-                    <td>
-                        <button class="btn">View</button>
-                        <button class="btn">Edit</button>
-                        <button class="btn">Delete</button>
-                        <button class="btn" onclick="openHistory()">History</button>
-                    </td>
-                </tr>
-
-            </table>
-
-        </div>
-
-    </div>
-</main>
-
-<!-- =========================
-     ADD PATIENT MODAL
-========================= -->
-<div id="patientModal" class="modal">
-
-    <div class="modal-content">
-
-        <h2>Add Patient</h2>
-
-        <input type="text" placeholder="Full Name">
-        <input type="number" placeholder="Age">
-
-        <select>
-            <option>Male</option>
-            <option>Female</option>
-        </select>
-
-        <input type="text" placeholder="Contact Number">
-
-        <button class="btn">Save</button>
-        <button class="btn" onclick="closePatientModal()">Cancel</button>
-
-    </div>
-
-</div>
-
-<!-- =========================
-     PATIENT HISTORY MODAL
-========================= -->
-<div id="historyModal" class="modal">
-
-    <div class="modal-content">
-
-        <h2>Patient History</h2>
-
-        <div class="section">
-
-            <p><b>Date:</b> 2026-04-10</p>
-            <p><b>Reason:</b> Minor Accident</p>
-            <p><b>Description:</b> Fell while walking, treated with bandage.</p>
-
-            <hr>
-
-            <p><b>Date:</b> 2026-03-15</p>
-            <p><b>Reason:</b> Fever</p>
-            <p><b>Description:</b> Given medication and rest advised.</p>
-
-        </div>
-
-        <button class="btn" onclick="openAddRecord()">➕ Add New Record</button>
-        <button class="btn" onclick="closeHistory()">Close</button>
-
-    </div>
-
-</div>
-
-<!-- =========================
-     ADD HISTORY RECORD MODAL
-========================= -->
-<div id="addRecordModal" class="modal">
-
-    <div class="modal-content">
-
-        <h2>Add Medical Record</h2>
-
-        <input type="date">
-        <input type="text" placeholder="Reason (Accident, Fever, etc.)">
-        <input type="text" placeholder="Description">
-
-        <button class="btn">Save</button>
-        <button class="btn" onclick="closeAddRecord()">Cancel</button>
-
-    </div>
-
-
-            
         </div>
     </main>
 
-    <!-- Footer -->
     <footer class="main-footer">
         <p>&copy; 2026 Smart Barangay Health Information System | All Rights Reserved</p>
     </footer>
 
-    <!-- Script -->
-    <script src="dashboard-script.js"></script>
+    <!-- ADD PATIENT MODAL -->
+    <div id="patientModal" class="modal">
+        <div class="modal-content">
+            <h2>Add Patient</h2>
+            <input type="text" id="patientName" placeholder="Full Name">
+            <input type="date" id="patientDOB">
+            <select id="patientSex">
+                <option value="">Select Sex</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select>
+            <input type="text" id="patientContact" placeholder="Contact Number">
+            <input type="text" id="patientAddress" placeholder="Address">
+            <select id="patientBloodType">
+                <option value="">Select Blood Type</option>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+            </select>
+            <input type="text" id="patientAllergies" placeholder="Allergies (if any)">
+            <textarea id="patientMedHistory" placeholder="Medical History" rows="3"></textarea>
+            <div style="display:flex; gap:10px; justify-content:flex-end;">
+                <button class="btn" id="savePatientBtn">Save</button>
+                <button class="btn" style="background:#d9534f;" id="cancelPatientBtn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIEW PATIENT MODAL -->
+    <div id="viewModal" class="modal">
+        <div class="modal-content">
+            <h2>Patient Details</h2>
+            <p><b>Name:</b> <span id="viewName"></span></p>
+            <p><b>Date of Birth:</b> <span id="viewDOB"></span></p>
+            <p><b>Sex:</b> <span id="viewSex"></span></p>
+            <p><b>Contact:</b> <span id="viewContact"></span></p>
+            <p><b>Address:</b> <span id="viewAddress"></span></p>
+            <p><b>Blood Type:</b> <span id="viewBloodType"></span></p>
+            <p><b>Allergies:</b> <span id="viewAllergies"></span></p>
+            <p><b>Medical History:</b> <span id="viewMedHistory"></span></p>
+            <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:10px;">
+                <!-- ADDED: Export PDF button in view modal -->
+                <button class="btn" id="exportPDFBtn">📄 Export PDF</button>
+                <!-- No change: Close button -->
+                <button class="btn" style="background:#d9534f;" id="closeViewBtn">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- EDIT PATIENT MODAL -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <h2>Edit Patient</h2>
+            <input type="hidden" id="editPatientId">
+            <input type="text" id="editName" placeholder="Full Name">
+            <input type="date" id="editDOB">
+            <select id="editSex">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+            </select>
+            <input type="text" id="editContact" placeholder="Contact Number">
+            <input type="text" id="editAddress" placeholder="Address">
+            <select id="editBloodType">
+                <option value="">Select Blood Type</option>
+                <option value="A+">A+</option>
+                <option value="A-">A-</option>
+                <option value="B+">B+</option>
+                <option value="B-">B-</option>
+                <option value="AB+">AB+</option>
+                <option value="AB-">AB-</option>
+                <option value="O+">O+</option>
+                <option value="O-">O-</option>
+            </select>
+            <input type="text" id="editAllergies" placeholder="Allergies">
+            <textarea id="editMedHistory" placeholder="Medical History" rows="3"></textarea>
+            <div style="display:flex; gap:10px; justify-content:flex-end;">
+                <button class="btn" id="updatePatientBtn">Update</button>
+                <button class="btn" style="background:#d9534f;" id="cancelEditBtn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <script src="js/sidebar-script.js"></script>
     <script>
-    // Logout function: redirect to login page
-    function logout() {
-        window.location.href = '../login/login.html';
-    }
+        function logout() { window.location.href = '../login/login.html'; }
     </script>
+    <script src="js/patient-records.js"></script>
 </body>
 </html>

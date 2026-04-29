@@ -9,18 +9,17 @@
     <link rel="stylesheet" href="css/headerandfooter.css">
     <link rel="stylesheet" href="css/sidebar.css">
     <link rel="stylesheet" href="css/global.css">
-
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.38.0"></script>
 </head>
 
 <body>
 
-    <!-- Header -->
     <header class="main-header">
         <h2>INVENTORY</h2>
     </header>
 
-    <!-- Sidebar -->
     <div class="sidebar">
         <ul>
             <li><a href="Dashboard.html">Dashboard</a></li>
@@ -30,85 +29,172 @@
             <li><a href="Immunization_and_Programs.html">Immunization and Programs</a></li>
             <li><a href="Inventory.html">Inventory</a></li>
             <li><a href="Analytics.html">Reports and Analytics</a></li>
-
             <li class="logout-btn">
                 <a href="#" onclick="logout()">Logout <i class="fa fa-sign-out-alt"></i></a>
             </li>
         </ul>
     </div>
 
-    <!-- Main Content -->
     <main>
         <h1>INVENTORY MANAGEMENT</h1>
-
         <div class="inventory-container">
 
-            <!-- TOP BAR -->
             <div class="inventory-topbar">
                 <input type="text" id="searchInput" placeholder="Search item..." onkeyup="searchInventory()">
-                <button class="btn" onclick="openModal()">➕ Add Item</button>
+                <button class="btn" onclick="openAddModal()">➕ Add Item</button>
             </div>
 
-            <!-- TABLE -->
             <div class="section">
                 <table id="inventoryTable">
-
-                    <tr>
-                        <th>Item</th>
-                        <th>Category</th>
-                        <th>Qty</th>
-                        <th>Unit</th>
-                        <th>Status</th>
-                        <th>Expiry</th>
-                        <th>Actions</th>
-                    </tr>
-
-                    <tr>
-                        <td>Paracetamol</td>
-                        <td>Medicine</td>
-                        <td>10</td>
-                        <td>Box</td>
-                        <td><span class="status-low">Low</span></td>
-                        <td>2026-05-01</td>
-                        <td>
-                            <button class="btn">Edit</button>
-                            <button class="btn">Delete</button>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td>Vitamin C</td>
-                        <td>Medicine</td>
-                        <td>50</td>
-                        <td>Bottle</td>
-                        <td><span class="status-normal">Normal</span></td>
-                        <td>2026-12-01</td>
-                        <td>
-                            <button class="btn">Edit</button>
-                            <button class="btn">Delete</button>
-                        </td>
-                    </tr>
-
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Category</th>
+                            <th>Qty</th>
+                            <th>Unit</th>
+                            <th>Status</th>
+                            <th>Expiry</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventoryTableBody">
+                        <tr><td colspan="7" style="text-align:center;">Loading...</td></tr>
+                    </tbody>
                 </table>
             </div>
 
         </div>
     </main>
 
-    <!-- Footer -->
+    <!-- ADD ITEM MODAL -->
+    <div id="addItemModal" class="modal">
+        <div class="modal-content">
+            <h2>Add New Item</h2>
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Item Name</label>
+                    <input type="text" id="addItem" placeholder="e.g. Paracetamol">
+                </div>
+
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="addCategory">
+                        <option value="Medicine">Medicine</option>
+                        <option value="Supplies">Supplies</option>
+                        <option value="Equipment">Equipment</option>
+                        <option value="Others">Others</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Quantity</label>
+                    <!-- CHANGED: oninput auto-computes status -->
+                    <input type="number" id="addQuantity" placeholder="0" min="0" oninput="autoStatus('addQuantity','addStatus')">
+                </div>
+
+                <div class="form-group">
+                    <label>Unit</label>
+                    <input type="text" id="addUnit" placeholder="e.g. Box, Bottle, Piece">
+                </div>
+
+                <div class="form-group">
+                    <label>Status</label>
+                    <!-- CHANGED: default Normal, auto-updated by quantity -->
+                    <select id="addStatus">
+                        <option value="Normal" selected>Normal</option>
+                        <option value="Low">Low</option>
+                        <option value="Critical">Critical</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Expiry Date</label>
+                    <input type="date" id="addExpiry">
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Supplier</label>
+                    <input type="text" id="addSupplier" placeholder="e.g. PhilHealth Supplies">
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn modal-save" onclick="saveNewItem()">Save</button>
+                <button class="btn modal-cancel" onclick="closeAddModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- EDIT ITEM MODAL -->
+    <div id="editItemModal" class="modal">
+        <div class="modal-content">
+            <h2>Edit Item</h2>
+
+            <input type="hidden" id="editItemId">
+
+            <div class="form-grid">
+                <div class="form-group">
+                    <label>Item Name</label>
+                    <input type="text" id="editItem">
+                </div>
+
+                <div class="form-group">
+                    <label>Category</label>
+                    <select id="editCategory">
+                        <option value="Medicine">Medicine</option>
+                        <option value="Supplies">Supplies</option>
+                        <option value="Equipment">Equipment</option>
+                        <option value="Others">Others</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Quantity</label>
+                    <!-- CHANGED: oninput auto-computes status -->
+                    <input type="number" id="editQuantity" min="0" oninput="autoStatus('editQuantity','editStatus')">
+                </div>
+
+                <div class="form-group">
+                    <label>Unit</label>
+                    <input type="text" id="editUnit">
+                </div>
+
+                <div class="form-group">
+                    <label>Status</label>
+                    <select id="editStatus">
+                        <option value="Normal">Normal</option>
+                        <option value="Low">Low</option>
+                        <option value="Critical">Critical</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Expiry Date</label>
+                    <input type="date" id="editExpiry">
+                </div>
+
+                <div class="form-group full-width">
+                    <label>Supplier</label>
+                    <input type="text" id="editSupplier">
+                </div>
+            </div>
+
+            <div class="modal-actions">
+                <button class="btn modal-save" onclick="saveEditItem()">Update</button>
+                <button class="btn modal-cancel" onclick="closeEditModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
     <footer class="main-footer">
         <p>&copy; 2026 Smart Barangay Health Information System | All Rights Reserved</p>
     </footer>
 
-    <!-- Scripts -->
-    <script src="dashboard-script.js"></script>
     <script src="js/sidebar-script.js"></script>
     <script>
-    // Logout function: redirect to login page
-    function logout() {
-        window.location.href = '../login/login.html';
-    }
+        function logout() { window.location.href = '../login/login.html'; }
     </script>
-
+    <script src="js/inventory-script.js"></script>
 </body>
 </html>

@@ -8,7 +8,7 @@ main h1 {
 }
 
 /* =========================
-   TOP BAR (SEARCH + FILTER)
+   TOP BAR
 ========================= */
 .top-bar {
     display: flex;
@@ -56,28 +56,42 @@ td {
 }
 
 /* =========================
-   BADGES
+   DROPDOWNS
 ========================= */
-.badge {
-    padding: 4px 8px;
-    border-radius: 5px;
-    color: white;
-    font-size: 12px;
+.role-select,
+.status-select {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    text-align: center;
+    min-width: 110px;
 }
 
-.admin { background: #d9534f; }
-.staff { background: #0275d8; }
-.nurse { background: #5cb85c; }
-
-/* STATUS */
-.status {
-    padding: 4px 8px;
-    border-radius: 5px;
-    font-size: 12px;
+.role-select {
+    background: #e0f2fe;
+    color: #0369a1;
 }
 
-.active { background: #5cb85c; color: white; }
-.inactive { background: #999; color: white; }
+.status-select.active-status {
+    background: #dcfce7 !important;
+    color: #15803d !important;
+}
+
+.status-select.inactive {
+    background: #fee2e2 !important;
+    color: #dc2626 !important;
+}
+
+.role-select:focus,
+.status-select:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(6, 95, 70, 0.3);
+}
 
 /* =========================
    ACTION BUTTONS
@@ -112,6 +126,7 @@ td {
     justify-content: center;
     z-index: 1000;
 }
+
 .modal-window {
     background: #fff;
     padding: 32px 24px 24px 24px;
@@ -120,8 +135,8 @@ td {
     min-width: 320px;
     max-width: 95vw;
     width: 350px;
-    position: relative;
 }
+
 .modal-window h2 {
     margin-top: 0;
     margin-bottom: 18px;
@@ -129,12 +144,14 @@ td {
     color: #065f46;
     text-align: center;
 }
+
 .modal-window label {
     display: block;
     margin-bottom: 6px;
     font-weight: 500;
     color: #333;
 }
+
 .modal-window input,
 .modal-window select {
     width: 100%;
@@ -144,11 +161,13 @@ td {
     border-radius: 6px;
     font-size: 15px;
 }
+
 .modal-actions {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
 }
+
 .modal-save {
     background: #065f46;
     color: #fff;
@@ -157,6 +176,7 @@ td {
     border-radius: 6px;
     cursor: pointer;
 }
+
 .modal-cancel {
     background: #d9534f;
     color: #fff;

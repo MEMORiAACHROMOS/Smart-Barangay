@@ -5,175 +5,151 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Appointments - Smart Barangay Health Information System</title>
 
-    <!-- Styles -->
     <link rel="stylesheet" href="css/appointments-styles.css">
- <link rel="stylesheet" href="css/headerandfooter.css">
+    <link rel="stylesheet" href="css/headerandfooter.css">
     <link rel="stylesheet" href="css/sidebar.css">
     <link rel="stylesheet" href="css/global.css">
-
-    <!-- Font Awesome (optional if you still use it) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.38.0"></script>
 </head>
 <body>
 
-    <!-- Header -->
     <header class="main-header">
-         <h2>APPOINTMENTS</h2>
+        <h2>APPOINTMENTS</h2>
     </header>
-<div class="sidebar">
-    <ul>
-        <li><a href="Dashboard.html">Dashboard</a></li>
-        <li><a href="User_Management.html">User Management</a></li>
-        <li><a href="Patient_Records.html">Patient Records</a></li>
-        <li><a href="Appointments.html">Appointments</a></li>
-        <li><a href="Immunization_and_Programs.html">Immunization and Programs</a></li>
-        <li><a href="Inventory.html">Inventory</a></li>
-        <li><a href="Analytics.html">Reports and Analytics</a></li>
 
-        <li class="logout-btn">
-            <a href="#" onclick="logout()">Logout <i class="fa fa-sign-out-alt"></i></a>
-        </li>
-    </ul>
-</div>
-    <!-- Main Content -->
-    <main>
-          <h1>LIST OF APPOINTMENTS</h1>
-      
-            <!-- Appointments Dashboard content goes here -->
-  <div class="appointments-container">
-
-        <!-- TOP BAR -->
-        <div class="appointments-topbar">
-
-            <input type="text" id="searchInput" placeholder="Search patient..." onkeyup="searchAppointments()">
-
-            <select id="filterStatus">
-                <option value="all">All</option>
-                <option value="pending">Pending</option>
-                <option value="approved">Approved</option>
-                <option value="completed">Completed</option>
-                <option value="cancelled">Cancelled</option>
-            </select>
-
-            <button class="btn" onclick="openAppointmentModal()">➕ Add Appointment</button>
-
-                </div>
-                <!-- Modal for Add Appointment (single instance, hidden by default) -->
-                <!-- Added/updated by Copilot: Modal structure for Add Appointment -->
-                <div id="addAppointmentModal" class="modal">
-                    <div class="modal-content">
-                        <h2>Add Appointment</h2>
-                        <form id="addAppointmentForm">
-                            <!-- Patient Name -->
-                            <label for="appointmentPatient">Patient Name</label>
-                            <input type="text" id="appointmentPatient" name="appointmentPatient" required>
-
-                            <!-- Date -->
-                            <label for="appointmentDate">Date</label>
-                            <input type="date" id="appointmentDate" name="appointmentDate" required>
-
-                            <!-- Time -->
-                            <label for="appointmentTime">Time</label>
-                            <input type="time" id="appointmentTime" name="appointmentTime" required>
-
-                            <!-- Purpose -->
-                            <label for="appointmentPurpose">Purpose</label>
-                            <input type="text" id="appointmentPurpose" name="appointmentPurpose" required>
-
-                            <!-- Status (default Pending, disabled) -->
-                            <label for="appointmentStatus">Status</label>
-                            <input type="text" id="appointmentStatus" name="appointmentStatus" value="Pending" readonly disabled>
-
-                            <div class="modal-actions">
-                                <button type="submit" class="btn modal-save">Save</button>
-                                <button type="button" class="btn modal-cancel" id="closeAddAppointmentModal">Cancel</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-        <!-- SUMMARY CARDS -->
-        <div class="card-container">
-
-            <div class="card">
-                <h3>Today</h3>
-                <p>0</p>
-            </div>
-
-            <div class="card">
-                <h3>Pending</h3>
-                <p>0</p>
-            </div>
-
-            <div class="card">
-                <h3>Completed</h3>
-                <p>0</p>
-            </div>
-
-            <div class="card">
-                <h3>Cancelled</h3>
-                <p>0</p>
-            </div>
-
-        </div>
-
-        <!-- APPOINTMENT TABLE -->
-        <div class="section">
-
-            <table id="appointmentTable">
-
-                <tr>
-                    <th>Patient</th>
-                    <th>Date</th>
-                    <th>Time</th>
-                    <th>Type</th>
-                    <th>Purpose</th>
-                    <th>Status</th>
-                    <th>Actions</th>
-                </tr>
-
-                <tr>
-                    <td>Juan Dela Cruz</td>
-                    <td>2026-04-20</td>
-                    <td>10:00 AM</td>
-                    <td>Walk-in</td>
-                    <td>Check-up</td>
-                    <td><span class="status-pending">Pending</span></td>
-                    <td>
-                        <button class="btn">Approve</button>
-                        <button class="btn">Reject</button>
-                        <button class="btn">Complete</button>
-                    </td>
-                </tr>
-
-            </table>
-
-        </div>
-
+    <div class="sidebar">
+        <ul>
+            <li><a href="Dashboard.html">Dashboard</a></li>
+            <li><a href="User_Management.html">User Management</a></li>
+            <li><a href="Patient_Records.html">Patient Records</a></li>
+            <li><a href="Appointments.html">Appointments</a></li>
+            <li><a href="Immunization_and_Programs.html">Immunization and Programs</a></li>
+            <li><a href="Inventory.html">Inventory</a></li>
+            <li><a href="Analytics.html">Reports and Analytics</a></li>
+            <li class="logout-btn">
+                <a href="#" onclick="logout()">Logout <i class="fa fa-sign-out-alt"></i></a>
+            </li>
+        </ul>
     </div>
 
-</main>
+    <main>
+        <h1>LIST OF APPOINTMENTS</h1>
 
+        <div class="appointments-container">
 
+            <!-- TOP BAR -->
+            <div class="appointments-topbar">
+                <div class="topbar-left">
+                    <input type="text" id="searchInput" placeholder="Search patient..." oninput="applyFilters()">
+                    <select id="filterStatus" onchange="applyFilters()">
+                        <option value="all">All</option>
+                        <option value="pending">Pending</option>
+                        <option value="approved">Approved</option>
+                        <option value="completed">Completed</option>
+                        <option value="cancelled">Cancelled</option>
+                    </select>
+                </div>
+                <button class="btn" onclick="openAppointmentModal()">➕ Add Appointment</button>
+            </div>
 
+            <!-- MODAL: Add Appointment — UPDATED: redesigned layout -->
+            <div id="addAppointmentModal" class="modal">
+                <div class="modal-content">
+                    <!-- ADDED: Header section with icon and subtitle -->
+                    <div class="modal-header">
+                        <span class="modal-icon">📅</span>
+                        <h2>Add Appointment</h2>
+                        <p class="modal-subtitle">Fill in the details below</p>
+                    </div>
+                    <form id="addAppointmentForm">
+
+                        <div class="form-group">
+                            <label for="appointmentPatient">Patient Name</label>
+                            <input type="text" id="appointmentPatient" name="appointmentPatient" placeholder="Enter patient name" required>
+                        </div>
+
+                        <!-- ADDED: Date and Time side by side -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="appointmentDate">Date</label>
+                                <!-- ADDED: min set by JS to block past dates -->
+                                <input type="date" id="appointmentDate" name="appointmentDate" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="appointmentTime">Time</label>
+                                <input type="time" id="appointmentTime" name="appointmentTime" required>
+                            </div>
+                        </div>
+
+                        <!-- ADDED: Type and Status side by side -->
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="appointmentType">Type</label>
+                                <select id="appointmentType" name="appointmentType">
+                                    <option value="Walk-in">Walk-in</option>
+                                    <option value="Online">Online</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="appointmentStatus">Status</label>
+                                <input type="text" id="appointmentStatus" value="Pending" readonly disabled>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="appointmentPurpose">Purpose</label>
+                            <input type="text" id="appointmentPurpose" name="appointmentPurpose" placeholder="e.g. Check-up, Vaccination" required>
+                        </div>
+
+                        <div class="modal-actions">
+                            <button type="button" class="btn modal-cancel" id="closeAddAppointmentModal">✕ Cancel</button>
+                            <button type="submit" class="btn modal-save">✔ Save Appointment</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- SUMMARY CARDS -->
+            <div class="card-container">
+                <div class="card"><h3>Today</h3><p id="countToday">0</p></div>
+                <div class="card"><h3>Pending</h3><p id="countPending">0</p></div>
+                <div class="card"><h3>Completed</h3><p id="countCompleted">0</p></div>
+                <div class="card"><h3>Cancelled</h3><p id="countCancelled">0</p></div>
+            </div>
+
+            <!-- APPOINTMENT TABLE -->
+            <div class="section">
+                <table id="appointmentTable">
+                    <thead>
+                        <tr>
+                            <th>Patient</th>
+                            <th>Date</th>
+                            <th>Time</th>
+                            <th>Type</th>
+                            <th>Purpose</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="appointmentTableBody">
+                        <tr><td colspan="7" style="text-align:center;">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+        </div>
     </main>
 
-   <!-- Footer -->
     <footer class="main-footer">
         <p>&copy; 2026 Smart Barangay Health Information System | All Rights Reserved</p>
     </footer>
 
-    <!-- Script -->
     <script src="dashboard-script.js"></script>
     <script src="js/sidebar-script.js"></script>
     <script>
-    // Logout function: redirect to login page
-    function logout() {
-        window.location.href = '../login/login.html';
-    }
+        function logout() { window.location.href = '../login/login.html'; }
     </script>
-    <!-- appointments.js handles modal logic -->
     <script src="js/appointments.js"></script>
 </body>
 </html>

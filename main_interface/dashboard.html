@@ -4,152 +4,126 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dashboard - Smart Barangay Health Information System</title>
-
-    <!-- Styles -->
     <link rel="stylesheet" href="css/dashboard-styles.css">
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/headerandfooter.css">
     <link rel="stylesheet" href="css/sidebar.css">
-
-
-    <!-- Font Awesome (optional if you still use it) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-
+    <!-- ADDED: Supabase CDN for database connection -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.38.0"></script>
 </head>
 <body>
 
-    <!-- Header -->
     <header class="main-header">
         <h2>DASHBOARD</h2>
     </header>
-<div class="sidebar">
-    <ul>
-       <li><a href="Dashboard.html">Dashboard</a></li>
-        <li><a href="User_Management.html">User Management</a></li>
-        <li><a href="Patient_Records.html">Patient Records</a></li>
-        <li><a href="Appointments.html">Appointments</a></li>
-        <li><a href="Immunization_and_Programs.html">Immunization and Programs</a></li>
-        <li><a href="Inventory.html">Inventory</a></li>
-        <li><a href="Analytics.html">Reports and Analytics</a></li>
 
-        <li class="logout-btn">
-            <a href="#" onclick="logout()">Logout <i class="fa fa-sign-out-alt"></i></a>
-        </li>
-    </ul>
-</div>
-    <!-- Main Content -->
-    <main>
-        <h1>WELCOME TO SMART BARANGAY HEALTH INFORMATION SYSTEM DASHBOARD!</h1>
-
-            <!-- Dashboard content goes here -->
-  <!-- =========================
-         SUMMARY CARDS
-    ========================== -->
-    <div class="card-container">
-
-        <div class="card">
-            <h3>Total Users</h3>
-            <p>0</p>
-        </div>
-
-        <div class="card">
-            <h3>Patients</h3>
-            <p>0</p>
-        </div>
-
-        <div class="card">
-            <h3>Pending Appointments</h3>
-            <p>0</p>
-        </div>
-
-        <div class="card">
-            <h3>Immunizations</h3>
-            <p>0</p>
-        </div>
-
-        <div class="card">
-            <h3>Inventory Items</h3>
-            <p>0</p>
-        </div>
-
-    </div>
-
-    <!-- =========================
-         QUICK ACTIONS
-    ========================== -->
-    <div class="section">
-        <h2>Quick Actions</h2>
-
-        <div class="button-grid">
-
-            <a href="Patient_Records.html" class="btn">➕ Add Patient</a>
-            <a href="Appointments.html" class="btn">📅 New Appointment</a>
-            <a href="Immunization_and_Programs.html" class="btn">💉 Add Immunization</a>
-            <a href="Inventory.html" class="btn">📦 Update Inventory</a>
-
-        </div>
-    </div>
-
-    <!-- =========================
-         UPCOMING APPOINTMENTS
-    ========================== -->
-    <div class="section">
-        <h2>Upcoming Appointments</h2>
-
-        <table>
-            <tr>
-                <th>Patient</th>
-                <th>Date/Time</th>
-                <th>Status</th>
-            </tr>
-            <tr>
-                <td>Sample Patient</td>
-                <td>2026-04-20 10:00 AM</td>
-                <td>Pending</td>
-            </tr>
-        </table>
-    </div>
-
-    <!-- =========================
-         INVENTORY ALERT
-    ========================== -->
-    <div class="section inventory">
-        <h2>Low Stock Alerts</h2>
-
+    <div class="sidebar">
         <ul>
-          <li>Paracetamol</li>
-            <li>Vitamin C</li>
-            <li>Alcohol</li>
+            <li><a href="Dashboard.html">Dashboard</a></li>
+            <li><a href="User_Management.html">User Management</a></li>
+            <li><a href="Patient_Records.html">Patient Records</a></li>
+            <li><a href="Appointments.html">Appointments</a></li>
+            <li><a href="Immunization_and_Programs.html">Immunization and Programs</a></li>
+            <li><a href="Inventory.html">Inventory</a></li>
+            <li><a href="Analytics.html">Reports and Analytics</a></li>
+            <li class="logout-btn">
+                <a href="#" onclick="logout()">Logout <i class="fa fa-sign-out-alt"></i></a>
+            </li>
         </ul>
     </div>
 
-    <!-- =========================
-         IMMUNIZATION SUMMARY
-    ========================== -->
-    <div class="section">
-        <h2>Immunization Summary</h2>
+    <main>
+        <h1>WELCOME TO SMART BARANGAY HEALTH INFORMATION SYSTEM DASHBOARD!</h1>
 
-        <p>Total Vaccinated: 0</p>
-        <p>Pending Vaccinations: 0</p>
-    </div>
+        <!-- SUMMARY CARDS -->
+        <div class="card-container">
+            <div class="card">
+                <h3>Total Users</h3>
+                <!-- ADDED: id for dynamic count -->
+                <p id="dashTotalUsers">0</p>
+            </div>
+            <div class="card">
+                <h3>Patients</h3>
+                <!-- ADDED: id for dynamic count -->
+                <p id="dashTotalPatients">0</p>
+            </div>
+            <div class="card">
+                <h3>Pending Appointments</h3>
+                <!-- ADDED: id for dynamic count -->
+                <p id="dashPendingAppointments">0</p>
+            </div>
+            <div class="card">
+                <h3>Immunizations</h3>
+                <!-- ADDED: id for dynamic count -->
+                <p id="dashTotalImmunizations">0</p>
+            </div>
+            <div class="card">
+                <h3>Inventory Items</h3>
+                <!-- ADDED: id for dynamic count -->
+                <p id="dashTotalInventory">0</p>
+            </div>
+        </div>
 
+        <!-- QUICK ACTIONS -->
+        <div class="section">
+            <h2>Quick Actions</h2>
+            <div class="button-grid">
+                <a href="Patient_Records.html" class="btn">➕ Add Patient</a>
+                <a href="Appointments.html" class="btn">📅 New Appointment</a>
+                <a href="Immunization_and_Programs.html" class="btn">💉 Add Immunization</a>
+                <a href="Inventory.html" class="btn">📦 Update Inventory</a>
+            </div>
+        </div>
 
+        <!-- UPCOMING APPOINTMENTS -->
+        <div class="section">
+            <h2>Upcoming Appointments</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Patient</th>
+                        <th>Date</th>
+                        <th>Time</th>
+                        <th>Purpose</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <!-- ADDED: tbody for dynamic rows -->
+                <tbody id="upcomingAppointmentsBody">
+                    <tr><td colspan="5" style="text-align:center;">Loading...</td></tr>
+                </tbody>
+            </table>
+        </div>
 
-    
+        <!-- LOW STOCK ALERTS -->
+        <div class="section inventory">
+            <h2>Low Stock Alerts</h2>
+            <!-- ADDED: ul for dynamic low stock items -->
+            <ul id="lowStockList">
+                <li>Loading...</li>
+            </ul>
+        </div>
+
+        <!-- IMMUNIZATION SUMMARY -->
+        <div class="section">
+            <h2>Immunization Summary</h2>
+            <!-- ADDED: ids for dynamic counts -->
+            <p>Total Programs: <span id="dashTotalPrograms">0</span></p>
+            <p>Active Programs: <span id="dashActivePrograms">0</span></p>
+        </div>
+
     </main>
 
- <!-- Footer -->
     <footer class="main-footer">
         <p>&copy; 2026 Smart Barangay Health Information System | All Rights Reserved</p>
     </footer>
 
-    <!-- Script -->
-    <script src="dashboard-script.js"></script>
     <script src="js/sidebar-script.js"></script>
     <script>
-    // Logout function: redirect to login page
-    function logout() {
-        window.location.href = '../login/login.html';
-    }
+        function logout() { window.location.href = '../login/login.html'; }
     </script>
+    <!-- ADDED: dashboard-script.js for database queries -->
+    <script src="js/dashboard-script.js"></script>
+</body>
 </html>
