@@ -46,21 +46,24 @@ async function loadSummaryCards() {
     document.getElementById('dashTotalInventory').textContent = invCount || 0;
 }
 
-// ADDED: Load upcoming appointments (pending, ordered by date)
+// FIXED: Removed FK join, removed date filter, using Notes column for patient name
 async function loadUpcomingAppointments() {
-    const today = new Date().toISOString().split('T')[0];
-
     const { data, error } = await supabase
         .from('AppointmentsTbl')
-        .select('Patient_ID, AppointmentDate, AppointmentTime, Purpose, Status, Patient_RecordsTbl(Name)')
+        .select('Notes, AppointmentDate, AppointmentTime, Purpose, Status')
         .ilike('Status', '%pending%')
-        .gte('AppointmentDate', today)
         .order('AppointmentDate', { ascending: true })
         .limit(5);
 
     const tbody = document.getElementById('upcomingAppointmentsBody');
 
-    if (error || !data || data.length === 0) {
+    if (error) {
+        console.error('Appointments error:', error);
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">Error loading appointments.</td></tr>';
+        return;
+    }
+
+    if (!data || data.length === 0) {
         tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">No upcoming appointments.</td></tr>';
         return;
     }
@@ -68,10 +71,8 @@ async function loadUpcomingAppointments() {
     tbody.innerHTML = '';
     data.forEach(appt => {
         const row = document.createElement('tr');
-        // ADDED: Get patient name from joined table, fallback to ID
-        const patientName = appt.Patient_RecordsTbl?.Name || `Patient #${appt.Patient_ID}`;
         row.innerHTML = `
-            <td>${patientName}</td>
+            <td>${appt.Notes || '—'}</td>
             <td>${appt.AppointmentDate || ''}</td>
             <td>${appt.AppointmentTime || ''}</td>
             <td>${appt.Purpose || ''}</td>
