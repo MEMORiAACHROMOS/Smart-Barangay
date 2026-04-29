@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration - Smart Barangay Health Information System</title>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/login-styles.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="main-header">
+        <h2>User Registration</h2>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="login-container">
+            
+            <!-- Logo -->
+            <div class="logo-holder">
+                <img src="image.png" alt="Barangay Logo">
+            </div>
+
+            <!-- Title -->
+            <h1>
+                CREATE NEW SMART BARANGAY<br>
+                HEALTH SYSTEM ACCOUNT
+            </h1>
+<!-- Register Form -->
+<div class="login-form">
+
+    <!-- NAME SECTION -->
+    <div class="form-grid">
+
+        <input type="text" id="firstname" placeholder="First Name" required>
+        <input type="text" id="lastname" placeholder="Last Name" required>
+        <input type="text" id="middlename" placeholder="Middle Name">
+
+        <input type="text" id="suffix" placeholder="Suffix (Jr, Sr, III)" >
+
+        <input type="date" id="birthdate" required>
+
+    </div>
+
+    <!-- CONTACT INFO -->
+    <input type="email" placeholder="Enter Email Address" id="email" required>
+    <input type="text" placeholder="Mobile Number" id="mobile" required>
+
+    <textarea id="address" placeholder="Complete Physical Address" required></textarea>
+
+    <!-- PASSWORD -->
+    <div class="password-wrapper">
+        <input type="password" placeholder="Create Password" id="password" required>
+        <i class="fa fa-eye" id="togglePassword"></i>
+    </div>
+
+    <!-- CONFIRM PASSWORD -->
+    <div class="password-wrapper">
+        <input type="password" placeholder="Confirm Password" id="confirmPassword" required>
+        <i class="fa fa-eye" id="toggleConfirmPassword"></i>
+    </div>
+
+    <!-- REGISTER BUTTON -->
+    <button type="button" id="registerButton">Create Account</button>
+
+    <!-- BACK TO LOGIN -->
+    <div class="signup-link">
+        <p>Already have an account? <a href="login.html">Login here</a></p>
+    </div>
+
+</div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <p>&copy; 2026 Smart Barangay Health Information System | All Rights Reserved</p>
+
+        <div class="footer-contact">
+            <p onclick="copyText('57 Baesa Road, Barangay Baesa, District 6')" title="Tap to copy">
+                57 Baesa Road, Barangay Baesa, District 6
+            </p>
+
+            <p onclick="copyText('(02) 7148 4458')" title="Tap to copy">
+                (02) 7148 4458
+            </p>
+        </div>
+    </footer>
+
+    <!-- Toast -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Script -->
+    <script src="js/register-script.js"></script>
+
+</body>
+</html>
