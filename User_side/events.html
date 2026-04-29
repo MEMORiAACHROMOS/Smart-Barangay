@@ -36,14 +36,14 @@
             <i class="fa-solid fa-calendar"></i> Events
         </a></li>
 
-        <li><a href="#">
+        <li><a href="profileandmedrecs.html">
             <i class="fa-solid fa-user"></i> Profile
         </a></li>
 
         <li class="logout-btn">
-            <a href="login.html">
-                <i class="fa-solid fa-right-from-bracket"></i> Logout
-            </a>
+      <a href="#" class="logout-trigger">
+    <i class="fa-solid fa-right-from-bracket"></i> Logout
+</a>
         </li>
     </ul>
 </aside>
@@ -159,7 +159,20 @@
 
     </div>
 </div>
+<!-- ================= LOGOUT CONFIRM MODAL ================= -->
+<div class="modal" id="logoutModal">
+    <div class="modal-content logout-modal">
 
+        <h3>Confirm Logout</h3>
+        <p>Are you sure you want to log out of your account?</p>
+
+        <div class="logout-actions">
+            <button id="confirmLogoutBtn">Yes, Logout</button>
+            <button onclick="closeLogoutModal()">Cancel</button>
+        </div>
+
+    </div>
+</div>
 <!-- ================= FOOTER ================= -->
 <footer class="main-footer">
     <p>&copy; 2026 Smart Barangay Health Information System | All Rights Reserved</p>
@@ -178,6 +191,13 @@
 <!-- ================= SCRIPTS ================= -->
 <script src="js/events.js"></script>
 <script src="js/sidebar-script.js"></script>
-
+  <!-- SCRIPT -->
+    <script>
+        function copyText(text) {
+            navigator.clipboard.writeText(text).catch(err => {
+                console.error("Copy failed:", err);
+            });
+        }
+    </script>
 </body>
 </html>

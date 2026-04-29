@@ -7,7 +7,7 @@
     left: 0;
 
     width: 240px;
-    height: 100vh;
+    height: calc(100vh - 70px);
 
     background: #0f8a51;
 
@@ -19,7 +19,7 @@
 
     display: flex;
     flex-direction: column;
- justify-content: space-between;  
+
     transform: translateX(-100%);
     transition: transform 0.3s ease;
 
@@ -40,12 +40,13 @@
     display: flex;
     flex-direction: column;
 
-     
     gap: 8px;
 
     padding: 10px;
 
     overflow-y: auto;
+
+    flex: 1; /* IMPORTANT FIX */
 }
 
 /* LINKS */
@@ -77,18 +78,11 @@
 }
 
 /* =========================
-   LOGOUT (FIXED AT BOTTOM)
+   LOGOUT (CLEAN BOTTOM FIX)
 ========================= */
 .sidebar ul li.logout-btn {
-    margin-top: 280px;
-
+    margin-top: auto; /* ✅ replaces 280px hack */
     padding-top: 10px;
-    padding-bottom: 10px;
-
-    position: sticky;
-    bottom: 0;
-
-    background: #0f8a51; /* prevents overlap glitch */
 }
 
 .sidebar ul li.logout-btn a {
@@ -113,9 +107,9 @@
 }
 
 /* =========================
-   OVERLAY
+   OVERLAY (FIXED MATCH WITH JS)
 ========================= */
-.sidebar-overlay {
+#sidebarOverlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -134,7 +128,7 @@
 }
 
 /* ACTIVE OVERLAY */
-.sidebar-overlay.active {
+#sidebarOverlay.active {
     opacity: 1;
     pointer-events: all;
 }

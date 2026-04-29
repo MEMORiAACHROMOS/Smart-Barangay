@@ -24,45 +24,58 @@
     <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
         <ul>
-            <li><a href="dashboard.html">
-                <i class="fa-solid fa-house"></i> Dashboard
-            </a></li>
 
-            <li><a href="appointments.html" class="active">
-                <i class="fa-solid fa-calendar-check"></i> My Appointments
-            </a></li>
+            <li>
+                <a href="dashboard.html">
+                    <i class="fa-solid fa-house"></i> Dashboard
+                </a>
+            </li>
 
-            <li><a href="events.html">
-                <i class="fa-solid fa-calendar"></i> Events
-            </a></li>
+            <li>
+                <a href="appointments.html" class="active">
+                    <i class="fa-solid fa-calendar-check"></i> My Appointments
+                </a>
+            </li>
 
-            <li><a href="#">
-                <i class="fa-solid fa-user"></i> Profile
-            </a></li>
+            <li>
+                <a href="events.html">
+                    <i class="fa-solid fa-calendar"></i> Events
+                </a>
+            </li>
 
+            <li>
+                <a href="profileandmedrecs.html">
+                    <i class="fa-solid fa-user"></i> Profile
+                </a>
+            </li>
+
+            <!-- FIXED LOGOUT -->
             <li class="logout-btn">
-                <a href="login.html">
+               <a href="#" class="logout-trigger">
                     <i class="fa-solid fa-right-from-bracket"></i> Logout
                 </a>
             </li>
+
         </ul>
     </aside>
+
+    <!-- REQUIRED FOR SIDEBAR SCRIPT -->
+    <div id="sidebarOverlay"></div>
 
     <!-- MAIN CONTENT -->
     <main>
         <div class="container">
 
-            <!-- GREETING -->
             <section class="card" id="greetingCard">
                 <h2>Good day 👋</h2>
-                <p id="greetingText">This is where you can track and manage your appointments and health records</p>
+                <p id="greetingText">
+                    This is where you can track and manage your appointments and health records
+                </p>
             </section>
 
-            <!-- BOOK APPOINTMENT -->
             <section class="card highlight" id="bookAppointmentCard">
                 <h3>Book New Appointment</h3>
 
-                <!-- FIXED: converted to REAL FORM -->
                 <form id="appointmentForm">
 
                     <p>Service</p>
@@ -86,44 +99,55 @@
                 </form>
             </section>
 
-            <!-- APPOINTMENT LIST -->
             <section class="card" id="appointmentCard">
                 <h3>My Appointments</h3>
-
                 <div id="appointmentContent">
                     <p>Loading appointments...</p>
                 </div>
             </section>
 
-            <!-- JOINED EVENTS -->
             <section class="card" id="eventsCard">
                 <h3>Joined Programs / Events</h3>
-
                 <div id="eventsContent">
                     <p>Loading events...</p>
                 </div>
             </section>
 
             <section class="card" id="historyCard">
-    <h3>Past Appointments (Records)</h3>
-    <div id="historyContent">
-        <p>No records yet</p>
-    </div>
-</section>
+                <h3>Past Appointments (Records)</h3>
+                <div id="historyContent">
+                    <p>No records yet</p>
+                </div>
+            </section>
 
         </div>
     </main>
+
+    <!-- LOGOUT MODAL (CONSISTENT ACROSS ALL PAGES) -->
+    <div class="modal" id="logoutModal">
+        <div class="modal-content logout-modal">
+
+            <h3>Confirm Logout</h3>
+            <p>Are you sure you want to log out of your account?</p>
+
+            <div class="logout-actions">
+                <button id="confirmLogoutBtn">Yes, Logout</button>
+                <button onclick="closeLogoutModal()">Cancel</button>
+            </div>
+
+        </div>
+    </div>
 
     <!-- FOOTER -->
     <footer class="main-footer">
         <p>&copy; 2026 Smart Barangay Health Information System | All Rights Reserved</p>
 
         <div class="footer-contact">
-            <p onclick="copyText('57 Baesa Road, Barangay Baesa, District 6')" title="Tap to copy">
+            <p onclick="copyText('57 Baesa Road, Barangay Baesa, District 6')">
                 57 Baesa Road, Barangay Baesa, District 6
             </p>
 
-            <p onclick="copyText('(02) 7148 4458')" title="Tap to copy">
+            <p onclick="copyText('(02) 7148 4458')">
                 (02) 7148 4458
             </p>
         </div>
@@ -132,6 +156,14 @@
     <!-- SCRIPTS -->
     <script src="js/sidebar-script.js"></script>
     <script src="js/appointments-script.js"></script>
+
+    <script>
+        function copyText(text) {
+            navigator.clipboard.writeText(text).catch(err => {
+                console.error("Copy failed:", err);
+            });
+        }
+    </script>
 
 </body>
 </html>
