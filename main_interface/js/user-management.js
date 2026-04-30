@@ -92,7 +92,7 @@ async function updateUserStatus(selectElement) {
     try {
         const { error } = await supabase.from('LoginTbl').update({ Status: status }).eq('User_ID', userId);
         if (error) throw error;
-        alert(`Status updated to ${status} successfully!`);
+        // Status updated successfully; UI will update automatically.
     } catch (error) {
         alert('Failed to update status: ' + error.message);
         loadUsers();

@@ -9,10 +9,13 @@
     <link rel="stylesheet" href="css/sidebar.css">
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-    <!-- ADDED: Supabase CDN for database connection -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.38.0"></script>
 </head>
 <body>
+
+
+    <!-- ADDED: Dark mode toggle button (moved for visibility) -->
+    <button id="darkModeToggle" onclick="toggleDarkMode()">🌙 Dark</button>
 
     <header class="main-header">
         <h2>REPORTS AND ANALYTICS</h2>
@@ -36,88 +39,96 @@
     <main>
         <h1>REPORTS AND ANALYTICS</h1>
 
-        <!-- OVERVIEW CARDS -->
         <div class="card-container horizontal-cards">
-            <div class="card">
+            <div class="card card-users">
+                <i class="fa fa-users card-icon"></i>
                 <h3><span class="card-title">Total Users</span></h3>
-                <!-- ADDED: id for dynamic data -->
                 <p class="card-value" id="totalUsers">0</p>
             </div>
-            <div class="card">
+            <div class="card card-patients">
+                <i class="fa fa-user-injured card-icon"></i>
                 <h3><span class="card-title">Patients</span></h3>
-                <!-- ADDED: id for dynamic data -->
                 <p class="card-value" id="totalPatients">0</p>
             </div>
-            <div class="card">
+            <div class="card card-appointments">
+                <i class="fa fa-calendar-check card-icon"></i>
                 <h3><span class="card-title">Pending Appointments</span></h3>
-                <!-- ADDED: id for dynamic data -->
                 <p class="card-value" id="pendingAppointments">0</p>
             </div>
-            <div class="card">
+            <div class="card card-immunizations">
+                <i class="fa fa-syringe card-icon"></i>
                 <h3><span class="card-title">Immunizations</span></h3>
-                <!-- ADDED: id for dynamic data -->
                 <p class="card-value" id="totalImmunizations">0</p>
             </div>
-            <div class="card">
+            <div class="card card-inventory">
+                <i class="fa fa-boxes-stacked card-icon"></i>
                 <h3><span class="card-title">Inventory Items</span></h3>
-                <!-- ADDED: id for dynamic data -->
                 <p class="card-value" id="totalInventory">0</p>
             </div>
         </div>
 
-        <!-- APPOINTMENT REPORT -->
-        <div class="report-card">
-            <h2>Appointment Report</h2>
-            <table class="report-table">
-                <tr>
-                    <th>Status</th>
-                    <th>Count</th>
-                </tr>
-                <tr>
-                    <td>Pending</td>
-                    <!-- ADDED: id for dynamic data -->
-                    <td id="apptPending">0</td>
-                </tr>
-                <tr>
-                    <td>Completed</td>
-                    <!-- ADDED: id for dynamic data -->
-                    <td id="apptCompleted">0</td>
-                </tr>
-                <tr>
-                    <td>Cancelled</td>
-                    <!-- ADDED: id for dynamic data -->
-                    <td id="apptCancelled">0</td>
-                </tr>
-            </table>
+        <div class="report-card enhanced-report">
+            <h2><i class="fa fa-calendar-alt report-icon"></i> Appointment Report</h2>
+            <div class="report-row">
+                <span class="report-label">Pending</span>
+                <span class="report-badge pending" id="apptPending">0</span>
+            </div>
+            <div class="report-row">
+                <span class="report-label">Completed</span>
+                <span class="report-badge completed" id="apptCompleted">0</span>
+            </div>
+            <div class="report-row">
+                <span class="report-label">Cancelled</span>
+                <span class="report-badge cancelled" id="apptCancelled">0</span>
+            </div>
         </div>
 
-        <!-- PATIENT REPORT -->
-        <div class="report-card">
-            <h2>Patient Report</h2>
-            <!-- ADDED: ids for dynamic data -->
-            <p>Total Registered Patients: <span id="totalPatientsReport">0</span></p>
-            <p>New Patients (This Month): <span id="newPatientsMonth">0</span></p>
+        <div class="report-card enhanced-report">
+            <h2><i class="fa fa-user-injured report-icon"></i> Patient Report</h2>
+            <div class="report-row">
+                <span class="report-label">Total Registered Patients</span>
+                <span class="report-badge patient" id="totalPatientsReport">0</span>
+            </div>
+            <div class="report-row">
+                <span class="report-label">New Patients (This Month)</span>
+                <span class="report-badge new-patient" id="newPatientsMonth">0</span>
+            </div>
         </div>
 
-        <!-- INVENTORY REPORT -->
-        <div class="report-card">
-            <h2>Inventory Report</h2>
-            <ul>
-                <!-- ADDED: ids for dynamic data -->
-                <li>Low Stock Items: <span id="lowStock">0</span></li>
-                <li>Expired Items: <span id="expiredItems">0</span></li>
-            </ul>
+        <div class="report-card enhanced-report">
+            <h2><i class="fa fa-boxes-stacked report-icon"></i> Inventory Report</h2>
+            <div class="report-row">
+                <span class="report-label">Low Stock Items</span>
+                <span class="report-badge low-stock" id="lowStock">0</span>
+            </div>
+            <div class="report-row">
+                <span class="report-label">Expired Items</span>
+                <span class="report-badge expired" id="expiredItems">0</span>
+            </div>
         </div>
 
-        <!-- USER SUMMARY -->
-        <div class="report-card">
-            <h2>User Summary</h2>
-            <!-- ADDED: ids for dynamic data -->
-            <p>Total Users: <span id="totalUsersReport">0</span></p>
-            <p>Admin: <span id="adminCount">0</span></p>
-            <p>Nurse: <span id="nurseCount">0</span></p>
-            <p>Doctor: <span id="doctorCount">0</span></p>
-            <p>Active Accounts: <span id="activeAccounts">0</span></p>
+        <div class="report-card enhanced-report">
+            <h2><i class="fa fa-users report-icon"></i> User Summary</h2>
+            <div class="report-row">
+                <span class="report-label">Total Users</span>
+                <span class="report-badge user" id="totalUsersReport">0</span>
+            </div>
+            <div class="report-row">
+                <span class="report-label">Admin</span>
+                <span class="report-badge admin" id="adminCount">0</span>
+            </div>
+            <div class="report-row">
+                <span class="report-label">Nurse</span>
+                <span class="report-badge nurse" id="nurseCount">0</span>
+            </div>
+            <div class="report-row">
+                <span class="report-label">Doctor</span>
+                <span class="report-badge doctor" id="doctorCount">0</span>
+            </div>
+            <div class="report-row">
+                <span class="report-label">Active Accounts</span>
+                <span class="report-badge active" id="activeAccounts">0</span>
+            </div>
         </div>
 
     </main>
@@ -130,7 +141,21 @@
     <script>
         function logout() { window.location.href = '../login/login.html'; }
     </script>
-    <!-- ADDED: analytics.js for database queries -->
     <script src="js/analytics.js"></script>
+
+    <!-- ADDED: Dark mode script -->
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark');
+            const isDark = document.body.classList.contains('dark');
+            localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
+            document.getElementById('darkModeToggle').textContent = isDark ? '☀️ Light' : '🌙 Dark';
+        }
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.body.classList.add('dark');
+            document.getElementById('darkModeToggle').textContent = '☀️ Light';
+        }
+    </script>
+
 </body>
 </html>

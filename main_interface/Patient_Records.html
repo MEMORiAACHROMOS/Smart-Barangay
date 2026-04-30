@@ -13,6 +13,10 @@
 </head>
 <body>
 
+
+    <!-- ADDED: Dark mode toggle button (moved for visibility) -->
+    <button id="darkModeToggle" onclick="toggleDarkMode()">🌙 Dark</button>
+
     <header class="main-header">
         <h2>PATIENT RECORDS</h2>
     </header>
@@ -113,9 +117,7 @@
             <p><b>Allergies:</b> <span id="viewAllergies"></span></p>
             <p><b>Medical History:</b> <span id="viewMedHistory"></span></p>
             <div style="display:flex; gap:10px; justify-content:flex-end; margin-top:10px;">
-                <!-- ADDED: Export PDF button in view modal -->
                 <button class="btn" id="exportPDFBtn">📄 Export PDF</button>
-                <!-- No change: Close button -->
                 <button class="btn" style="background:#d9534f;" id="closeViewBtn">Close</button>
             </div>
         </div>
@@ -159,5 +161,20 @@
         function logout() { window.location.href = '../login/login.html'; }
     </script>
     <script src="js/patient-records.js"></script>
+
+    <!-- ADDED: Dark mode script -->
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark');
+            const isDark = document.body.classList.contains('dark');
+            localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
+            document.getElementById('darkModeToggle').textContent = isDark ? '☀️ Light' : '🌙 Dark';
+        }
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.body.classList.add('dark');
+            document.getElementById('darkModeToggle').textContent = '☀️ Light';
+        }
+    </script>
+
 </body>
 </html>

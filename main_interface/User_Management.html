@@ -12,12 +12,18 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.38.0"></script>
 </head>
 <body>
+
+
+    <!-- ADDED: Dark mode toggle button (moved for visibility) -->
+    <button id="darkModeToggle" onclick="toggleDarkMode()">🌙 Dark</button>
+
     <header class="main-header">
         <h2>USER MANAGEMENT</h2>
     </header>
+
     <div class="sidebar">
         <ul>
-            <li><a href="dashboard.html">Dashboard</a></li>
+            <li><a href="Dashboard.html">Dashboard</a></li>
             <li><a href="User_Management.html">User Management</a></li>
             <li><a href="Patient_Records.html">Patient Records</a></li>
             <li><a href="Appointments.html">Appointments</a></li>
@@ -29,6 +35,7 @@
             </li>
         </ul>
     </div>
+
     <main>
         <h1>USER ACCOUNTS</h1>
         <div class="top-bar">
@@ -56,13 +63,11 @@
             </table>
         </div>
     </main>
+
     <footer class="main-footer">
         <p>&copy; 2026 Smart Barangay Health Information System | All Rights Reserved</p>
     </footer>
-    <script src="js/sidebar-script.js"></script>
-    <script>
-        function logout() { window.location.href = '../login/login.html'; }
-    </script>
+
     <div id="addUserModal" class="modal-overlay" style="display:none;">
         <div class="modal-window">
             <h2>Register New User</h2>
@@ -89,6 +94,26 @@
             </form>
         </div>
     </div>
+
+    <script src="js/sidebar-script.js"></script>
+    <script>
+        function logout() { window.location.href = '../login/login.html'; }
+    </script>
     <script src="js/user-management.js"></script>
+
+    <!-- ADDED: Dark mode script -->
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark');
+            const isDark = document.body.classList.contains('dark');
+            localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
+            document.getElementById('darkModeToggle').textContent = isDark ? '☀️ Light' : '🌙 Dark';
+        }
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.body.classList.add('dark');
+            document.getElementById('darkModeToggle').textContent = '☀️ Light';
+        }
+    </script>
+
 </body>
 </html>

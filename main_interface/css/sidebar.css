@@ -1,18 +1,26 @@
 /* Sidebar */
 .sidebar {
     position: fixed;
-    top: 60px; /* below header */
+    top: 60px;
     left: 0;
     width: 220px;
-    height: calc(100vh - 60px); 
+    height: calc(100vh - 60px);
     background: #0f8a51;
     padding-top: 20px;
     box-shadow: 2px 0 10px rgba(0,0,0,0.1);
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-  
     z-index: 1000;
+
+    /* ADDED: smooth transition for dark mode */
+    transition: background 0.3s ease;
+}
+
+/* ADDED: dark mode sidebar */
+body.dark .sidebar {
+    background: #1e293b;
+    box-shadow: 2px 0 10px rgba(0,0,0,0.5);
 }
 
 .sidebar ul {
@@ -43,6 +51,11 @@
     color: #fff;
 }
 
+/* ADDED: dark mode sidebar hover */
+body.dark .sidebar ul li a:hover {
+    background: rgba(100, 200, 150, 0.15);
+}
+
 /* Logout button */
 .sidebar ul li.logout-btn {
     margin-top: auto;
@@ -53,11 +66,16 @@
     align-items: center;
     justify-content: center;
     padding: 12px 20px;
-    background:#0f8a51;
+    background: #0f8a51;
     color: #fff;
     border-radius: 8px;
     font-weight: 600;
     transition: background 0.3s;
+}
+
+/* ADDED: dark mode logout button */
+body.dark .sidebar ul li.logout-btn a {
+    background: #1e293b;
 }
 
 .sidebar ul li.logout-btn a i {
@@ -66,7 +84,10 @@
 
 .sidebar ul li.logout-btn a:hover {
     background: rgba(5, 100, 62, 0.95);
-    color: #fff;
+}
+
+body.dark .sidebar ul li.logout-btn a:hover {
+    background: rgba(100, 200, 150, 0.15);
 }
 
 /* Active menu */
@@ -74,6 +95,11 @@
     background: rgba(5, 100, 62, 0.95);
     color: #fff;
     font-weight: 600;
+}
+
+/* ADDED: dark mode active menu */
+body.dark .sidebar ul li a.active {
+    background: rgba(100, 200, 150, 0.2);
 }
 
 /* Scrollbar */
@@ -84,6 +110,11 @@
 .sidebar::-webkit-scrollbar-thumb {
     background-color: #00c267;
     border-radius: 3px;
+}
+
+/* ADDED: dark mode scrollbar */
+body.dark .sidebar::-webkit-scrollbar-thumb {
+    background-color: #334155;
 }
 
 /* Responsive sidebar */

@@ -145,3 +145,50 @@ td {
 .section.inventory ul {
     padding-left: 20px;
 }
+
+/* =========================
+   DARK MODE STYLES FOR ANALYTICS
+========================= */
+body.dark .report-card {
+    background: #1e293b !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4) !important;
+}
+
+body.dark .report-card h2 {
+    color: #a7f3d0 !important;
+}
+
+body.dark .report-card p {
+    color: #e2e8f0 !important;
+}
+
+body.dark .report-card ul {
+    color: #e2e8f0 !important;
+}
+
+body.dark .report-table {
+    background: #1e293b !important;
+}
+
+body.dark .report-table td {
+    color: #e2e8f0 !important;
+    border-bottom: 1px solid #334155 !important;
+}
+
+body.dark .report-table th {
+    background: #064e3b !important;
+}
+
+body.dark .card-container.horizontal-cards .card {
+    background: #1e293b !important;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.4) !important;
+}
+
+body.dark .card-container.horizontal-cards .card-title {
+    color: #94a3b8 !important;
+}
+
+body.dark .card-container.horizontal-cards .card-value {
+    color: #a7f3d0 !important;
+}
+

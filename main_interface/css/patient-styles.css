@@ -146,3 +146,46 @@ table td {
 
 .section p { margin: 5px 0; }
 .section hr { margin: 10px 0; border: 0; border-top: 1px solid #eee; }
+
+/* =========================
+   DARK MODE STYLES
+========================= */
+body.dark .modal {
+    background: rgba(0,0,0,0.7);
+}
+
+body.dark .modal-content {
+    background: #1e293b !important;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+}
+
+body.dark .modal-content h2 {
+    color: #a7f3d0 !important;
+}
+
+body.dark .modal-content input,
+body.dark .modal-content select,
+body.dark .modal-content textarea {
+    background: #0f172a !important;
+    color: #e2e8f0 !important;
+    border-color: #334155 !important;
+}
+
+body.dark .modal-content input:focus,
+body.dark .modal-content select:focus,
+body.dark .modal-content textarea:focus {
+    border-color: #10b981 !important;
+}
+
+body.dark .modal-content label {
+    color: #94a3b8 !important;
+}
+
+body.dark .btn {
+    background: #065f46;
+    color: #fff;
+}
+
+body.dark .btn:hover {
+    background: #0a7a58;
+}

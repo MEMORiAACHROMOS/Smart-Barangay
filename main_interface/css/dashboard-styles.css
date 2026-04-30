@@ -1,4 +1,35 @@
 /* =========================
+   MARQUEE SCROLLING TEXT
+========================= */
+.marquee {
+    overflow: hidden;
+    background: linear-gradient(90deg, #065f46, #047857);
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+}
+
+.marquee span {
+    display: inline-block;
+    padding-left: 100%;
+    animation: scroll 20s linear infinite;
+    font-size: 18px;
+    font-weight: 600;
+    color: white;
+    white-space: nowrap;
+}
+
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+    100% {
+        transform: translateX(-100%);
+    }
+}
+
+/* =========================
    DASHBOARD TITLE
 ========================= */
 main h1 {
@@ -15,20 +46,17 @@ main h1 {
 .dashboard-container {
     display: flex;
     flex-direction: column;
-    gap: 25px; /* Space between main dashboard sections */
+    gap: 25px;
 }
 
-/* Add gap between all main dashboard boxes */
-/* This targets each .section (the white boxes) and adds margin for vertical spacing */
 .section {
     background: #ffffff;
     padding: 15px;
     border-radius: 10px;
     box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-    margin-bottom: 15px; /* Added: space between boxes */
+    margin-bottom: 15px;
 }
 
-/* If you want to remove the last margin for the last box, you can use: */
 .section:last-child {
     margin-bottom: 0;
 }
@@ -40,20 +68,123 @@ main h1 {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
     gap: 15px;
-    margin-bottom: 20px; /* Added: space below summary cards */
+    margin-bottom: 20px;
 }
 
 .card {
     background: #ffffff;
-    padding: 15px;
+    padding: 20px 15px 15px 15px;
     border-radius: 10px;
     text-align: center;
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    transition: 0.2s ease;
+    transition: all 0.3s ease;
+    /* ADDED: top colored border per card — overridden individually below */
+    border-top: 5px solid #ccc;
+    position: relative;
+    overflow: hidden;
 }
 
 .card:hover {
-    transform: translateY(-3px);
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+}
+
+.card::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 60px;
+    height: 60px;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+/* ADDED: Colored top border + icon background tint per card */
+
+/* Card 1 - Total Users: Light Blue */
+.card:nth-child(1) {
+    border-top-color: #3b82f6;
+    background: linear-gradient(135deg, #eff6ff 0%, #ffffff 60%);
+}
+.card:nth-child(1) p {
+    color: #1d4ed8;
+}
+.card:nth-child(1)::before {
+    content: "👥";
+    font-size: 36px;
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    opacity: 0.15;
+}
+
+/* Card 2 - Patients: Light Green */
+.card:nth-child(2) {
+    border-top-color: #10b981;
+    background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 60%);
+}
+.card:nth-child(2) p {
+    color: #065f46;
+}
+.card:nth-child(2)::before {
+    content: "🏥";
+    font-size: 36px;
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    opacity: 0.15;
+}
+
+/* Card 3 - Pending Appointments: Light Orange */
+.card:nth-child(3) {
+    border-top-color: #f59e0b;
+    background: linear-gradient(135deg, #fffbeb 0%, #ffffff 60%);
+}
+.card:nth-child(3) p {
+    color: #b45309;
+}
+.card:nth-child(3)::before {
+    content: "📅";
+    font-size: 36px;
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    opacity: 0.15;
+}
+
+/* Card 4 - Immunizations: Light Purple */
+.card:nth-child(4) {
+    border-top-color: #8b5cf6;
+    background: linear-gradient(135deg, #f5f3ff 0%, #ffffff 60%);
+}
+.card:nth-child(4) p {
+    color: #6d28d9;
+}
+.card:nth-child(4)::before {
+    content: "💉";
+    font-size: 36px;
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    opacity: 0.15;
+}
+
+/* Card 5 - Inventory Items: Light Red */
+.card:nth-child(5) {
+    border-top-color: #ef4444;
+    background: linear-gradient(135deg, #fef2f2 0%, #ffffff 60%);
+}
+.card:nth-child(5) p {
+    color: #b91c1c;
+}
+.card:nth-child(5)::before {
+    content: "📦";
+    font-size: 36px;
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    opacity: 0.15;
 }
 
 .card h3 {
@@ -65,7 +196,7 @@ main h1 {
 .card p {
     font-size: 22px;
     font-weight: bold;
-    color: #065f46;
+    /* ADDED: color is overridden per card above */
 }
 
 /* =========================
@@ -143,4 +274,26 @@ table td {
 
 .section.inventory ul li {
     padding: 5px 0;
+}
+
+/* FIXED: Dark mode toggle button positioning */
+#darkModeToggle {
+    position: fixed;
+    top: 15px;
+    right: 20px;
+    z-index: 9999;
+    background: rgba(255,255,255,0.2);
+    color: white;
+    border: 1px solid rgba(255,255,255,0.4);
+    padding: 6px 14px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    backdrop-filter: blur(6px);
+    transition: 0.2s ease;
+}
+
+#darkModeToggle:hover {
+    background: rgba(255,255,255,0.35);
 }

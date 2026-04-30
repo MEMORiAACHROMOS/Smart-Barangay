@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Appointments - Smart Barangay Health Information System</title>
-
     <link rel="stylesheet" href="css/appointments-styles.css">
     <link rel="stylesheet" href="css/headerandfooter.css">
     <link rel="stylesheet" href="css/sidebar.css">
@@ -13,6 +12,10 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.38.0"></script>
 </head>
 <body>
+
+
+    <!-- ADDED: Dark mode toggle button (moved for visibility) -->
+    <button id="darkModeToggle" onclick="toggleDarkMode()">🌙 Dark</button>
 
     <header class="main-header">
         <h2>APPOINTMENTS</h2>
@@ -38,7 +41,6 @@
 
         <div class="appointments-container">
 
-            <!-- TOP BAR -->
             <div class="appointments-topbar">
                 <div class="topbar-left">
                     <input type="text" id="searchInput" placeholder="Search patient..." oninput="applyFilters()">
@@ -53,27 +55,21 @@
                 <button class="btn" onclick="openAppointmentModal()">➕ Add Appointment</button>
             </div>
 
-            <!-- MODAL: Add Appointment — UPDATED: redesigned layout -->
             <div id="addAppointmentModal" class="modal">
                 <div class="modal-content">
-                    <!-- ADDED: Header section with icon and subtitle -->
                     <div class="modal-header">
                         <span class="modal-icon">📅</span>
                         <h2>Add Appointment</h2>
                         <p class="modal-subtitle">Fill in the details below</p>
                     </div>
                     <form id="addAppointmentForm">
-
                         <div class="form-group">
                             <label for="appointmentPatient">Patient Name</label>
                             <input type="text" id="appointmentPatient" name="appointmentPatient" placeholder="Enter patient name" required>
                         </div>
-
-                        <!-- ADDED: Date and Time side by side -->
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="appointmentDate">Date</label>
-                                <!-- ADDED: min set by JS to block past dates -->
                                 <input type="date" id="appointmentDate" name="appointmentDate" required>
                             </div>
                             <div class="form-group">
@@ -81,8 +77,6 @@
                                 <input type="time" id="appointmentTime" name="appointmentTime" required>
                             </div>
                         </div>
-
-                        <!-- ADDED: Type and Status side by side -->
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="appointmentType">Type</label>
@@ -96,12 +90,10 @@
                                 <input type="text" id="appointmentStatus" value="Pending" readonly disabled>
                             </div>
                         </div>
-
                         <div class="form-group">
                             <label for="appointmentPurpose">Purpose</label>
                             <input type="text" id="appointmentPurpose" name="appointmentPurpose" placeholder="e.g. Check-up, Vaccination" required>
                         </div>
-
                         <div class="modal-actions">
                             <button type="button" class="btn modal-cancel" id="closeAddAppointmentModal">✕ Cancel</button>
                             <button type="submit" class="btn modal-save">✔ Save Appointment</button>
@@ -110,7 +102,6 @@
                 </div>
             </div>
 
-            <!-- SUMMARY CARDS -->
             <div class="card-container">
                 <div class="card"><h3>Today</h3><p id="countToday">0</p></div>
                 <div class="card"><h3>Pending</h3><p id="countPending">0</p></div>
@@ -118,7 +109,6 @@
                 <div class="card"><h3>Cancelled</h3><p id="countCancelled">0</p></div>
             </div>
 
-            <!-- APPOINTMENT TABLE -->
             <div class="section">
                 <table id="appointmentTable">
                     <thead>
@@ -145,11 +135,25 @@
         <p>&copy; 2026 Smart Barangay Health Information System | All Rights Reserved</p>
     </footer>
 
-    <script src="dashboard-script.js"></script>
     <script src="js/sidebar-script.js"></script>
     <script>
         function logout() { window.location.href = '../login/login.html'; }
     </script>
     <script src="js/appointments.js"></script>
+
+    <!-- ADDED: Dark mode script -->
+    <script>
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark');
+            const isDark = document.body.classList.contains('dark');
+            localStorage.setItem('darkMode', isDark ? 'enabled' : 'disabled');
+            document.getElementById('darkModeToggle').textContent = isDark ? '☀️ Light' : '🌙 Dark';
+        }
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.body.classList.add('dark');
+            document.getElementById('darkModeToggle').textContent = '☀️ Light';
+        }
+    </script>
+
 </body>
 </html>

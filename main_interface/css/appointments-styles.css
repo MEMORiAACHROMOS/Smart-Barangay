@@ -164,18 +164,116 @@
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
     gap: 15px;
+    margin-bottom: 20px;
 }
 .card {
     background: #ffffff;
-    padding: 15px;
+    padding: 20px 15px 15px 15px;
     border-radius: 10px;
     text-align: center;
     box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    transition: 0.2s ease;
+    transition: all 0.3s ease;
+    border-top: 5px solid #ccc;
+    position: relative;
+    overflow: hidden;
 }
-.card:hover { transform: translateY(-3px); }
-.card h3 { font-size: 14px; color: #666; margin-bottom: 8px; }
-.card p { font-size: 22px; font-weight: bold; color: #065f46; }
+.card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+}
+
+.card::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 60px;
+    height: 60px;
+    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
+    border-radius: 50%;
+}
+
+/* Card 1 - Today: Blue */
+.card:nth-child(1) {
+    border-top-color: #3b82f6;
+    background: linear-gradient(135deg, #eff6ff 0%, #ffffff 60%);
+}
+.card:nth-child(1) p {
+    color: #1d4ed8;
+}
+.card:nth-child(1)::before {
+    content: "📅";
+    font-size: 36px;
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    opacity: 0.15;
+}
+
+/* Card 2 - Pending: Orange */
+.card:nth-child(2) {
+    border-top-color: #f59e0b;
+    background: linear-gradient(135deg, #fffbeb 0%, #ffffff 60%);
+}
+.card:nth-child(2) p {
+    color: #b45309;
+}
+.card:nth-child(2)::before {
+    content: "⏳";
+    font-size: 36px;
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    opacity: 0.15;
+}
+
+/* Card 3 - Completed: Green */
+.card:nth-child(3) {
+    border-top-color: #10b981;
+    background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 60%);
+}
+.card:nth-child(3) p {
+    color: #065f46;
+}
+.card:nth-child(3)::before {
+    content: "✓";
+    font-size: 36px;
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    opacity: 0.15;
+}
+
+/* Card 4 - Cancelled: Red */
+.card:nth-child(4) {
+    border-top-color: #ef4444;
+    background: linear-gradient(135deg, #fef2f2 0%, #ffffff 60%);
+}
+.card:nth-child(4) p {
+    color: #b91c1c;
+}
+.card:nth-child(4)::before {
+    content: "✕";
+    font-size: 36px;
+    position: absolute;
+    top: 10px;
+    right: 12px;
+    opacity: 0.15;
+}
+
+.card h3 {
+    font-size: 14px;
+    color: #666;
+    margin-bottom: 8px;
+    position: relative;
+    z-index: 1;
+}
+.card p {
+    font-size: 22px;
+    font-weight: bold;
+    position: relative;
+    z-index: 1;
+}
 
 /* =========================
    TABLE STYLE
@@ -216,4 +314,98 @@ table .btn {
     padding: 6px 8px;
     font-size: 12px;
     margin-right: 5px;
+}
+
+/* =========================
+   DARK MODE STYLES FOR MODAL
+========================= */
+body.dark .modal-content {
+    background: #1e293b;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+
+body.dark .modal-header {
+    border-bottom: 2px solid #334155;
+}
+
+body.dark .modal-header h2 {
+    color: #a7f3d0;
+}
+
+body.dark .modal-subtitle {
+    color: #94a3b8;
+}
+
+body.dark .form-group label {
+    color: #94a3b8;
+}
+
+body.dark .form-group input,
+body.dark .form-group select {
+    background: #0f172a;
+    color: #e2e8f0;
+    border-color: #334155;
+}
+
+body.dark .form-group input:focus,
+body.dark .form-group select:focus {
+    border-color: #10b981;
+    background: #1e293b;
+    color: #e2e8f0;
+}
+
+body.dark .form-group input:disabled {
+    background: #334155;
+    color: #64748b;
+}
+
+body.dark .topbar-left input,
+body.dark .topbar-left select {
+    background: #1e293b;
+    color: #e2e8f0;
+    border-color: #334155;
+}
+
+body.dark .topbar-left input:focus,
+body.dark .topbar-left select:focus {
+    border-color: #10b981;
+}
+
+/* =========================
+   DARK MODE STYLES FOR CARDS
+========================= */
+body.dark .card {
+    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+}
+
+body.dark .card:nth-child(1) {
+    background: linear-gradient(135deg, #1e3a5f 0%, #1e293b 60%);
+}
+body.dark .card:nth-child(1) p {
+    color: #60a5fa;
+}
+
+body.dark .card:nth-child(2) {
+    background: linear-gradient(135deg, #451a03 0%, #1e293b 60%);
+}
+body.dark .card:nth-child(2) p {
+    color: #fbbf24;
+}
+
+body.dark .card:nth-child(3) {
+    background: linear-gradient(135deg, #14532d 0%, #1e293b 60%);
+}
+body.dark .card:nth-child(3) p {
+    color: #6ee7b7;
+}
+
+body.dark .card:nth-child(4) {
+    background: linear-gradient(135deg, #450a0a 0%, #1e293b 60%);
+}
+body.dark .card:nth-child(4) p {
+    color: #fca5a5;
+}
+
+body.dark .card h3 {
+    color: #94a3b8;
 }

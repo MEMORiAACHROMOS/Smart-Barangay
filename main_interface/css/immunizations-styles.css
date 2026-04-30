@@ -222,3 +222,49 @@ table td button {
 .btn.btn-registered:hover {
     background: #6d28d9;
 }
+
+/* =========================
+   DARK MODE STYLES
+========================= */
+body.dark .programs-topbar input {
+    background: #1e293b;
+    color: #e2e8f0;
+    border-color: #334155;
+}
+
+body.dark .programs-topbar input:focus {
+    border-color: #10b981;
+}
+
+body.dark .modal-content {
+    background: #1e293b;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+
+body.dark .modal-content h2 {
+    color: #a7f3d0;
+}
+
+body.dark .modal-content label {
+    color: #94a3b8;
+}
+
+body.dark .modal-content input,
+body.dark .modal-content select,
+body.dark .modal-content textarea {
+    background: #0f172a;
+    color: #e2e8f0;
+    border-color: #334155;
+}
+
+body.dark .modal-content input:focus,
+body.dark .modal-content select:focus,
+body.dark .modal-content textarea:focus {
+    border-color: #10b981;
+    background: #1e293b;
+    color: #e2e8f0;
+}
+
+body.dark .modal-content p {
+    color: #e2e8f0;
+}
