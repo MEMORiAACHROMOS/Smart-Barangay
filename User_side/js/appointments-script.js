@@ -1,258 +1,238 @@
+// =========================
+// SUPABASE SETUP
+// =========================
+const SUPABASE_URL = 'https://fdywrbdjrtrpnyyhrpoj.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_LMKNlKJ7lXXZIvbUllHPjA_Xi7cwKGH';
+const { createClient } = window.supabase;
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+const blockedDates = ["2026-05-20", "2026-05-25"];
+
+// =========================
+// INIT
+// =========================
 document.addEventListener("DOMContentLoaded", () => {
-    initActivity();
-    setupAppointmentForm();
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    if (!currentUser) {
+        window.location.href = 'login.html';
+        return;
+    }
+
+    document.querySelector('#greetingCard h2').textContent =
+        `Good day, ${currentUser.firstname} ${currentUser.lastname} 👋`;
+
+    setupAppointmentForm(currentUser);
+    loadMyAppointments(currentUser);
+    renderEvents();
 });
 
-/* =========================
-   DATA LAYER (SWAP FOR BACKEND LATER)
-========================= */
-function fetchActivityData() {
-    return new Promise((resolve) => {
-        setTimeout(() => {
-            resolve({
-                appointments: [
-                    {
-                        service: "Dental Checkup",
-                        date: "2026-05-10",
-                        time: "10:00",
-                        status: "Confirmed"
-                    },
-                    {
-                        service: "Prenatal Care",
-                        date: "2026-05-15",
-                        time: "13:00",
-                        status: "Pending"
-                    }
-                ],
-                events: [
-                    "Free Vaccination Drive - Registered",
-                    "Health Seminar for Mothers - Registered"
-                ],
-                history: []
-            });
-        }, 300);
+// =========================
+// LOAD MY APPOINTMENTS
+// CHANGED: Completed appointments are now excluded from active list
+// and moved to history instead
+// =========================
+async function loadMyAppointments(currentUser) {
+    const container = document.getElementById('appointmentContent');
+    container.innerHTML = '<p>Loading...</p>';
+
+    const fullName = `${currentUser.firstname} ${currentUser.lastname}`;
+
+    const { data, error } = await supabase
+        .from('AppointmentsTbl')
+        .select('*')
+        .eq('Notes', fullName)
+        .order('AppointmentDate', { ascending: false });
+
+    if (error) {
+        container.innerHTML = '<p>Failed to load appointments.</p>';
+        console.error(error);
+        return;
+    }
+
+    if (!data || !data.length) {
+        container.innerHTML = '<p>No appointments yet.</p>';
+        return;
+    }
+
+    container.innerHTML = '';
+
+    // CHANGED: active = not cancelled AND not completed
+    const active = data.filter(a => {
+        const status = (a.Status || '').toLowerCase();
+        return status !== 'cancelled' && status !== 'completed';
+    });
+
+    // CHANGED: history = cancelled OR completed
+    const history = data.filter(a => {
+        const status = (a.Status || '').toLowerCase();
+        return status === 'cancelled' || status === 'completed';
+    });
+
+    if (!active.length) {
+        container.innerHTML = '<p>No active appointments.</p>';
+    }
+
+    active.forEach(appt => {
+        const div = document.createElement('div');
+        div.innerHTML = `
+            <p><strong>${appt.Purpose || '—'}</strong></p>
+            <p>${appt.AppointmentDate} — ${formatTime(appt.AppointmentTime)}</p>
+            <p>Type: ${appt.AppointmentType || '—'}</p>
+            <span class="status ${(appt.Status || 'pending').toLowerCase()}">${appt.Status || 'Pending'}</span>
+            <div style="margin-top:10px;">
+                <button onclick="cancelAppointment(${appt.Appointment_ID})">Cancel</button>
+            </div>
+        `;
+        container.appendChild(div);
+    });
+
+    renderHistory(history);
+}
+
+// =========================
+// BOOK NEW APPOINTMENT
+// =========================
+function setupAppointmentForm(currentUser) {
+    const form = document.getElementById('appointmentForm');
+    const timeInput = document.getElementById('time');
+    const dateInput = document.getElementById('date');
+
+    dateInput.min = new Date().toISOString().split('T')[0];
+
+    if (timeInput) {
+        timeInput.addEventListener('change', () => {
+            const hour = parseInt(timeInput.value.split(':')[0]);
+            if (hour < 7 || hour >= 15) {
+                alert('Clinic hours are only 7:00 AM to 3:00 PM.');
+                timeInput.value = '';
+            }
+        });
+    }
+
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const service  = document.getElementById('service').value;
+        const apptType = document.getElementById('apptType').value;
+        const date     = document.getElementById('date').value;
+        const time     = document.getElementById('time').value;
+
+        if (!service || !date || !time) {
+            alert('Please complete all fields.');
+            return;
+        }
+
+        const hour = parseInt(time.split(':')[0]);
+        if (hour < 7 || hour >= 15) {
+            alert('Appointments allowed only 7AM - 3PM.');
+            return;
+        }
+
+        if (blockedDates.includes(date)) {
+            alert('No doctor available on this date.');
+            return;
+        }
+
+        const submitBtn = form.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting...';
+
+        const { error } = await supabase.from('AppointmentsTbl').insert([{
+            CreatedBy_User_ID: null,
+            AppointmentDate:   date,
+            AppointmentTime:   time,
+            AppointmentType:   apptType,
+            Purpose:           service,
+            Status:            'Pending',
+            Notes:             `${currentUser.firstname} ${currentUser.lastname}`
+        }]);
+
+        if (error) {
+            alert('Failed to book appointment: ' + error.message);
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Submit Appointment';
+            return;
+        }
+
+        alert('Appointment successfully booked!');
+        form.reset();
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit Appointment';
+        await loadMyAppointments(currentUser);
     });
 }
 
-/* =========================
-   INIT
-========================= */
-async function initActivity() {
+// =========================
+// CANCEL APPOINTMENT
+// =========================
+async function cancelAppointment(id) {
+    if (!confirm('Are you sure you want to cancel this appointment?')) return;
 
-    let stored = localStorage.getItem("appointmentsData");
+    const { error } = await supabase
+        .from('AppointmentsTbl')
+        .update({ Status: 'Cancelled' })
+        .eq('Appointment_ID', id);
 
-    window.appData = stored
-        ? JSON.parse(stored)
-        : await fetchActivityData();
+    if (error) {
+        alert('Failed to cancel. Please try again.');
+        return;
+    }
 
-    saveData();
-
-    renderAppointments();
-    renderEvents();
-    renderHistory();
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    await loadMyAppointments(currentUser);
 }
 
-/* =========================
-   SAVE (LOCAL STORAGE)
-========================= */
-function saveData() {
-    localStorage.setItem("appointmentsData", JSON.stringify(window.appData));
-}
+// =========================
+// RENDER HISTORY
+// CHANGED: now shows both Cancelled and Completed appointments
+// =========================
+function renderHistory(historyData) {
+    const container = document.getElementById('historyContent');
+    container.innerHTML = '';
 
-/* =========================
-   RENDER APPOINTMENTS
-========================= */
-function renderAppointments() {
+    if (!historyData || !historyData.length) {
+        container.innerHTML = '<p>No records yet</p>';
+        return;
+    }
 
-    const container = document.getElementById("appointmentContent");
-    if (!container || !window.appData) return;
-
-    container.innerHTML = "";
-
-    window.appData.appointments.forEach((a, index) => {
-
-        const div = document.createElement("div");
-
+    historyData.forEach(h => {
+        const div = document.createElement('div');
         div.innerHTML = `
-            <p><strong>${a.service}</strong></p>
-            <p>${a.date} - ${a.time}</p>
-            <span class="status ${a.status.toLowerCase()}">${a.status}</span>
-
-            <div style="margin-top:10px;">
-                <button onclick="rescheduleAppointment(${index})">Reschedule</button>
-                <button onclick="cancelAppointment(${index})">Cancel</button>
-            </div>
+            <p><strong>${h.Purpose || '—'}</strong></p>
+            <p>${h.AppointmentDate} — ${formatTime(h.AppointmentTime)}</p>
+            <span class="status ${(h.Status || '').toLowerCase()}">${h.Status || '—'}</span>
         `;
-
         container.appendChild(div);
     });
 }
 
-/* =========================
-   EVENTS
-========================= */
+// =========================
+// RENDER EVENTS (static)
+// =========================
 function renderEvents() {
+    const container = document.getElementById('eventsContent');
+    container.innerHTML = '';
 
-    const container = document.getElementById("eventsContent");
-    if (!container || !window.appData) return;
+    const events = [
+        'Free Vaccination Drive - Registered',
+        'Health Seminar for Mothers - Registered'
+    ];
 
-    container.innerHTML = "";
-
-    window.appData.events.forEach(e => {
-        const p = document.createElement("p");
+    events.forEach(e => {
+        const p = document.createElement('p');
         p.innerHTML = `<i class="fa-solid fa-check"></i> ${e}`;
         container.appendChild(p);
     });
 }
 
-/* =========================
-   HISTORY
-========================= */
-function renderHistory() {
-
-    const container = document.getElementById("historyContent");
-    if (!container || !window.appData) return;
-
-    container.innerHTML = "";
-
-    if (!window.appData.history || window.appData.history.length === 0) {
-        container.innerHTML = "<p>No records yet</p>";
-        return;
-    }
-
-    window.appData.history.forEach(h => {
-
-        const div = document.createElement("div");
-
-        div.innerHTML = `
-            <p><strong>${h.service}</strong></p>
-            <p>${h.action}</p>
-            <p>${h.timestamp}</p>
-            ${h.oldDate ? `<p>Old: ${h.oldDate} ${h.oldTime}</p>` : ""}
-            ${h.newDate ? `<p>New: ${h.newDate} ${h.newTime}</p>` : ""}
-        `;
-
-        container.appendChild(div);
-    });
-}
-
-/* =========================
-   FORM HANDLER
-========================= */
-function setupAppointmentForm() {
-
-    const form = document.getElementById("appointmentForm");
-    if (!form) return;
-
-    const blockedDates = ["2026-05-20", "2026-05-25"];
-    const timeInput = document.getElementById("time");
-
-    // REAL-TIME TIME VALIDATION
-    if (timeInput) {
-        timeInput.addEventListener("change", () => {
-
-            const hour = parseInt(timeInput.value.split(":")[0]);
-
-            if (hour < 7 || hour >= 15) {
-                alert("Clinic hours are only 7:00 AM to 3:00 PM.");
-                timeInput.value = "";
-            }
-        });
-    }
-
-    form.addEventListener("submit", (e) => {
-        e.preventDefault();
-
-        const service = document.getElementById("service").value;
-        const date = document.getElementById("date").value;
-        const time = document.getElementById("time").value;
-
-        if (!service || !date || !time) {
-            alert("Please complete all fields.");
-            return;
-        }
-
-        const hour = parseInt(time.split(":")[0]);
-
-        if (hour < 7 || hour >= 15) {
-            alert("Appointments allowed only 7AM - 3PM.");
-            return;
-        }
-
-        if (blockedDates.includes(date)) {
-            alert("No doctor available on this date.");
-            return;
-        }
-
-        const newAppointment = {
-            service,
-            date,
-            time,
-            status: "Pending"
-        };
-
-        window.appData.appointments.push(newAppointment);
-
-        window.appData.history.push({
-            ...newAppointment,
-            action: "Created",
-            timestamp: new Date().toLocaleString()
-        });
-
-        saveData();
-        renderAppointments();
-        renderHistory();
-
-        alert("Appointment successfully booked!");
-        form.reset();
-    });
-}
-
-/* =========================
-   CANCEL
-========================= */
-function cancelAppointment(index) {
-
-    const removed = window.appData.appointments.splice(index, 1)[0];
-
-    window.appData.history.push({
-        ...removed,
-        action: "Cancelled",
-        timestamp: new Date().toLocaleString()
-    });
-
-    saveData();
-    renderAppointments();
-    renderHistory();
-}
-
-/* =========================
-   RESCHEDULE
-========================= */
-function rescheduleAppointment(index) {
-
-    const appt = window.appData.appointments[index];
-
-    const newDate = prompt("New date (YYYY-MM-DD):");
-    const newTime = prompt("New time (HH:MM):");
-
-    if (!newDate || !newTime) return;
-
-    window.appData.history.push({
-        ...appt,
-        action: "Rescheduled",
-        oldDate: appt.date,
-        oldTime: appt.time,
-        newDate,
-        newTime,
-        timestamp: new Date().toLocaleString()
-    });
-
-    appt.date = newDate;
-    appt.time = newTime;
-    appt.status = "Rescheduled";
-
-    saveData();
-    renderAppointments();
-    renderHistory();
+// =========================
+// HELPER
+// =========================
+function formatTime(timeStr) {
+    if (!timeStr) return '—';
+    const [h, m] = timeStr.split(':');
+    let hour = parseInt(h, 10);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    hour = hour % 12 || 12;
+    return `${hour}:${m} ${ampm}`;
 }

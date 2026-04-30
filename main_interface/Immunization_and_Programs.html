@@ -166,7 +166,6 @@
             <p><b>Participants:</b> <span id="viewEventParticipants"></span></p>
             <p><b>Notes:</b> <span id="viewEventNotes"></span></p>
             <div class="modal-actions">
-                <!-- ADDED: Export PDF button -->
                 <button class="btn btn-export-pdf" onclick="exportEventPDF()">
                     <i class="fa fa-file-pdf"></i> Export PDF
                 </button>
@@ -175,11 +174,42 @@
         </div>
     </div>
 
+    <!-- ADDED: REGISTERED PEOPLE MODAL -->
+    <div id="registeredModal" class="modal">
+        <div class="modal-content" style="width: 700px; max-width: 95vw;">
+            <h2>Registered Participants</h2>
+            <p id="registeredEventTitle" style="color:#065f46; font-weight:600; margin-bottom:10px;"></p>
+
+            <!-- Registered people table -->
+            <div style="overflow-x:auto;">
+                <table id="registeredTable">
+                    <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Full Name</th>
+                            <th>Gender</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                            <th>Address</th>
+                            <th>Registered At</th>
+                        </tr>
+                    </thead>
+                    <tbody id="registeredTableBody">
+                        <tr><td colspan="7" style="text-align:center;">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="modal-actions" style="margin-top:16px;">
+                <button class="btn modal-cancel" id="closeRegisteredModal">Close</button>
+            </div>
+        </div>
+    </div>
+
     <footer class="main-footer">
         <p>&copy; 2026 Smart Barangay Health Information System | All Rights Reserved</p>
     </footer>
 
-    <script src="dashboard-script.js"></script>
     <script src="js/sidebar-script.js"></script>
     <script>
         function logout() { window.location.href = '../login/login.html'; }

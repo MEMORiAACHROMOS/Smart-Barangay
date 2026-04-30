@@ -6,10 +6,7 @@ const SUPABASE_ANON_KEY = 'sb_publishable_LMKNlKJ7lXXZIvbUllHPjA_Xi7cwKGH';
 const { createClient } = window.supabase;
 const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// Holds all programs loaded from DB
 let allPrograms = [];
-
-// ADDED: Tracks which program is currently open in View Details
 let currentViewedProgram = null;
 
 // =========================
@@ -20,6 +17,8 @@ window.addEventListener('DOMContentLoaded', function () {
     setupAddModal();
     setupEditModal();
     setupViewModal();
+    // ADDED: setup registered modal
+    setupRegisteredModal();
 });
 
 // =========================
@@ -39,6 +38,7 @@ async function loadPrograms() {
 
 // =========================
 // RENDER table rows
+// ADDED: Registered button in each row
 // =========================
 function renderTable(programs) {
     const tbody = document.getElementById('programsTableBody');
@@ -61,6 +61,9 @@ function renderTable(programs) {
                 <button class="btn" onclick="openEditModal(${prog.Programs_ID})">Edit</button>
                 <button class="btn btn-delete" onclick="deleteProgram(${prog.Programs_ID})">Delete</button>
                 <button class="btn view-details" onclick="openViewModal(${prog.Programs_ID})">View Details</button>
+                <button class="btn btn-registered" onclick="openRegisteredModal(${prog.Programs_ID}, '${(prog.EventName || '').replace(/'/g, "\\'")}')">
+                    <i class="fa fa-users"></i> Registered
+                </button>
             </td>
         `;
         tbody.appendChild(row);
@@ -203,7 +206,6 @@ function openViewModal(id) {
     const prog = allPrograms.find(p => p.Programs_ID === id);
     if (!prog) return;
 
-    // ADDED: Save current program so exportEventPDF() can use it
     currentViewedProgram = prog;
 
     document.getElementById('viewEventName').textContent         = prog.EventName || '—';
@@ -218,191 +220,124 @@ function openViewModal(id) {
 }
 
 // =========================
-// ADDED: EXPORT TO PDF
-// Builds a hidden styled div and calls window.print()
-// @media print in CSS hides everything except #pdfPrintArea
+// ADDED: REGISTERED PEOPLE MODAL
+// =========================
+function setupRegisteredModal() {
+    const modal    = document.getElementById('registeredModal');
+    const closeBtn = document.getElementById('closeRegisteredModal');
+    closeBtn.addEventListener('click', () => modal.classList.remove('active'));
+    modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
+}
+
+async function openRegisteredModal(eventId, eventName) {
+    const modal = document.getElementById('registeredModal');
+    const tbody = document.getElementById('registeredTableBody');
+
+    document.getElementById('registeredEventTitle').textContent = `Event: ${eventName}`;
+    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">Loading...</td></tr>';
+    modal.classList.add('active');
+
+    const { data, error } = await supabase
+        .from('EventRegistrationsTbl')
+        .select('*')
+        .eq('Event_ID', eventId)
+        .order('RegisteredAt', { ascending: true });
+
+    if (error) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:red;">Failed to load registrations.</td></tr>';
+        console.error(error);
+        return;
+    }
+
+    if (!data || !data.length) {
+        tbody.innerHTML = '<tr><td colspan="7" style="text-align:center; color:#888;">No registrations yet.</td></tr>';
+        return;
+    }
+
+    tbody.innerHTML = '';
+    data.forEach((reg, index) => {
+        const fullName = `${reg.FirstName || ''} ${reg.MiddleInitial ? reg.MiddleInitial + '. ' : ''}${reg.LastName || ''}`.trim();
+        const registeredAt = reg.RegisteredAt
+            ? new Date(reg.RegisteredAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+            : '—';
+
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${index + 1}</td>
+            <td>${fullName || '—'}</td>
+            <td>${reg.Gender || '—'}</td>
+            <td>${reg.PhoneNumber || '—'}</td>
+            <td>${reg.Email || '—'}</td>
+            <td>${reg.Address || '—'}</td>
+            <td>${registeredAt}</td>
+        `;
+        tbody.appendChild(row);
+    });
+}
+
+// =========================
+// EXPORT TO PDF
 // =========================
 function exportEventPDF() {
     if (!currentViewedProgram) return;
 
     const prog = currentViewedProgram;
 
-    // Format date nicely e.g. "May 19, 2026"
     const formattedDate = prog.Date
         ? new Date(prog.Date).toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })
         : '—';
 
-    // Today's date for the footer
     const generatedDate = new Date().toLocaleDateString('en-US', {
         year: 'numeric', month: 'long', day: 'numeric'
     });
 
-    // Remove old print area if exists
     const existing = document.getElementById('pdfPrintArea');
     if (existing) existing.remove();
 
-    // Build the print area
     const printArea = document.createElement('div');
     printArea.id = 'pdfPrintArea';
     printArea.innerHTML = `
         <style>
-            #pdfPrintArea {
-                font-family: Arial, sans-serif;
-                padding: 40px;
-                color: #111;
-            }
-            #pdfPrintArea .pdf-header {
-                text-align: center;
-                border-bottom: 3px solid #065f46;
-                padding-bottom: 16px;
-                margin-bottom: 24px;
-            }
-            #pdfPrintArea .pdf-header h1 {
-                color: #065f46;
-                font-size: 20px;
-                margin: 0 0 4px 0;
-            }
-            #pdfPrintArea .pdf-header p {
-                font-size: 13px;
-                color: #555;
-                margin: 0;
-            }
-            #pdfPrintArea .pdf-title {
-                font-size: 17px;
-                font-weight: bold;
-                color: #065f46;
-                margin-bottom: 20px;
-                text-align: center;
-                text-transform: uppercase;
-                letter-spacing: 1px;
-            }
-            #pdfPrintArea .pdf-table {
-                width: 100%;
-                border-collapse: collapse;
-                margin-bottom: 30px;
-            }
-            #pdfPrintArea .pdf-table th {
-                background: #065f46;
-                color: white;
-                padding: 10px 14px;
-                text-align: left;
-                font-size: 13px;
-                width: 35%;
-            }
-            #pdfPrintArea .pdf-table td {
-                padding: 10px 14px;
-                border: 1px solid #ddd;
-                font-size: 13px;
-                background: #f9f9f9;
-            }
-            #pdfPrintArea .pdf-table tr:nth-child(even) td {
-                background: #ffffff;
-            }
-            #pdfPrintArea .pdf-notes-box {
-                border: 1px solid #ccc;
-                border-radius: 6px;
-                padding: 14px;
-                background: #f4faf7;
-                margin-bottom: 30px;
-            }
-            #pdfPrintArea .pdf-notes-box h3 {
-                margin: 0 0 8px 0;
-                color: #065f46;
-                font-size: 14px;
-            }
-            #pdfPrintArea .pdf-notes-box p {
-                margin: 0;
-                font-size: 13px;
-                color: #444;
-            }
-            #pdfPrintArea .pdf-signature-row {
-                display: flex;
-                justify-content: space-between;
-                margin-top: 50px;
-                margin-bottom: 10px;
-            }
-            #pdfPrintArea .pdf-signature-box {
-                text-align: center;
-                width: 40%;
-            }
-            #pdfPrintArea .pdf-signature-box .sig-line {
-                border-top: 1px solid #333;
-                margin-bottom: 6px;
-            }
-            #pdfPrintArea .pdf-signature-box p {
-                font-size: 12px;
-                color: #555;
-                margin: 0;
-            }
-            #pdfPrintArea .pdf-footer {
-                text-align: center;
-                font-size: 11px;
-                color: #888;
-                border-top: 1px solid #ddd;
-                padding-top: 12px;
-            }
+            #pdfPrintArea { font-family: Arial, sans-serif; padding: 40px; color: #111; }
+            #pdfPrintArea .pdf-header { text-align: center; border-bottom: 3px solid #065f46; padding-bottom: 16px; margin-bottom: 24px; }
+            #pdfPrintArea .pdf-header h1 { color: #065f46; font-size: 20px; margin: 0 0 4px 0; }
+            #pdfPrintArea .pdf-header p { font-size: 13px; color: #555; margin: 0; }
+            #pdfPrintArea .pdf-title { font-size: 17px; font-weight: bold; color: #065f46; margin-bottom: 20px; text-align: center; text-transform: uppercase; letter-spacing: 1px; }
+            #pdfPrintArea .pdf-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; }
+            #pdfPrintArea .pdf-table th { background: #065f46; color: white; padding: 10px 14px; text-align: left; font-size: 13px; width: 35%; }
+            #pdfPrintArea .pdf-table td { padding: 10px 14px; border: 1px solid #ddd; font-size: 13px; background: #f9f9f9; }
+            #pdfPrintArea .pdf-table tr:nth-child(even) td { background: #ffffff; }
+            #pdfPrintArea .pdf-notes-box { border: 1px solid #ccc; border-radius: 6px; padding: 14px; background: #f4faf7; margin-bottom: 30px; }
+            #pdfPrintArea .pdf-notes-box h3 { margin: 0 0 8px 0; color: #065f46; font-size: 14px; }
+            #pdfPrintArea .pdf-notes-box p { margin: 0; font-size: 13px; color: #444; }
+            #pdfPrintArea .pdf-signature-row { display: flex; justify-content: space-between; margin-top: 50px; margin-bottom: 10px; }
+            #pdfPrintArea .pdf-signature-box { text-align: center; width: 40%; }
+            #pdfPrintArea .pdf-signature-box .sig-line { border-top: 1px solid #333; margin-bottom: 6px; }
+            #pdfPrintArea .pdf-signature-box p { font-size: 12px; color: #555; margin: 0; }
+            #pdfPrintArea .pdf-footer { text-align: center; font-size: 11px; color: #888; border-top: 1px solid #ddd; padding-top: 12px; }
         </style>
-
-        <!-- Header -->
         <div class="pdf-header">
             <h1>Smart Barangay Health Information System</h1>
             <p>Immunization and Programs — Official Event Report</p>
         </div>
-
-        <!-- Title -->
         <div class="pdf-title">Event Details Report</div>
-
-        <!-- Details Table -->
         <table class="pdf-table">
-            <tr>
-                <th>Event Name</th>
-                <td>${prog.EventName || '—'}</td>
-            </tr>
-            <tr>
-                <th>Type of Event</th>
-                <td>${prog.TypeOfEvent || '—'}</td>
-            </tr>
-            <tr>
-                <th>Date</th>
-                <td>${formattedDate}</td>
-            </tr>
-            <tr>
-                <th>Location</th>
-                <td>${prog.Location || '—'}</td>
-            </tr>
-            <tr>
-                <th>Status</th>
-                <td>${prog.Status || '—'}</td>
-            </tr>
-            <tr>
-                <th>Participants Count</th>
-                <td>${prog.Participants_Count ?? '—'}</td>
-            </tr>
-            <tr>
-                <th>Event ID</th>
-                <td>${prog.Programs_ID || '—'}</td>
-            </tr>
+            <tr><th>Event Name</th><td>${prog.EventName || '—'}</td></tr>
+            <tr><th>Type of Event</th><td>${prog.TypeOfEvent || '—'}</td></tr>
+            <tr><th>Date</th><td>${formattedDate}</td></tr>
+            <tr><th>Location</th><td>${prog.Location || '—'}</td></tr>
+            <tr><th>Status</th><td>${prog.Status || '—'}</td></tr>
+            <tr><th>Participants Count</th><td>${prog.Participants_Count ?? '—'}</td></tr>
+            <tr><th>Event ID</th><td>${prog.Programs_ID || '—'}</td></tr>
         </table>
-
-        <!-- Notes -->
         <div class="pdf-notes-box">
             <h3>Notes / Remarks</h3>
             <p>${prog.Notes || 'No notes provided.'}</p>
         </div>
-
-        <!-- Signature Lines -->
         <div class="pdf-signature-row">
-            <div class="pdf-signature-box">
-                <div class="sig-line"></div>
-                <p>Prepared by</p>
-            </div>
-            <div class="pdf-signature-box">
-                <div class="sig-line"></div>
-                <p>Noted by / Health Officer</p>
-            </div>
+            <div class="pdf-signature-box"><div class="sig-line"></div><p>Prepared by</p></div>
+            <div class="pdf-signature-box"><div class="sig-line"></div><p>Noted by / Health Officer</p></div>
         </div>
-
-        <!-- Footer -->
         <div class="pdf-footer">
             Generated on: ${generatedDate} &nbsp;|&nbsp; Smart Barangay Health Information System &copy; 2026
         </div>
@@ -411,7 +346,6 @@ function exportEventPDF() {
     document.body.appendChild(printArea);
     window.print();
 
-    // Clean up after printing
     setTimeout(() => {
         const area = document.getElementById('pdfPrintArea');
         if (area) area.remove();

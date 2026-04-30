@@ -1,94 +1,146 @@
+// =========================
+// SUPABASE SETUP
+// =========================
+const supabase = window.supabase.createClient(
+    'https://fdywrbdjrtrpnyyhrpoj.supabase.co',
+    'sb_publishable_LMKNlKJ7lXXZIvbUllHPjA_Xi7cwKGH'
+);
+
 document.addEventListener("DOMContentLoaded", () => {
     loadDashboard();
 });
 
 async function loadDashboard() {
     try {
-        let data;
+        // Get logged-in user from sessionStorage
+        const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
 
-        try {
-            const response = await fetch("http://localhost:3000/api/dashboard");
-
-            if (!response.ok) throw new Error("No backend yet");
-
-            data = await response.json();
-
-        } catch (err) {
-            console.warn("Using mock data instead");
-
-            data = {
-                user: { name: "Juan Dela Cruz" },
-                appointment: {
-                    service: "Prenatal Care",
-                    date: "May 10, 2026 - 10:00 AM",
-                    doctor: "Dr. Santos",
-                    status: "Confirmed"
-                },
-                events: [
-                    "Free Vaccination Drive - May 15",
-                    "Health Seminar for Mothers - May 20",
-                    "General Checkup Week - May 25"
-                ]
-            };
+        // Redirect to login if no session
+        if (!currentUser) {
+            window.location.href = 'login.html';
+            return;
         }
 
-        // =========================
-        // GREETING
-        // =========================
-        const greetingCard = document.getElementById("greetingCard");
-        greetingCard.querySelector("h2").textContent =
-            `Good day, ${data.user.name}`;
+        const fullName = `${currentUser.firstname} ${currentUser.lastname}`;
 
-        // =========================
-        // APPOINTMENT (with status color)
-        // =========================
-        const appointmentContainer = document.getElementById("appointmentContent");
+        // Update greeting with real user name
+        document.querySelector('#greetingCard h2').textContent = `Good day, ${fullName} 👋`;
 
-        const status = data.appointment.status.toLowerCase();
-
-        let statusColor = "#333";
-        if (status === "confirmed") statusColor = "#00c267";
-        else if (status === "pending") statusColor = "#f59e0b";
-        else if (status === "cancelled") statusColor = "#ef4444";
-
-        appointmentContainer.innerHTML = `
-            <p>
-                <i class="fa-solid fa-stethoscope"></i>
-                <strong>Service:</strong> ${data.appointment.service}
-            </p>
-
-            <p>
-                <i class="fa-solid fa-calendar-days"></i>
-                <strong>Date:</strong> ${data.appointment.date}
-            </p>
-
-            <p>
-                <i class="fa-solid fa-user-doctor"></i>
-                <strong>Doctor:</strong> ${data.appointment.doctor}
-            </p>
-
-            <p>
-                <i class="fa-solid fa-circle-info"></i>
-                <strong>Status:</strong>
-                <span style="color:${statusColor}; font-weight:600;">
-                    ${data.appointment.status}
-                </span>
-            </p>
-        `;
-
-        // =========================
-        // EVENTS
-        // =========================
-        const eventsContainer = document.getElementById("eventsContent");
-        eventsContainer.innerHTML = "";
-
-        data.events.forEach(event => {
-            const p = document.createElement("p");
-            p.innerHTML = `<i class="fa-solid fa-bullhorn"></i> ${event}`;
-            eventsContainer.appendChild(p);
-        });
+        // Load both in parallel
+        loadNextAppointment(fullName);
+        loadUpcomingEvents();
 
     } catch (error) {
         console.error("Dashboard error:", error);
     }
+}
+
+// =========================
+// NEXT APPOINTMENT
+// Fetches the user's next upcoming appointment from AppointmentsTbl
+// =========================
+async function loadNextAppointment(fullName) {
+    const container = document.getElementById('appointmentContent');
+    const today = new Date().toISOString().split('T')[0];
+
+    const { data, error } = await supabase
+    .from('AppointmentsTbl')
+    .select('*')
+    .eq('Notes', fullName)
+    .gte('AppointmentDate', today)
+    .not('Status', 'eq', 'Completed')   // CHANGED: only hide Completed
+    .order('AppointmentDate', { ascending: true })
+    .limit(1);                       // get only the next one
+
+    if (error) {
+        container.innerHTML = '<p>Failed to load appointment.</p>';
+        console.error(error);
+        return;
+    }
+
+    if (!data || !data.length) {
+        container.innerHTML = '<p>No upcoming appointments.</p>';
+        return;
+    }
+
+    const appt = data[0];
+
+    // Status color
+    let statusColor = "#333";
+    const status = (appt.Status || '').toLowerCase();
+    if (status === 'approved')  statusColor = '#00c267';
+    if (status === 'pending')   statusColor = '#f59e0b';
+    if (status === 'cancelled') statusColor = '#ef4444';
+    if (status === 'completed') statusColor = '#2563eb';
+
+    container.innerHTML = `
+        <p>
+            <i class="fa-solid fa-stethoscope"></i>
+            <strong>Service:</strong> ${appt.Purpose || '—'}
+        </p>
+        <p>
+            <i class="fa-solid fa-calendar-days"></i>
+            <strong>Date:</strong> ${appt.AppointmentDate} — ${formatTime(appt.AppointmentTime)}
+        </p>
+        <p>
+            <i class="fa-solid fa-hospital"></i>
+            <strong>Type:</strong> ${appt.AppointmentType || '—'}
+        </p>
+        <p>
+            <i class="fa-solid fa-circle-info"></i>
+            <strong>Status:</strong>
+            <span style="color:${statusColor}; font-weight:600;">${appt.Status || 'Pending'}</span>
+        </p>
+    `;
+}
+
+// =========================
+// UPCOMING EVENTS
+// Fetches upcoming/scheduled events from ImmunizationProgramsTbl (admin side)
+// =========================
+async function loadUpcomingEvents() {
+    const container = document.getElementById('eventsContent');
+    const today = new Date().toISOString().split('T')[0];
+
+    const { data, error } = await supabase
+        .from('ImmunizationProgramsTbl')
+        .select('*')
+        .in('Status', ['Upcoming', 'Scheduled'])  // only show upcoming/scheduled
+        .gte('Date', today)
+        .order('Date', { ascending: true })
+        .limit(5);
+
+    if (error) {
+        container.innerHTML = '<p>Failed to load events.</p>';
+        console.error(error);
+        return;
+    }
+
+    if (!data || !data.length) {
+        container.innerHTML = '<p>No upcoming events.</p>';
+        return;
+    }
+
+    container.innerHTML = '';
+    data.forEach(event => {
+        const p = document.createElement('p');
+        p.innerHTML = `
+            <i class="fa-solid fa-bullhorn"></i>
+            <strong>${event.EventName}</strong> — ${event.Date}
+            <br><small>${event.Location || ''}</small>
+        `;
+        container.appendChild(p);
+    });
+}
+
+// =========================
+// HELPER: format HH:MM:SS → 10:00 AM
+// =========================
+function formatTime(timeStr) {
+    if (!timeStr) return '—';
+    const [h, m] = timeStr.split(':');
+    let hour = parseInt(h, 10);
+    const ampm = hour >= 12 ? 'PM' : 'AM';
+    hour = hour % 12 || 12;
+    return `${hour}:${m} ${ampm}`;
 }

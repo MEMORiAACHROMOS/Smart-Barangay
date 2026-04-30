@@ -1,19 +1,24 @@
-// ================= COPY =================
-function copyText(text) {
-    navigator.clipboard.writeText(text).catch(err => {
-        console.error("Copy failed:", err);
-    });
-}
+// ADDED: Supabase setup
+const SUPABASE_URL = 'https://fdywrbdjrtrpnyyhrpoj.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_LMKNlKJ7lXXZIvbUllHPjA_Xi7cwKGH';
+const { createClient } = window.supabase;
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // ================= TOAST =================
 function showToast(message) {
     const toast = document.getElementById("toast");
     toast.textContent = message;
     toast.classList.add("show");
-
     setTimeout(() => {
         toast.classList.remove("show");
     }, 1500);
+}
+
+// ================= COPY =================
+function copyText(text) {
+    navigator.clipboard.writeText(text).catch(err => {
+        console.error("Copy failed:", err);
+    });
 }
 
 // ================= HELPERS =================
@@ -28,22 +33,19 @@ const confirmPassword = document.getElementById("confirmPassword");
 document.getElementById("togglePassword")?.addEventListener("click", () => {
     const type = password.type === "password" ? "text" : "password";
     password.type = type;
-
-    togglePassword.classList.toggle("fa-eye");
-    togglePassword.classList.toggle("fa-eye-slash");
+    document.getElementById("togglePassword").classList.toggle("fa-eye");
+    document.getElementById("togglePassword").classList.toggle("fa-eye-slash");
 });
 
 document.getElementById("toggleConfirmPassword")?.addEventListener("click", () => {
     const type = confirmPassword.type === "password" ? "text" : "password";
     confirmPassword.type = type;
-
-    toggleConfirmPassword.classList.toggle("fa-eye");
-    toggleConfirmPassword.classList.toggle("fa-eye-slash");
+    document.getElementById("toggleConfirmPassword").classList.toggle("fa-eye");
+    document.getElementById("toggleConfirmPassword").classList.toggle("fa-eye-slash");
 });
 
-
 // ================= REGISTER =================
-document.getElementById("registerButton").addEventListener("click", () => {
+document.getElementById("registerButton").addEventListener("click", async () => {
 
     // ===== GET VALUES =====
     const firstname = value("firstname");
@@ -51,36 +53,30 @@ document.getElementById("registerButton").addEventListener("click", () => {
     const middlename = value("middlename");
     const suffix = value("suffix");
     const birthdate = value("birthdate");
-
     const email = value("email");
     const mobile = value("mobile");
     const address = value("address");
-
     const pass = password.value.trim();
     const confirm = confirmPassword.value.trim();
 
     // ===== VALIDATION =====
-
     if (!firstname || !lastname || !birthdate || !email || !mobile || !address || !pass || !confirm) {
         showToast("Please fill in all required fields");
         return;
     }
 
-    // email format
     const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailPattern.test(email)) {
         showToast("Invalid email format");
         return;
     }
 
-    // mobile (PH basic check: 09xxxxxxxxx or +639xxxxxxxxx)
     const mobilePattern = /^(09|\+639)\d{9}$/;
     if (!mobilePattern.test(mobile)) {
         showToast("Invalid mobile number");
         return;
     }
 
-    // password match
     if (pass !== confirm) {
         showToast("Passwords do not match");
         return;
@@ -91,58 +87,61 @@ document.getElementById("registerButton").addEventListener("click", () => {
         return;
     }
 
-    // ===== AGE CALCULATION (AUTO) =====
+    // ===== AGE CALCULATION =====
     const birth = new Date(birthdate);
     const today = new Date();
     let age = today.getFullYear() - birth.getFullYear();
     const m = today.getMonth() - birth.getMonth();
+    if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) age--;
 
-    if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
-        age--;
-    }
+    // ADDED: Check if email already exists in Supabase
+    const { data: existing, error: checkError } = await supabase
+        .from('UserRegistrationTbl')
+        .select('Email')
+        .eq('Email', email)
+        .single();
 
-    // ===== STORAGE =====
-    let users = JSON.parse(localStorage.getItem("users")) || [];
-
-    // duplicate email
-    const exists = users.some(user => user.email === email);
-    if (exists) {
+    if (existing) {
         showToast("Email already registered");
         return;
     }
 
-    // ===== CREATE USER OBJECT =====
-    const newUser = {
-        id: "BRGY-" + Date.now(),
+    // ADDED: Hash password using Supabase RPC (bcrypt)
+    const { data: hashed, error: hashError } = await supabase
+        .rpc('hash_password', { input_password: pass });
 
-        firstname,
-        lastname,
-        middlename,
-        suffix,
+    if (hashError) {
+        showToast("Error creating account. Try again.");
+        console.error("Hash error:", hashError);
+        return;
+    }
 
-        birthdate,
-        age,
+    // ADDED: Insert new user into Supabase UserRegistrationTbl
+    const { error: insertError } = await supabase
+        .from('UserRegistrationTbl')
+        .insert([{
+            FirstName: firstname,
+            LastName: lastname,
+            MiddleName: middlename,
+            Suffix: suffix,
+            DateOfBirth: birthdate,
+            Email: email,
+            MobileNumber: mobile,
+            Address: address,
+            PasswordHash: hashed,
+            Status: 'active'
+        }]);
 
-        email,
-        mobile,
-        address,
-
-        password: pass,
-
-        createdAt: new Date().toISOString()
-    };
-
-    users.push(newUser);
-
-    localStorage.setItem("users", JSON.stringify(users));
-
-    // optional: set logged-in user
-    localStorage.setItem("currentUser", JSON.stringify(newUser));
+    if (insertError) {
+        showToast("Failed to create account: " + insertError.message);
+        console.error("Insert error:", insertError);
+        return;
+    }
 
     showToast("Account created successfully ✓");
 
-    // redirect
+    // ADDED: Redirect to login after success
     setTimeout(() => {
-        window.location.href = "dashboard.html";
+        window.location.href = "login.html";
     }, 1200);
 });

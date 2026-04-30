@@ -6,7 +6,6 @@
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
-/* Full screen background with image */
 body {
     min-height: 100vh;
     display: flex;
@@ -15,7 +14,7 @@ body {
     background: url('healthcenter-sample.png') no-repeat center center/cover;
 }
 
-/* Header Banner */
+/* Header */
 .main-header {
     position: fixed;
     top: 0;
@@ -30,7 +29,7 @@ body {
     z-index: 1000;
 }
 
-/* Footer Banner */
+/* Footer */
 .main-footer {
     position: fixed;
     bottom: 0;
@@ -44,7 +43,9 @@ body {
     z-index: 1000;
 }
 
-/* Container */
+/* =========================
+   LOGIN CONTAINER (unchanged — don't break login)
+========================= */
 .login-container {
     background-color: rgba(7, 130, 81, 0.95);
     padding: 40px 35px;
@@ -59,6 +60,12 @@ body {
 
 .login-container:hover {
     transform: scale(1.02);
+}
+
+/* ADDED: Wider container for registration only */
+.register-container {
+    width: 520px;
+    max-width: 95vw;
 }
 
 /* Logo */
@@ -76,7 +83,9 @@ h1 {
     line-height: 1.4;
 }
 
-/* Inputs */
+/* =========================
+   FORM INPUTS (login + register shared)
+========================= */
 .login-form input,
 .login-form select,
 .login-form textarea {
@@ -108,6 +117,7 @@ h1 {
     font-size: 16px;
     cursor: pointer;
     transition: background 0.3s, transform 0.2s;
+    margin-top: 10px;
 }
 
 .login-form button:hover {
@@ -115,7 +125,7 @@ h1 {
     transform: scale(1.03);
 }
 
-/* PASSWORD FIELD */
+/* Password wrapper */
 .password-wrapper {
     position: relative;
     width: 100%;
@@ -124,6 +134,7 @@ h1 {
 .password-wrapper input {
     width: 100%;
     padding: 12px 45px 12px 15px;
+    margin-bottom: 0;
 }
 
 .password-wrapper .fa {
@@ -142,25 +153,87 @@ h1 {
 }
 
 /* =========================
-   TOAST FIX (IMPORTANT)
+   ADDED: Registration-specific styles
 ========================= */
 
+/* Section divider labels */
+.form-section-label {
+    text-align: left;
+    font-size: 12px;
+    font-weight: 700;
+    color: #a7f3d0;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin: 14px 0 8px 0;
+    padding-bottom: 4px;
+    border-bottom: 1px solid rgba(255,255,255,0.2);
+}
+
+/* Field group with label above input */
+.field-group {
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+    margin-bottom: 12px;
+}
+
+.field-group label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #d1fae5;
+    margin-bottom: 4px;
+}
+
+.field-group input,
+.field-group textarea {
+    margin-bottom: 0 !important;
+}
+
+/* Required asterisk */
+.required {
+    color: #fca5a5;
+}
+
+/* Two column grid */
+.form-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+
+/* Textarea */
+textarea {
+    width: 100%;
+    padding: 10px 15px;
+    border-radius: 10px;
+    border: 1px solid #ccc;
+    resize: none;
+    min-height: 70px;
+    font-size: 14px;
+    outline: none;
+}
+
+textarea:focus {
+    border-color: #4facfe;
+    box-shadow: 0 0 8px rgba(79, 172, 254, 0.5);
+}
+
+/* =========================
+   TOAST
+========================= */
 .toast {
     position: fixed;
     bottom: 80px;
     left: 50%;
     transform: translateX(-50%);
-
     background: rgba(0, 0, 0, 0.85);
     color: #fff;
     padding: 10px 18px;
     border-radius: 25px;
     font-size: 14px;
-
-    opacity: 0; /* 🔥 FIX: hidden by default */
+    opacity: 0;
     pointer-events: none;
     z-index: 99999;
-
     transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
@@ -169,60 +242,30 @@ h1 {
     transform: translateX(-50%) translateY(-10px);
 }
 
-/* Scrollbar */
-.login-container::-webkit-scrollbar {
-    width: 6px;
-}
-
-.login-container::-webkit-scrollbar-thumb {
-    background: #00c267;
-    border-radius: 10px;
-}
-
-/* Responsive */
-@media (max-width: 450px) {
-    .login-container {
-        width: 90%;
-        padding: 30px 20px;
-    }
-
-    h1 {
-        font-size: 16px;
-    }
-}
-
+/* =========================
+   SIGNUP LINK
+========================= */
 .signup-link {
     margin-top: 18px;
     text-align: center;
     font-size: 14px;
     color: #e6f5ef;
-    
     padding-top: 12px;
     border-top: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-.signup-link p {
-    margin: 0;
-    opacity: 0.9;
-}
+.signup-link p { margin: 0; opacity: 0.9; }
 
-/* Link styling */
 .signup-link a {
     color: #00e6a8;
     font-weight: 600;
     text-decoration: none;
-    
     position: relative;
     transition: all 0.25s ease;
 }
 
-/* Hover animation effect */
-.signup-link a:hover {
-    color: #ffffff;
-    transform: translateY(-1px);
-}
+.signup-link a:hover { color: #ffffff; }
 
-/* subtle underline animation */
 .signup-link a::after {
     content: "";
     position: absolute;
@@ -234,29 +277,23 @@ h1 {
     transition: width 0.3s ease;
 }
 
-.signup-link a:hover::after {
-    width: 100%;
-}
+.signup-link a:hover::after { width: 100%; }
 
-.form-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-}
-
-/* make full width fields */
-textarea {
-    width: 100%;
-    padding: 10px;
-    margin-top: 10px;
+/* =========================
+   SCROLLBAR
+========================= */
+.login-container::-webkit-scrollbar { width: 6px; }
+.login-container::-webkit-scrollbar-thumb {
+    background: #00c267;
     border-radius: 10px;
-    border: 1px solid #ddd;
-    resize: none;
 }
 
-/* mobile fix */
+/* =========================
+   RESPONSIVE
+========================= */
 @media (max-width: 600px) {
-    .form-grid {
-        grid-template-columns: 1fr;
-    }
+    .form-grid { grid-template-columns: 1fr; }
+    .login-container { width: 90%; padding: 30px 20px; }
+    .register-container { width: 95%; }
+    h1 { font-size: 16px; }
 }

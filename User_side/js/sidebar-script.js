@@ -4,75 +4,46 @@ document.addEventListener("DOMContentLoaded", () => {
     const toggle = document.getElementById("menuToggle");
     const overlay = document.getElementById("sidebarOverlay");
 
-    console.log("Sidebar loaded:", location.pathname);
-
-    /* =========================
-       SIDEBAR TOGGLE
-    ========================= */
-    toggle?.addEventListener("click", () => {
-        sidebar?.classList.toggle("active");
-        overlay?.classList.toggle("active");
-    });
-
-    overlay?.addEventListener("click", () => {
-        sidebar?.classList.remove("active");
-        overlay?.classList.remove("active");
-    });
-
-    /* =========================
-       ACTIVE LINK
-    ========================= */
     const links = document.querySelectorAll(".sidebar a");
 
-    let currentPage = location.pathname.split("/").pop();
-    if (!currentPage) currentPage = "dashboard.html";
+    // =========================
+    // TOGGLE SIDEBAR
+    // =========================
+    if (toggle && sidebar) {
+        toggle.addEventListener("click", () => {
+            sidebar.classList.toggle("active");
+
+            if (overlay) {
+                overlay.classList.toggle("active");
+            }
+        });
+    }
+
+    // CLOSE ON OUTSIDE CLICK
+    if (overlay) {
+        overlay.addEventListener("click", () => {
+            sidebar.classList.remove("active");
+            overlay.classList.remove("active");
+        });
+    }
+
+    // =========================
+    // ACTIVE LINK HIGHLIGHT
+    // =========================
+    let currentPage = window.location.pathname.split("/").pop();
+
+    if (currentPage === "") {
+        currentPage = "dashboard.html";
+    }
 
     links.forEach(link => {
-        link.classList.toggle(
-            "active",
-            link.getAttribute("href") === currentPage
-        );
-    });
+        const linkPage = link.getAttribute("href");
 
-    /* =========================
-       LOGOUT HANDLER (FIXED GLOBAL SAFE)
-    ========================= */
-    document.addEventListener("click", (e) => {
+        link.classList.remove("active");
 
-        const logoutBtn = e.target.closest(".logout-trigger");
-
-        if (!logoutBtn) return;
-
-        e.preventDefault();
-
-        const modal = document.getElementById("logoutModal");
-
-        if (!modal) {
-            console.warn("Logout modal missing on this page");
-            return;
-        }
-
-        modal.classList.add("show");
-    });
-
-    /* =========================
-       CONFIRM LOGOUT
-    ========================= */
-    document.addEventListener("click", (e) => {
-
-        if (e.target.id === "confirmLogoutBtn") {
-
-            localStorage.removeItem("currentUser");
-
-            window.location.href = "login.html";
+        if (linkPage === currentPage) {
+            link.classList.add("active");
         }
     });
 
 });
-
-/* =========================
-   GLOBAL MODAL CONTROL
-========================= */
-window.closeLogoutModal = function () {
-    document.getElementById("logoutModal")?.classList.remove("show");
-};

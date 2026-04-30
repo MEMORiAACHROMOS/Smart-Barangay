@@ -1,102 +1,94 @@
+// =========================
+// SUPABASE SETUP
+// =========================
+const supabase = window.supabase.createClient(
+    'https://fdywrbdjrtrpnyyhrpoj.supabase.co',
+    'sb_publishable_LMKNlKJ7lXXZIvbUllHPjA_Xi7cwKGH'
+);
+
 let selectedEvent = null;
 let events = [];
 let currentDate = new Date();
 
-/* =========================
-   MOCK DATABASE (LOCALSTORAGE)
-========================= */
-const DB_KEY = "eventsData";
-
-/* seed database */
-function seedDB() {
-    let data = JSON.parse(localStorage.getItem(DB_KEY));
-
-    if (!data || !Array.isArray(data) || data.length === 0) {
-        data = [
-            {
-                id: 1,
-                title: "Vaccination Drive",
-                date: "2026-05-15",
-                description: "Free vaccination for children and seniors.",
-                duration: "8:00 AM - 3:00 PM",
-                location: "Barangay Baesa Health Center",
-                imageUrl: "assets/vaccine.jpg"
-            },
-            {
-                id: 2,
-                title: "Health Seminar",
-                date: "2026-05-20",
-                description: "Maternal and child health awareness program.",
-                duration: "9:00 AM - 12:00 PM",
-                location: "Barangay Baesa Hall",
-                imageUrl: "assets/seminar.jpg"
-            }
-        ];
-
-        localStorage.setItem(DB_KEY, JSON.stringify(data));
-    }
-
-    return data;
-}
-
-/* =========================
-   MOCK API LAYER (SWAPPABLE)
-========================= */
-const eventsAPI = {
-
-    async getAll() {
-        // FUTURE:
-        // const res = await fetch("/api/events");
-        // return await res.json();
-
-        return seedDB();
-    },
-
-    async create(event) {
-        const data = seedDB();
-        event.id = Date.now();
-        data.push(event);
-        localStorage.setItem(DB_KEY, JSON.stringify(data));
-        return event;
-    },
-
-    async clear() {
-        localStorage.removeItem(DB_KEY);
-    }
-};
-
-/* expose for browser console testing */
-window.eventsAPI = eventsAPI;
-
-/* =========================
-   INIT
-========================= */
+// =========================
+// INIT
+// =========================
 document.addEventListener("DOMContentLoaded", async () => {
-    events = await eventsAPI.getAll();
-
+    await loadEvents();
     renderCalendar();
     setupUI();
     updateMonthTitle();
+
+    // ADDED: Auto-fill registration form from sessionStorage
+    autoFillForm();
 });
 
-/* =========================
-   CALENDAR RENDER
-========================= */
+// =========================
+// ADDED: Auto-fill registration form using logged-in user info
+// =========================
+function autoFillForm() {
+    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    if (!currentUser) return;
+
+    // Fill fields with user's info — user can still edit them
+    if (document.getElementById('firstname'))
+        document.getElementById('firstname').value = currentUser.firstname || '';
+    if (document.getElementById('lastname'))
+        document.getElementById('lastname').value = currentUser.lastname || '';
+    if (document.getElementById('email'))
+        document.getElementById('email').value = currentUser.email || '';
+    if (document.getElementById('phone'))
+        document.getElementById('phone').value = currentUser.MobileNumber || currentUser.phone || '';
+    if (document.getElementById('address'))
+        document.getElementById('address').value = currentUser.Address || currentUser.address || '';
+}
+
+// =========================
+// LOAD EVENTS from Supabase
+// =========================
+async function loadEvents() {
+    const { data, error } = await supabase
+        .from('ImmunizationProgramsTbl')
+        .select('*')
+        .order('Date', { ascending: true });
+
+    if (error) {
+        console.error('Failed to load events:', error);
+        events = [];
+        return;
+    }
+
+    events = (data || []).map(e => ({
+        id:           e.Programs_ID,
+        title:        e.EventName,
+        date:         e.Date,
+        description:  e.Notes || '—',
+        duration:     '—',
+        location:     e.Location || '—',
+        type:         e.TypeOfEvent || '—',
+        status:       e.Status || '—',
+        participants: e.Participants_Count || 0,
+        imageUrl:     'assets/default-event.jpg'
+    }));
+}
+
+// =========================
+// RENDER CALENDAR
+// =========================
 function renderCalendar() {
     const calendar = document.getElementById("calendar");
     if (!calendar) return;
 
     calendar.innerHTML = "";
 
-    const year = currentDate.getFullYear();
+    const year  = currentDate.getFullYear();
     const month = currentDate.getMonth();
 
     const firstDayIndex = new Date(year, month, 1).getDay();
-    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const daysInMonth   = new Date(year, month + 1, 0).getDate();
 
     const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-    // weekday labels
     weekDays.forEach(day => {
         const el = document.createElement("div");
         el.className = "weekday";
@@ -104,27 +96,30 @@ function renderCalendar() {
         calendar.appendChild(el);
     });
 
-    // empty cells
     for (let i = 0; i < firstDayIndex; i++) {
         const empty = document.createElement("div");
         empty.className = "empty";
         calendar.appendChild(empty);
     }
 
-    // days
     for (let day = 1; day <= daysInMonth; day++) {
-
-        const dateStr = formatDate(year, month + 1, day);
+        const dateStr   = formatDate(year, month + 1, day);
         const dayEvents = events.filter(e => e.date === dateStr);
 
         const cell = document.createElement("div");
         cell.className = "day";
-
         cell.innerHTML = `<span>${day}</span>`;
 
         if (dayEvents.length > 0) {
             cell.classList.add("event");
             cell.onclick = () => openEvent(dayEvents[0]);
+
+            if (dayEvents.length > 1) {
+                const badge = document.createElement("span");
+                badge.className = "event-badge";
+                badge.textContent = dayEvents.length;
+                cell.appendChild(badge);
+            }
         } else {
             cell.classList.add("disabled");
         }
@@ -133,16 +128,16 @@ function renderCalendar() {
     }
 }
 
-/* =========================
-   DATE FORMAT
-========================= */
+// =========================
+// DATE FORMAT
+// =========================
 function formatDate(y, m, d) {
     return `${y}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
 }
 
-/* =========================
-   MONTH NAVIGATION
-========================= */
+// =========================
+// MONTH NAVIGATION
+// =========================
 function nextMonth() {
     currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
     refreshCalendar();
@@ -158,30 +153,29 @@ function refreshCalendar() {
     updateMonthTitle();
 }
 
-/* =========================
-   MONTH TITLE
-========================= */
 function updateMonthTitle() {
     const el = document.getElementById("monthTitle");
     if (!el) return;
-
     el.textContent = currentDate.toLocaleDateString("en-US", {
         month: "long",
         year: "numeric"
     });
 }
 
-/* =========================
-   MODAL
-========================= */
+// =========================
+// OPEN EVENT MODAL
+// =========================
 function openEvent(event) {
     selectedEvent = event;
 
-    setText("eventTitle", event.title);
-    setText("eventDesc", event.description);
-    setText("eventDate", event.date);
-    setText("eventDuration", event.duration);
-    setText("eventLocation", event.location);
+    setText("eventTitle",        event.title);
+    setText("eventDesc",         event.description);
+    setText("eventDate",         event.date);
+    setText("eventDuration",     event.duration);
+    setText("eventLocation",     event.location);
+    setText("eventType",         event.type);
+    setText("eventStatus",       event.status);
+    setText("eventParticipants", event.participants);
 
     const img = document.getElementById("eventImage");
     if (img) img.src = event.imageUrl || "assets/default-event.jpg";
@@ -193,13 +187,14 @@ function closeModal() {
     document.getElementById("eventModal")?.classList.remove("show");
 }
 
-/* =========================
-   UI / REGISTRATION
-========================= */
+// =========================
+// UI / REGISTRATION
+// =========================
 function setupUI() {
-
     document.getElementById("openRegisterBtn")?.addEventListener("click", () => {
         document.getElementById("eventModal")?.classList.remove("show");
+        // ADDED: Re-fill form every time register modal opens
+        autoFillForm();
         document.getElementById("registerModal")?.classList.add("show");
     });
 
@@ -210,48 +205,49 @@ function setupUI() {
     const form = document.getElementById("registerForm");
     if (!form) return;
 
-    form.addEventListener("submit", (e) => {
+    // CHANGED: Now saves to EventRegistrationsTbl in Supabase
+    form.addEventListener("submit", async (e) => {
         e.preventDefault();
-
         if (!selectedEvent) return alert("No event selected.");
 
-        const registration = {
-            eventId: selectedEvent.id,
-            event: selectedEvent.title,
-            date: selectedEvent.date,
-            lastname: value("lastname"),
-            firstname: value("firstname"),
-            middleinitial: value("middleinitial"),
-            gender: value("gender"),
-            phone: value("phone"),
-            email: value("email"),
-            address: value("address"),
-            type: "event",
-            timestamp: new Date().toISOString()
-        };
+        const submitBtn = form.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting...';
 
-        let data = JSON.parse(localStorage.getItem("appointmentsData")) || {
-            appointments: [],
-            events: [],
-            eventRegistrations: []
-        };
+        const { error } = await supabase.from('EventRegistrationsTbl').insert([{
+            Event_ID:      selectedEvent.id,
+            LastName:      document.getElementById('lastname').value.trim(),
+            FirstName:     document.getElementById('firstname').value.trim(),
+            MiddleInitial: document.getElementById('middleinitial').value.trim(),
+            Gender:        document.getElementById('gender').value,
+            PhoneNumber:   document.getElementById('phone').value.trim(),
+            Email:         document.getElementById('email').value.trim(),
+            Address:       document.getElementById('address').value.trim()
+        }]);
 
-        data.eventRegistrations.push(registration);
+        if (error) {
+            alert('Failed to register: ' + error.message);
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Submit Registration';
+            return;
+        }
 
-        localStorage.setItem("appointmentsData", JSON.stringify(data));
-
-        alert("Successfully registered!");
+        alert(`Successfully registered for ${selectedEvent.title}!`);
         form.reset();
+        // ADDED: Re-fill after reset so info stays
+        autoFillForm();
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Submit Registration';
         closeRegister();
     });
 }
 
-/* =========================
-   HELPERS
-========================= */
-function setText(id, value) {
+// =========================
+// HELPERS
+// =========================
+function setText(id, val) {
     const el = document.getElementById(id);
-    if (el) el.textContent = value || "";
+    if (el) el.textContent = val || "—";
 }
 
 function value(id) {

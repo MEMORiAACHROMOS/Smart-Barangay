@@ -1,3 +1,10 @@
+// ADDED: Supabase setup
+const SUPABASE_URL = 'https://fdywrbdjrtrpnyyhrpoj.supabase.co';
+const SUPABASE_ANON_KEY = 'sb_publishable_LMKNlKJ7lXXZIvbUllHPjA_Xi7cwKGH';
+const { createClient } = window.supabase;
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+// ===== COPY =====
 function copyText(text) {
     navigator.clipboard.writeText(text).catch(err => {
         console.error("Copy failed:", err);
@@ -9,12 +16,10 @@ function showToast(message) {
     const toast = document.getElementById("toast");
     toast.textContent = message;
     toast.classList.add("show");
-
     setTimeout(() => {
         toast.classList.remove("show");
     }, 1500);
 }
-
 
 // ===== PASSWORD TOGGLE =====
 const togglePassword = document.getElementById("togglePassword");
@@ -22,48 +27,63 @@ const passwordInput = document.getElementById("password");
 
 if (togglePassword) {
     togglePassword.addEventListener("click", function () {
-        const type = passwordInput.getAttribute("type") === "password"
-            ? "text"
-            : "password";
-
+        const type = passwordInput.getAttribute("type") === "password" ? "text" : "password";
         passwordInput.setAttribute("type", type);
-
         this.classList.toggle("fa-eye");
         this.classList.toggle("fa-eye-slash");
     });
 }
 
-
 // ===== LOGIN FUNCTION =====
-document.getElementById("loginButton").addEventListener("click", function () {
+// CHANGED: Replaced localStorage with Supabase authentication against UserRegistrationTbl
+document.getElementById("loginButton").addEventListener("click", async function () {
 
     const email = document.getElementById("email").value.trim();
-    const password = document.getElementById("password").value.trim();
+    const pass = document.getElementById("password").value.trim();
 
-    // basic validation
-    if (!email || !password) {
+    // Basic validation
+    if (!email || !pass) {
         showToast("Please fill in all fields");
         return;
     }
 
-    // get users from localStorage
-    const users = JSON.parse(localStorage.getItem("users")) || [];
+    // ADDED: Look up user by email in UserRegistrationTbl
+    const { data, error } = await supabase
+        .from('UserRegistrationTbl')
+        .select('*')
+        .eq('Email', email)
+        .eq('Status', 'active')
+        .single();
 
-    // find matching user
-    const user = users.find(u => u.email === email && u.password === password);
-
-    if (!user) {
+    if (error || !data) {
         showToast("Invalid email or password");
         return;
     }
 
-    // save session
-    localStorage.setItem("currentUser", JSON.stringify(user));
+    // ADDED: Verify password using bcrypt via Supabase RPC
+    const { data: verified, error: verifyError } = await supabase
+        .rpc('verify_password', {
+            input_password: pass,
+            hashed_password: data.PasswordHash
+        });
+
+    if (verifyError || !verified) {
+        showToast("Invalid email or password");
+        return;
+    }
+
+    // ADDED: Save user session in sessionStorage
+    sessionStorage.setItem('currentUser', JSON.stringify({
+        id: data.Registration_ID,
+        email: data.Email,
+        firstname: data.FirstName,
+        lastname: data.LastName
+    }));
 
     showToast("Login successful ✓");
 
-    // redirect to user dashboard
+    // ADDED: Redirect to user dashboard after login
     setTimeout(() => {
-        window.location.href = "user-dashboard.html";
+        window.location.href = "dashboard.html";
     }, 1000);
 });
