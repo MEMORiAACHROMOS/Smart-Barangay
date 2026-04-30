@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>  
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Login - Smart Barangay Health Information System</title>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/login-styles.css">
+
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Header -->
+    <header class="main-header">
+        <h2>User Login</h2>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="login-container">
+            
+            <!-- Logo -->
+            <div class="logo-holder">
+                <img src="image.png" alt="Barangay Logo">
+            </div>
+
+            <!-- Title -->
+            <h1>
+                SMART BARANGAY:<br>
+                HEALTH INFORMATION SYSTEM
+            </h1>
+
+            <!-- Login Form -->
+            <div class="login-form">
+
+                <!-- EMAIL -->
+                <input type="email" placeholder="Enter Email" id="email">
+
+                <!-- PASSWORD -->
+                <div class="password-wrapper">
+                    <input type="password" placeholder="Enter Password" id="password">
+                    <i class="fa fa-eye" id="togglePassword"></i>
+                </div>
+
+                <!-- LOGIN BUTTON -->
+                <button type="button" id="loginButton">Login</button>
+
+                <!-- SIGNUP -->
+                <div class="signup-link">
+                    <p>Don’t have an account? <a href="register.html">Register here</a></p>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <p>&copy; 2026 Smart Barangay Health Information System | All Rights Reserved</p>
+
+        <div class="footer-contact">
+            <p onclick="copyText('57 Baesa Road, Barangay Baesa, District 6')" title="Tap to copy">
+                57 Baesa Road, Barangay Baesa, District 6
+            </p>
+
+            <p onclick="copyText('(02) 7148 4458')" title="Tap to copy">
+                (02) 7148 4458
+            </p>
+        </div>
+    </footer>
+
+    <!-- Toast -->
+    <div id="toast" class="toast">Copied to clipboard ✓</div>
+
+    <!-- Scripts -->
+    <script src="js/login-script.js"></script>
+
+</body>
+</html>

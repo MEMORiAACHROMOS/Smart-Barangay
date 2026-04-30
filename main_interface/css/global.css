@@ -1,0 +1,79 @@
+/* =========================
+   GLOBAL RESET
+========================= */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* =========================
+   BODY LAYOUT
+========================= */
+body {
+   
+    margin: 0;
+    display: flex;
+    min-height: 100vh;
+    flex-direction: row;
+
+
+    /* BACKGROUND IMAGE */
+    background-image: url("healthcenter-sample.png");
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+
+}
+
+/* =========================
+   MAIN CONTENT AREA
+   (shared layout only)
+========================= */
+main {
+    margin-left: 220px;
+    padding-top: 80px;
+    padding: 80px 40px 60px 40px;
+    flex: 1;
+}
+
+/* =========================
+   HEADINGS (H1 GLOBAL STYLE)
+========================= */
+h1 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #065f46;
+    margin-bottom: 20px;
+       
+}
+
+/* =========================
+   FOOTER
+========================= */
+.main-footer {
+    left: 220px;
+    width: calc(100% - 220px);
+}
+
+/* =========================
+   RESPONSIVE DESIGN
+========================= */
+@media (max-width: 768px) {
+
+    .sidebar {
+        width: 60px;
+    }
+
+    main {
+        margin-left: 60px;
+        padding: 80px 20px 60px 20px;
+    }
+
+    .main-footer {
+        left: 60px;
+        width: calc(100% - 60px);
+    }
+}

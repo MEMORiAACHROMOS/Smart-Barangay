@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile & Medical Records - Barangay Baesa Health System</title>
+
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/sidebar.css">
+    <link rel="stylesheet" href="css/profileandmedrecs.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+</head>
+
+<body>
+
+<header class="main-header">
+    <i class="fa-solid fa-bars" id="menuToggle"
+       style="position:absolute; left:20px; top:50%; transform:translateY(-50%); cursor:pointer;"></i>
+
+    <h2>Profile & Medical Records</h2>
+</header>
+
+<aside class="sidebar" id="sidebar">
+    <ul>
+        <li><a href="dashboard.html"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+        <li><a href="appointments.html"><i class="fa-solid fa-calendar-check"></i> Appointments</a></li>
+        <li><a href="events.html"><i class="fa-solid fa-calendar"></i> Events</a></li>
+        <li><a href="profileandmedrecs.html" class="active"><i class="fa-solid fa-user"></i> Profile</a></li>
+        <li class="logout-btn">
+           <a href="#" class="logout-trigger">
+    <i class="fa-solid fa-right-from-bracket"></i> Logout
+</a>
+        </li>
+    </ul>
+</aside>
+
+<main class="container">
+
+    <!-- PROFILE -->
+    <section class="card profile-card">
+
+        <div class="profile-header">
+            <div>
+                <h2 id="fullName">Loading...</h2>
+                <p id="ageText"></p>
+            </div>
+
+            <button id="editProfileBtn">Edit Profile</button>
+        </div>
+
+        <div class="profile-details">
+            <p><strong>Email:</strong> <span id="email"></span></p>
+            <p><strong>Phone:</strong> <span id="phone"></span></p>
+            <p><strong>Address:</strong> <span id="address"></span></p>
+        </div>
+
+    </section>
+
+    <!-- MEDICAL RECORDS (READ ONLY) -->
+    <section class="card records-card">
+
+        <div class="records-header">
+            <h3>Medical Records</h3>
+        </div>
+
+        <div id="recordsList" class="records-list">
+            <!-- dynamic (READ ONLY) -->
+        </div>
+
+    </section>
+
+</main>
+
+<!-- EDIT PROFILE MODAL -->
+<div class="modal" id="editProfileModal">
+    <div class="modal-content">
+
+        <h3>Edit Profile</h3>
+
+        <input id="firstname" placeholder="First Name">
+        <input id="middlename" placeholder="Middle Name">
+        <input id="lastname" placeholder="Last Name">
+        <input id="suffix" placeholder="Suffix (optional)">
+        <input id="birthdate" type="date">
+
+        <input id="emailInput" placeholder="Email">
+        <input id="phoneInput" placeholder="Phone">
+        <textarea id="addressInput" placeholder="Address"></textarea>
+
+        <button id="saveProfileBtn">Save</button>
+        <button onclick="closeEditModal()">Cancel</button>
+
+    </div>
+</div>
+<!-- ================= LOGOUT CONFIRM MODAL ================= -->
+<div class="modal" id="logoutModal">
+    <div class="modal-content logout-modal">
+
+        <h3>Confirm Logout</h3>
+        <p>Are you sure you want to log out of your account?</p>
+
+        <div class="logout-actions">
+            <button id="confirmLogoutBtn">Yes, Logout</button>
+            <button onclick="closeLogoutModal()">Cancel</button>
+        </div>
+
+    </div>
+</div>
+<!-- FOOTER -->
+<footer class="main-footer">
+    <p>&copy; 2026 Smart Barangay Health Information System | All Rights Reserved</p>
+
+    <div class="footer-contact">
+        <p onclick="copyText('57 Baesa Road, Barangay Baesa, District 6')">
+            57 Baesa Road, Barangay Baesa, District 6
+        </p>
+        <p onclick="copyText('(02) 7148 4458')">
+            (02) 7148 4458
+        </p>
+    </div>
+</footer>
+
+<script>
+function copyText(text) {
+    navigator.clipboard.writeText(text).catch(err => {
+        console.error("Copy failed:", err);
+    });
+}
+</script>
+
+<script src="js/sidebar-script.js"></script>
+<script src="js/profileandmedrecs.js"></script>
+
+</body>
+</html>

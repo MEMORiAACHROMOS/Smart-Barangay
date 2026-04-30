@@ -1,0 +1,150 @@
+/* Reset default styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+/* BODY FIXED LAYOUT (NO SCROLL) */
+body {
+    height: 100vh;
+    overflow: hidden;
+
+    display: flex;
+    flex-direction: column;
+
+    background: url('healthcenter-sample.png') no-repeat center center/cover;
+
+    padding-top: 225px; /* space for header */
+    padding-bottom: 50px; /* space for footer */
+}
+
+/* Header Banner */
+.main-header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background: #065f46;
+    color: #fff;
+    text-align: center;
+    padding: 15px 0;
+    font-size: 18px;
+    font-weight: 600;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    z-index: 1000;
+}
+
+/* Footer Banner */
+.main-footer {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    background: #065f46;
+    color: #fff;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 14px;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.3);
+}
+
+/* HERO FIXED (fills remaining space) */
+.hero {
+    flex: 1;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    padding: 20px;
+    text-align: center;
+
+    color: white;
+}
+
+/* HERO CONTENT */
+.hero-content {
+    max-width: 850px;
+}
+
+/* HERO TEXT SHADOWS */
+.hero h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.75);
+}
+
+.slogan {
+    font-size: 1.4rem;
+    font-weight: 500;
+    margin-bottom: 20px;
+    color: #00d1a0;
+    text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.7);
+}
+
+.hero p {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin-bottom: 30px;
+    line-height: 1.6;
+    text-shadow: 1px 1px 8px rgba(0, 0, 0, 0.7);
+}
+
+/* BUTTONS */
+.hero-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 12px 24px;
+    border-radius: 30px;
+    text-decoration: none;
+    font-weight: 600;
+    transition: 0.3s;
+}
+
+.primary {
+    background: #00b894;
+    color: white;
+}
+
+.primary:hover {
+    background: #019170;
+}
+
+.secondary {
+    border: 2px solid white;
+    color: white;
+}
+
+.secondary:hover {
+    background: white;
+    color: black;
+}
+
+/* TOAST */
+.toast {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 10px 18px;
+    border-radius: 25px;
+    font-size: 14px;
+
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(-10px);
+}

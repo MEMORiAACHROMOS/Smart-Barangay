@@ -1,0 +1,187 @@
+/* =========================
+   PAGE TITLE
+========================= */
+main h1 {
+    font-size: 24px;
+    color: #065f46;
+    margin-bottom: 20px;
+}
+
+/* =========================
+   TOP BAR
+========================= */
+.top-bar {
+    display: flex;
+    gap: 12px;
+    margin-bottom: 15px;
+}
+
+.top-bar input,
+.top-bar select {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.add-btn {
+    background: #065f46;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+/* =========================
+   TABLE
+========================= */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th {
+    background: #065f46;
+    color: white;
+    text-align: left;
+    padding: 14px;
+}
+
+td {
+    padding: 12px;
+    border-bottom: 1px solid #eee;
+}
+
+/* =========================
+   DROPDOWNS
+========================= */
+.role-select,
+.status-select {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    text-align: center;
+    min-width: 110px;
+}
+
+.role-select {
+    background: #e0f2fe;
+    color: #0369a1;
+}
+
+.status-select.active-status {
+    background: #dcfce7 !important;
+    color: #15803d !important;
+}
+
+.status-select.inactive {
+    background: #fee2e2 !important;
+    color: #dc2626 !important;
+}
+
+.role-select:focus,
+.status-select:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(6, 95, 70, 0.3);
+}
+
+/* =========================
+   ACTION BUTTONS
+========================= */
+.edit {
+    background: #0275d8;
+    color: white;
+    border: none;
+    padding: 5px 8px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.delete {
+    background: #d9534f;
+    color: white;
+    border: none;
+    padding: 5px 8px;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+/* =========================
+   MODAL STYLES
+========================= */
+.modal-overlay {
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+}
+
+.modal-window {
+    background: #fff;
+    padding: 32px 24px 24px 24px;
+    border-radius: 12px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.18);
+    min-width: 320px;
+    max-width: 95vw;
+    width: 350px;
+}
+
+.modal-window h2 {
+    margin-top: 0;
+    margin-bottom: 18px;
+    font-size: 20px;
+    color: #065f46;
+    text-align: center;
+}
+
+.modal-window label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 500;
+    color: #333;
+}
+
+.modal-window input,
+.modal-window select {
+    width: 100%;
+    padding: 8px 10px;
+    margin-bottom: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 15px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+}
+
+.modal-save {
+    background: #065f46;
+    color: #fff;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.modal-cancel {
+    background: #d9534f;
+    color: #fff;
+    border: none;
+    padding: 8px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+}
