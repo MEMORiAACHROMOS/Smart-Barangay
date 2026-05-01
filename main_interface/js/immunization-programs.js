@@ -17,12 +17,11 @@ window.addEventListener('DOMContentLoaded', function () {
     setupAddModal();
     setupEditModal();
     setupViewModal();
-    // ADDED: setup registered modal
     setupRegisteredModal();
 });
 
 // =========================
-// LOAD programs from Supabase
+// LOAD PROGRAMS
 // =========================
 async function loadPrograms() {
     const { data, error } = await supabase
@@ -37,8 +36,7 @@ async function loadPrograms() {
 }
 
 // =========================
-// RENDER table rows
-// ADDED: Registered button in each row
+// RENDER TABLE
 // =========================
 function renderTable(programs) {
     const tbody = document.getElementById('programsTableBody');
@@ -71,6 +69,20 @@ function renderTable(programs) {
 }
 
 // =========================
+// ADDED: CHARACTER COUNTER FOR NOTES
+// Limits notes to 300 characters with live counter, turns red near limit
+// =========================
+function updateCharCount(textareaId, counterId) {
+    const textarea = document.getElementById(textareaId);
+    const counter  = document.getElementById(counterId);
+    if (!textarea || !counter) return;
+    const len = textarea.value.length;
+    counter.textContent = `${len} / 300 characters`;
+    // ADDED: turn red when within 20 characters of limit
+    counter.style.color = len >= 280 ? '#ef4444' : '#94a3b8';
+}
+
+// =========================
 // ADD EVENT
 // =========================
 function setupAddModal() {
@@ -78,8 +90,21 @@ function setupAddModal() {
     const closeBtn = document.getElementById('closeAddEventModal');
     const form     = document.getElementById('addEventForm');
 
-    closeBtn.addEventListener('click', () => { modal.classList.remove('active'); form.reset(); });
-    modal.addEventListener('click', (e) => { if (e.target === modal) { modal.classList.remove('active'); form.reset(); } });
+    closeBtn.addEventListener('click', () => {
+        modal.classList.remove('active');
+        form.reset();
+        // ADDED: reset counter on close
+        updateCharCount('eventNotes', 'eventNotesCount');
+    });
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.remove('active');
+            form.reset();
+            // ADDED: reset counter on close
+            updateCharCount('eventNotes', 'eventNotesCount');
+        }
+    });
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -106,6 +131,8 @@ function setupAddModal() {
 
         modal.classList.remove('active');
         form.reset();
+        // ADDED: reset counter after save
+        updateCharCount('eventNotes', 'eventNotesCount');
         saveBtn.disabled = false;
         saveBtn.textContent = 'Save';
         await loadPrograms();
@@ -114,6 +141,8 @@ function setupAddModal() {
 
 function openModal() {
     document.getElementById('addEventModal').classList.add('active');
+    // ADDED: reset counter when modal opens
+    updateCharCount('eventNotes', 'eventNotesCount');
 }
 
 // =========================
@@ -124,8 +153,21 @@ function setupEditModal() {
     const closeBtn = document.getElementById('closeEditEventModal');
     const form     = document.getElementById('editEventForm');
 
-    closeBtn.addEventListener('click', () => { modal.classList.remove('active'); form.reset(); });
-    modal.addEventListener('click', (e) => { if (e.target === modal) { modal.classList.remove('active'); form.reset(); } });
+    closeBtn.addEventListener('click', () => {
+        modal.classList.remove('active');
+        form.reset();
+        // ADDED: reset counter on close
+        updateCharCount('editEventNotes', 'editEventNotesCount');
+    });
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            modal.classList.remove('active');
+            form.reset();
+            // ADDED: reset counter on close
+            updateCharCount('editEventNotes', 'editEventNotesCount');
+        }
+    });
 
     form.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -172,6 +214,9 @@ async function openEditModal(id) {
     document.getElementById('editEventStatus').value       = prog.Status || '';
     document.getElementById('editEventParticipants').value = prog.Participants_Count || 0;
     document.getElementById('editEventNotes').value        = prog.Notes || '';
+
+    // ADDED: update char count when edit modal opens with existing data
+    updateCharCount('editEventNotes', 'editEventNotesCount');
 
     document.getElementById('editEventModal').classList.add('active');
 }
@@ -220,7 +265,7 @@ function openViewModal(id) {
 }
 
 // =========================
-// ADDED: REGISTERED PEOPLE MODAL
+// REGISTERED PEOPLE MODAL
 // =========================
 function setupRegisteredModal() {
     const modal    = document.getElementById('registeredModal');
@@ -376,4 +421,18 @@ function getStatusClass(status) {
         case 'done':      return 'status-done';
         default:          return '';
     }
+}
+
+// =========================
+// ADDED: CHARACTER COUNTER FOR NOTES
+// Shows live count, turns red when within 20 chars of 300 limit
+// =========================
+function updateCharCount(textareaId, counterId) {
+    const textarea = document.getElementById(textareaId);
+    const counter  = document.getElementById(counterId);
+    if (!textarea || !counter) return;
+    const len = textarea.value.length;
+    counter.textContent = `${len} / 300 characters`;
+    // ADDED: red warning when near limit
+    counter.style.color = len >= 280 ? '#ef4444' : '#94a3b8';
 }

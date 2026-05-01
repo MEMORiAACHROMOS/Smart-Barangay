@@ -383,3 +383,41 @@ body.dark .card-container.horizontal-cards .card-title {
 body.dark .card-container.horizontal-cards .card-value {
     color: #a7f3d0 !important;
 }
+/* ADDED: Dark mode text color fix for report labels and enhanced report elements */
+body.dark .report-label {
+    color: #e2e8f0;
+}
+
+body.dark .enhanced-report {
+    background: linear-gradient(120deg, #1e293b 0%, #0f172a 100%);
+    border-left-color: #3b82f6;
+}
+
+body.dark .enhanced-report h2 {
+    color: #e2e8f0;
+}
+
+body.dark .report-row {
+    border-bottom-color: #334155;
+}
+
+body.dark .report-badge {
+    background: #334155;
+    color: #e2e8f0;
+}
+
+/* ADDED: Dark mode badge color overrides per type — brighter versions */
+body.dark .report-badge.patient     { background: #1d4ed8; color: #ffffff; }
+body.dark .report-badge.new-patient { background: #059669; color: #ffffff; }
+body.dark .report-badge.low-stock   { background: #d97706; color: #ffffff; }
+body.dark .report-badge.expired     { background: #dc2626; color: #ffffff; }
+body.dark .report-badge.user        { background: #2563eb; color: #ffffff; }
+body.dark .report-badge.admin       { background: #7c3aed; color: #ffffff; }
+body.dark .report-badge.nurse       { background: #059669; color: #ffffff; }
+body.dark .report-badge.doctor      { background: #0284c7; color: #ffffff; }
+body.dark .report-badge.active      { background: #16a34a; color: #ffffff; }
+
+body.dark .report-badge:hover {
+    background: #10b981;
+    color: #fff;
+}

@@ -9,42 +9,65 @@
     top: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(0,0,0,0.5);
+    background: rgba(0,0,0,0.4);
     justify-content: center;
     align-items: center;
+    backdrop-filter: blur(4px);
+    animation: fadeIn 0.2s ease;
 }
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
 .modal.active {
     display: flex;
 }
+
 .modal-content {
-    background: #fff;
-    padding: 28px 24px;
-    border-radius: 16px;
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    padding: 32px 28px;
+    border-radius: 14px;
     width: 460px;
     max-width: 90vw;
     display: flex;
     flex-direction: column;
-    gap: 14px;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    gap: 16px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.15);
+    border: 1px solid rgba(255,255,255,0.8);
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* ADDED: Modal header with icon + subtitle */
 .modal-header {
     text-align: center;
-    padding-bottom: 12px;
-    border-bottom: 2px solid #f0fdf4;
+    padding-bottom: 14px;
+    border-bottom: 2px solid #e2e8f0;
 }
 .modal-icon {
     font-size: 34px;
 }
 .modal-header h2 {
-    margin: 6px 0 2px 0;
-    font-size: 20px;
-    color: #065f46;
+    margin: 8px 0 3px 0;
+    font-size: 22px;
+    color: #10b981;
+    font-weight: 700;
 }
 .modal-subtitle {
     font-size: 12px;
-    color: #888;
+    color: #64748b;
     margin: 0;
 }
 
@@ -61,47 +84,68 @@
 .form-group {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 8px;
 }
 .form-group label {
     font-size: 13px;
     font-weight: 600;
-    color: #065f46;
+    color: #475569;
+    text-transform: uppercase;
+    letter-spacing: 0.3px;
 }
 .form-group input,
 .form-group select {
-    padding: 10px 12px;
-    border: 1.5px solid #e5e7eb;
+    padding: 11px 14px;
+    border: 2px solid #e2e8f0;
     border-radius: 8px;
     font-size: 14px;
     outline: none;
-    transition: border-color 0.2s;
-    background: #f9fafb;
+    transition: all 0.3s ease;
+    background: #f8fafc;
     width: 100%;
     box-sizing: border-box;
     font-family: inherit;
 }
 .form-group input:focus,
 .form-group select:focus {
-    border-color: #065f46;
-    background: #fff;
+    border-color: #10b981;
+    background: white;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.1);
 }
 .form-group input:disabled {
-    background: #f3f4f6;
-    color: #aaa;
+    background: #f0f4f8;
+    color: #94a3b8;
     cursor: not-allowed;
 }
 
 .modal-actions {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     justify-content: flex-end;
-    margin-top: 6px;
+    margin-top: 12px;
+    padding-top: 14px;
+    border-top: 1px solid #e2e8f0;
 }
-.modal-save { background: #065f46; color: #fff; }
-.modal-cancel { background: #d9534f; color: #fff; }
-.modal-save:hover { background: #0a7a58; }
-.modal-cancel:hover { background: #a12d2a; }
+.modal-save {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
+}
+.modal-cancel {
+    background: linear-gradient(135deg, #94a3b8 0%, #64748b 100%);
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(100, 116, 139, 0.2);
+}
+.modal-save:hover {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+    transform: translateY(-2px);
+}
+.modal-cancel:hover {
+    background: linear-gradient(135deg, #64748b 0%, #475569 100%);
+    box-shadow: 0 4px 16px rgba(100, 116, 139, 0.3);
+    transform: translateY(-2px);
+}
 
 /* =========================
    APPOINTMENTS WRAPPER
@@ -119,43 +163,55 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 10px;
+    gap: 15px;
     flex-wrap: wrap;
 }
 .topbar-left {
     display: flex;
-    gap: 10px;
+    gap: 12px;
     align-items: center;
     flex-wrap: wrap;
 }
 .topbar-left input,
 .topbar-left select {
-    padding: 10px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
+    padding: 12px 16px;
+    border: 2px solid #e0e7ff;
+    border-radius: 10px;
     outline: none;
     min-width: 200px;
+    background: #f8fafc;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
 }
 .topbar-left input:focus,
 .topbar-left select:focus {
-    border-color: #065f46;
+    border-color: #10b981;
+    background: white;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.15);
 }
 
 /* =========================
    BUTTONS
 ========================= */
 .btn {
-    padding: 10px 12px;
-    background: #065f46;
+    padding: 11px 16px;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
     color: white;
     border: none;
     border-radius: 8px;
     cursor: pointer;
     text-decoration: none;
-    transition: 0.2s ease;
+    transition: all 0.3s ease;
     font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
 }
-.btn:hover { background: #0a7a58; }
+.btn:hover {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+    transform: translateY(-2px);
+}
 
 /* =========================
    SUMMARY CARDS
@@ -163,34 +219,23 @@
 .card-container {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 15px;
-    margin-bottom: 20px;
+    gap: 18px;
+    margin-bottom: 25px;
 }
 .card {
     background: #ffffff;
-    padding: 20px 15px 15px 15px;
-    border-radius: 10px;
+    padding: 22px 18px 18px 18px;
+    border-radius: 12px;
     text-align: center;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     transition: all 0.3s ease;
-    border-top: 5px solid #ccc;
+    border-top: 6px solid #ccc;
     position: relative;
     overflow: hidden;
 }
 .card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
-}
-
-.card::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 60px;
-    height: 60px;
-    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
-    border-radius: 50%;
+    transform: translateY(-6px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.12);
 }
 
 /* Card 1 - Today: Blue */
@@ -282,46 +327,97 @@ table {
     width: 100%;
     border-collapse: collapse;
     background: white;
-    border-radius: 10px;
+    border-radius: 12px;
     overflow: hidden;
-    margin-top: 10px;
+    margin-top: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.06);
 }
 table th {
-    background: #065f46;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
     color: white;
-    padding: 12px;
+    padding: 15px 14px;
     text-align: left;
-    font-size: 14px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
 }
 table td {
-    padding: 12px;
-    border-bottom: 1px solid #eee;
+    padding: 14px;
+    border-bottom: 1px solid #f0f4f8;
     font-size: 14px;
+    color: #334155;
+    transition: background-color 0.2s ease;
+}
+
+table tr:hover {
+    background-color: #f8fafc;
+}
+
+table tr:last-child td {
+    border-bottom: none;
 }
 
 /* =========================
    STATUS LABELS
 ========================= */
-.status-pending   { color: orange;   font-weight: bold; }
-.status-approved  { color: #16a34a;  font-weight: bold; }
-.status-completed { color: #2563eb;  font-weight: bold; }
-.status-cancelled { color: #dc2626;  font-weight: bold; }
+.status-pending {
+    color: #f59e0b;
+    font-weight: 600;
+    background: #fef3c7;
+    padding: 5px 12px;
+    border-radius: 6px;
+    display: inline-block;
+    font-size: 12px;
+}
+
+.status-approved {
+    color: #059669;
+    font-weight: 600;
+    background: #d1fae5;
+    padding: 5px 12px;
+    border-radius: 6px;
+    display: inline-block;
+    font-size: 12px;
+}
+
+.status-completed {
+    color: #0369a1;
+    font-weight: 600;
+    background: #cffafe;
+    padding: 5px 12px;
+    border-radius: 6px;
+    display: inline-block;
+    font-size: 12px;
+}
+
+.status-cancelled {
+    color: #dc2626;
+    font-weight: 600;
+    background: #fee2e2;
+    padding: 5px 12px;
+    border-radius: 6px;
+    display: inline-block;
+    font-size: 12px;
+}
 
 /* =========================
    ACTION BUTTONS IN TABLE
 ========================= */
 table .btn {
-    padding: 6px 8px;
+    padding: 7px 12px;
     font-size: 12px;
-    margin-right: 5px;
+    margin-right: 6px;
 }
 
 /* =========================
    DARK MODE STYLES FOR MODAL
 ========================= */
 body.dark .modal-content {
-    background: #1e293b;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+    border-color: #334155;
 }
 
 body.dark .modal-header {
@@ -329,7 +425,7 @@ body.dark .modal-header {
 }
 
 body.dark .modal-header h2 {
-    color: #a7f3d0;
+    color: #6ee7b7;
 }
 
 body.dark .modal-subtitle {
@@ -337,7 +433,7 @@ body.dark .modal-subtitle {
 }
 
 body.dark .form-group label {
-    color: #94a3b8;
+    color: #cbd5e1;
 }
 
 body.dark .form-group input,
@@ -352,6 +448,7 @@ body.dark .form-group select:focus {
     border-color: #10b981;
     background: #1e293b;
     color: #e2e8f0;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
 }
 
 body.dark .form-group input:disabled {
@@ -369,13 +466,16 @@ body.dark .topbar-left select {
 body.dark .topbar-left input:focus,
 body.dark .topbar-left select:focus {
     border-color: #10b981;
+    background: #0f172a;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
 }
 
 /* =========================
    DARK MODE STYLES FOR CARDS
 ========================= */
 body.dark .card {
-    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    background: #1e293b;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.3);
 }
 
 body.dark .card:nth-child(1) {
@@ -408,4 +508,25 @@ body.dark .card:nth-child(4) p {
 
 body.dark .card h3 {
     color: #94a3b8;
+}
+
+body.dark table {
+    background: #1e293b;
+}
+
+body.dark table th {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+}
+
+body.dark table td {
+    color: #cbd5e1;
+    border-bottom-color: #334155;
+}
+
+body.dark table tr:hover {
+    background-color: #334155;
+}
+
+body.dark .modal-actions {
+    border-top-color: #334155;
 }

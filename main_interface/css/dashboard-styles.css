@@ -3,41 +3,39 @@
 ========================= */
 .marquee {
     overflow: hidden;
-    background: linear-gradient(90deg, #065f46, #047857);
-    padding: 15px;
-    border-radius: 8px;
-    margin-bottom: 20px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    background: linear-gradient(90deg, #10b981, #059669);
+    padding: 16px 20px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
 }
 
 .marquee span {
     display: inline-block;
     padding-left: 100%;
     animation: scroll 20s linear infinite;
-    font-size: 18px;
+    font-size: 16px;
     font-weight: 600;
     color: white;
     white-space: nowrap;
+    letter-spacing: 0.5px;
 }
 
 @keyframes scroll {
-    0% {
-        transform: translateX(0);
-    }
-    100% {
-        transform: translateX(-100%);
-    }
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-100%); }
 }
 
 /* =========================
    DASHBOARD TITLE
 ========================= */
 main h1 {
-    font-size: 24px;
-    font-weight: 600;
-    color: #065f46;
-    margin-bottom: 25px;
+    font-size: 26px;
+    font-weight: 700;
+    color: #10b981;
+    margin-bottom: 30px;
     text-align: center;
+    letter-spacing: 0.3px;
 }
 
 /* =========================
@@ -73,146 +71,65 @@ main h1 {
 
 .card {
     background: #ffffff;
-    padding: 20px 15px 15px 15px;
-    border-radius: 10px;
+    padding: 22px 18px 18px 18px;
+    border-radius: 12px;
     text-align: center;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     transition: all 0.3s ease;
-    /* ADDED: top colored border per card — overridden individually below */
-    border-top: 5px solid #ccc;
+    border-top: 6px solid #ccc;
     position: relative;
     overflow: hidden;
 }
 
 .card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+    transform: translateY(-6px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.12);
 }
 
-.card::after {
-    content: "";
-    position: absolute;
-    top: 0;
-    right: 0;
-    width: 60px;
-    height: 60px;
-    background: radial-gradient(circle, rgba(255,255,255,0.3) 0%, transparent 70%);
-    border-radius: 50%;
-}
+.card:nth-child(1) { border-top-color: #3b82f6; background: linear-gradient(135deg, #eff6ff 0%, #ffffff 60%); }
+.card:nth-child(1) p { color: #1d4ed8; }
+.card:nth-child(1)::before { content: "👥"; font-size: 36px; position: absolute; top: 10px; right: 12px; opacity: 0.15; }
 
-/* ADDED: Colored top border + icon background tint per card */
+.card:nth-child(2) { border-top-color: #10b981; background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 60%); }
+.card:nth-child(2) p { color: #065f46; }
+.card:nth-child(2)::before { content: "🏥"; font-size: 36px; position: absolute; top: 10px; right: 12px; opacity: 0.15; }
 
-/* Card 1 - Total Users: Light Blue */
-.card:nth-child(1) {
-    border-top-color: #3b82f6;
-    background: linear-gradient(135deg, #eff6ff 0%, #ffffff 60%);
-}
-.card:nth-child(1) p {
-    color: #1d4ed8;
-}
-.card:nth-child(1)::before {
-    content: "👥";
-    font-size: 36px;
-    position: absolute;
-    top: 10px;
-    right: 12px;
-    opacity: 0.15;
-}
+.card:nth-child(3) { border-top-color: #f59e0b; background: linear-gradient(135deg, #fffbeb 0%, #ffffff 60%); }
+.card:nth-child(3) p { color: #b45309; }
+.card:nth-child(3)::before { content: "📅"; font-size: 36px; position: absolute; top: 10px; right: 12px; opacity: 0.15; }
 
-/* Card 2 - Patients: Light Green */
-.card:nth-child(2) {
-    border-top-color: #10b981;
-    background: linear-gradient(135deg, #ecfdf5 0%, #ffffff 60%);
-}
-.card:nth-child(2) p {
-    color: #065f46;
-}
-.card:nth-child(2)::before {
-    content: "🏥";
-    font-size: 36px;
-    position: absolute;
-    top: 10px;
-    right: 12px;
-    opacity: 0.15;
-}
+.card:nth-child(4) { border-top-color: #8b5cf6; background: linear-gradient(135deg, #f5f3ff 0%, #ffffff 60%); }
+.card:nth-child(4) p { color: #6d28d9; }
+.card:nth-child(4)::before { content: "💉"; font-size: 36px; position: absolute; top: 10px; right: 12px; opacity: 0.15; }
 
-/* Card 3 - Pending Appointments: Light Orange */
-.card:nth-child(3) {
-    border-top-color: #f59e0b;
-    background: linear-gradient(135deg, #fffbeb 0%, #ffffff 60%);
-}
-.card:nth-child(3) p {
-    color: #b45309;
-}
-.card:nth-child(3)::before {
-    content: "📅";
-    font-size: 36px;
-    position: absolute;
-    top: 10px;
-    right: 12px;
-    opacity: 0.15;
-}
+.card:nth-child(5) { border-top-color: #ef4444; background: linear-gradient(135deg, #fef2f2 0%, #ffffff 60%); }
+.card:nth-child(5) p { color: #b91c1c; }
+.card:nth-child(5)::before { content: "📦"; font-size: 36px; position: absolute; top: 10px; right: 12px; opacity: 0.15; }
 
-/* Card 4 - Immunizations: Light Purple */
-.card:nth-child(4) {
-    border-top-color: #8b5cf6;
-    background: linear-gradient(135deg, #f5f3ff 0%, #ffffff 60%);
-}
-.card:nth-child(4) p {
-    color: #6d28d9;
-}
-.card:nth-child(4)::before {
-    content: "💉";
-    font-size: 36px;
-    position: absolute;
-    top: 10px;
-    right: 12px;
-    opacity: 0.15;
-}
-
-/* Card 5 - Inventory Items: Light Red */
-.card:nth-child(5) {
-    border-top-color: #ef4444;
-    background: linear-gradient(135deg, #fef2f2 0%, #ffffff 60%);
-}
-.card:nth-child(5) p {
-    color: #b91c1c;
-}
-.card:nth-child(5)::before {
-    content: "📦";
-    font-size: 36px;
-    position: absolute;
-    top: 10px;
-    right: 12px;
-    opacity: 0.15;
-}
-
-.card h3 {
-    font-size: 14px;
-    color: #666;
-    margin-bottom: 8px;
-}
-
-.card p {
-    font-size: 22px;
-    font-weight: bold;
-    /* ADDED: color is overridden per card above */
-}
+.card h3 { font-size: 14px; color: #666; margin-bottom: 8px; }
+.card p { font-size: 22px; font-weight: bold; }
 
 /* =========================
    SECTIONS
 ========================= */
 .section {
-    background: #ffffff;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+    padding: 28px;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+    border: 1px solid #e2e8f0;
+    margin-bottom: 25px;
+    transition: all 0.3s ease;
 }
 
+.section:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.12); }
+
 .section h2 {
-    font-size: 18px;
-    margin-bottom: 15px;
-    color: #333;
+    font-size: 20px;
+    margin-bottom: 18px;
+    color: #10b981;
+    font-weight: 700;
+    letter-spacing: 0.3px;
 }
 
 /* =========================
@@ -221,23 +138,30 @@ main h1 {
 .button-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-    gap: 10px;
-    margin-top: 10px;
+    gap: 12px;
+    margin-top: 12px;
 }
 
 .btn {
     display: block;
-    padding: 10px;
-    background: #065f46;
+    padding: 12px 16px;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
     color: white;
     text-align: center;
     border-radius: 8px;
     text-decoration: none;
-    transition: 0.2s ease;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    font-size: 14px;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
 }
 
 .btn:hover {
-    background: #0a7a58;
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);
+    transform: translateY(-2px);
 }
 
 /* =========================
@@ -246,37 +170,190 @@ main h1 {
 table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 10px;
+    margin-top: 15px;
     background: white;
-    border-radius: 8px;
+    border-radius: 10px;
     overflow: hidden;
 }
 
 table th {
-    background: #065f46;
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
     color: white;
     text-align: left;
-    padding: 10px;
+    padding: 14px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
 }
 
 table td {
-    padding: 10px;
-    border-bottom: 1px solid #eee;
+    padding: 13px 16px;
+    border-bottom: 1px solid #f0f4f8;
+    font-size: 14px;
+    color: #334155;
+    transition: background-color 0.2s ease;
+}
+
+table tr:hover { background-color: #f8fafc; }
+table tr:last-child td { border-bottom: none; }
+
+/* =========================
+   LIST (Inventory & Alerts)
+========================= */
+.section.inventory ul,
+.section ul {
+    margin-top: 10px;
+    padding-left: 24px;
+    list-style: none;
+}
+
+.section.inventory ul li,
+.section ul li {
+    padding: 12px 0;
+    color: #475569;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    transition: all 0.2s ease;
 }
 
 /* =========================
-   LIST (Inventory)
+   IMMUNIZATION SUMMARY — ADDED
 ========================= */
-.section.inventory ul {
-    margin-top: 10px;
-    padding-left: 20px;
+
+/* ADDED: Status count badges row */
+.immun-summary-counts {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 20px;
 }
 
-.section.inventory ul li {
-    padding: 5px 0;
+/* ADDED: Individual badge */
+.immun-badge {
+    flex: 1;
+    min-width: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 14px 10px;
+    border-radius: 10px;
+    text-align: center;
+    transition: transform 0.2s ease;
 }
 
-/* FIXED: Dark mode toggle button positioning */
+.immun-badge:hover { transform: translateY(-3px); }
+
+/* ADDED: Badge color themes per status */
+.immun-badge.upcoming  { background: #eff6ff; border: 2px solid #3b82f6; }
+.immun-badge.scheduled { background: #fffbeb; border: 2px solid #f59e0b; }
+.immun-badge.ongoing   { background: #ecfdf5; border: 2px solid #10b981; }
+.immun-badge.total     { background: #f5f3ff; border: 2px solid #8b5cf6; }
+
+.immun-badge-count {
+    font-size: 28px;
+    font-weight: 800;
+    line-height: 1;
+}
+
+/* ADDED: Badge count colors */
+.immun-badge.upcoming  .immun-badge-count { color: #1d4ed8; }
+.immun-badge.scheduled .immun-badge-count { color: #b45309; }
+.immun-badge.ongoing   .immun-badge-count { color: #065f46; }
+.immun-badge.total     .immun-badge-count { color: #6d28d9; }
+
+.immun-badge-label {
+    font-size: 12px;
+    font-weight: 600;
+    color: #64748b;
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ADDED: Event cards container */
+.immun-events-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* ADDED: Individual event card */
+.immun-event-card {
+    border-left: 5px solid #10b981;
+    border-radius: 10px;
+    padding: 14px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.immun-event-card:hover {
+    transform: translateX(4px);
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+}
+
+/* ADDED: Event card header row */
+.immun-event-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.immun-event-icon { font-size: 22px; }
+
+.immun-event-title-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.immun-event-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: #1e293b;
+}
+
+.immun-event-type {
+    font-size: 12px;
+    color: #64748b;
+    font-weight: 500;
+}
+
+/* ADDED: Status pill badge on card */
+.immun-event-status {
+    font-size: 11px;
+    font-weight: 700;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* ADDED: Event detail row */
+.immun-event-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+.immun-event-details span {
+    font-size: 13px;
+    color: #475569;
+    background: rgba(255,255,255,0.7);
+    padding: 4px 10px;
+    border-radius: 6px;
+    font-weight: 500;
+}
+
+/* =========================
+   DARK MODE TOGGLE BUTTON
+========================= */
 #darkModeToggle {
     position: fixed;
     top: 15px;
@@ -294,6 +371,96 @@ table td {
     transition: 0.2s ease;
 }
 
-#darkModeToggle:hover {
-    background: rgba(255,255,255,0.35);
+#darkModeToggle:hover { background: rgba(255,255,255,0.35); }
+
+/* =========================
+   DARK MODE STYLES
+========================= */
+body.dark .section {
+    background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+    border-color: #334155;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+}
+
+body.dark .section h2 { color: #6ee7b7; }
+
+body.dark table { background: #1e293b; }
+body.dark table th { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
+body.dark table td { color: #cbd5e1; border-bottom-color: #334155; }
+body.dark table tr:hover { background-color: #334155; }
+
+body.dark .card { background: #1e293b; box-shadow: 0 4px 12px rgba(0,0,0,0.3); }
+body.dark .card h3 { color: #94a3b8; }
+body.dark .card p { color: #cbd5e1; }
+
+body.dark .card:nth-child(1) { background: linear-gradient(135deg, #1e3a5f 0%, #1e293b 60%); }
+body.dark .card:nth-child(1) p { color: #60a5fa; }
+
+body.dark .card:nth-child(2) { background: linear-gradient(135deg, #14532d 0%, #1e293b 60%); }
+body.dark .card:nth-child(2) p { color: #6ee7b7; }
+
+body.dark .card:nth-child(3) { background: linear-gradient(135deg, #451a03 0%, #1e293b 60%); }
+body.dark .card:nth-child(3) p { color: #fbbf24; }
+
+body.dark .card:nth-child(4) { background: linear-gradient(135deg, #553399 0%, #1e293b 60%); }
+body.dark .card:nth-child(4) p { color: #c084fc; }
+
+body.dark .card:nth-child(5) { background: linear-gradient(135deg, #450a0a 0%, #1e293b 60%); }
+body.dark .card:nth-child(5) p { color: #fca5a5; }
+
+/* ADDED: Dark mode for immunization summary section */
+body.dark .immun-badge.upcoming  { background: #1e3a5f; border-color: #3b82f6; }
+body.dark .immun-badge.scheduled { background: #451a03; border-color: #f59e0b; }
+body.dark .immun-badge.ongoing   { background: #14532d; border-color: #10b981; }
+body.dark .immun-badge.total     { background: #2e1065; border-color: #8b5cf6; }
+body.dark .immun-badge-label     { color: #94a3b8; }
+
+body.dark .immun-event-card { box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+body.dark .immun-event-name  { color: #e2e8f0; }
+body.dark .immun-event-type  { color: #94a3b8; }
+body.dark .immun-event-details span { background: rgba(0,0,0,0.2); color: #94a3b8; }
+
+/* FIXED: Event card background per status using classes (so dark mode can override) */
+.immun-event-upcoming  { background-color: #eff6ff; }
+.immun-event-scheduled { background-color: #fffbeb; }
+.immun-event-ongoing   { background-color: #ecfdf5; }
+
+/* ADDED: Dark mode override for event cards */
+body.dark .immun-event-card             { background-color: #1e293b !important; }
+body.dark .immun-event-upcoming         { background-color: #1e3a5f !important; }
+body.dark .immun-event-scheduled        { background-color: #451a03 !important; }
+body.dark .immun-event-ongoing          { background-color: #14532d !important; }
+body.dark .immun-event-card .immun-event-name    { color: #e2e8f0; }
+body.dark .immun-event-card .immun-event-type    { color: #94a3b8; }
+body.dark .immun-event-card .immun-event-details span { background: rgba(0,0,0,0.25); color: #94a3b8; }
+
+/* FIXED: Prevent event cards and detail spans from stretching horizontally on long text */
+.immun-event-card {
+    overflow: hidden;
+    word-break: break-word;
+}
+
+.immun-event-name {
+    word-break: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+}
+
+.immun-event-details {
+    overflow: hidden;
+}
+
+.immun-event-details span {
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    word-break: break-word;
+}
+
+/* FIXED: Notes span specifically wraps instead of stretching */
+.immun-event-details span:last-child {
+    white-space: normal;
+    word-break: break-word;
+    overflow-wrap: break-word;
 }

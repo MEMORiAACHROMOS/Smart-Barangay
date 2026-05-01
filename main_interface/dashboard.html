@@ -17,7 +17,6 @@
         <h2>DASHBOARD</h2>
     </header>
 
-    <!-- ADDED: Dark mode toggle button -->
     <button id="darkModeToggle" onclick="toggleDarkMode()">🌙 Dark</button>
 
     <div class="sidebar">
@@ -98,10 +97,41 @@
             </ul>
         </div>
 
+        <!-- UPDATED: Immunization Summary now shows event cards with details -->
         <div class="section">
-            <h2>Immunization Summary</h2>
-            <p>Total Programs: <span id="dashTotalPrograms">0</span></p>
-            <p>Active Programs: <span id="dashActivePrograms">0</span></p>
+            <h2>💉 Immunization & Programs Summary</h2>
+
+            <!-- ADDED: Summary count badges -->
+            <div class="immun-summary-counts">
+                <div class="immun-badge upcoming">
+                    <span class="immun-badge-count" id="immunUpcomingCount">0</span>
+                    <span class="immun-badge-label">Upcoming</span>
+                </div>
+                <div class="immun-badge scheduled">
+                    <span class="immun-badge-count" id="immunScheduledCount">0</span>
+                    <span class="immun-badge-label">Scheduled</span>
+                </div>
+                <div class="immun-badge ongoing">
+                    <span class="immun-badge-count" id="immunOngoingCount">0</span>
+                    <span class="immun-badge-label">Ongoing</span>
+                </div>
+                <div class="immun-badge total">
+                    <span class="immun-badge-count" id="dashTotalPrograms">0</span>
+                    <span class="immun-badge-label">Total Programs</span>
+                </div>
+            </div>
+
+            <!-- ADDED: Event cards list -->
+            <div id="immunEventsList" class="immun-events-list">
+                <p style="text-align:center; color:#94a3b8;">Loading events...</p>
+            </div>
+
+            <!-- ADDED: Link to full page -->
+            <div style="text-align:right; margin-top:12px;">
+                <a href="Immunization_and_Programs.html" class="btn" style="display:inline-block; width:auto; padding: 8px 18px; font-size:13px;">
+                    View All Events →
+                </a>
+            </div>
         </div>
 
     </main>
@@ -116,7 +146,6 @@
     </script>
     <script src="js/dashboard-script.js"></script>
 
-    <!-- ADDED: Dark mode script -->
     <script>
         function toggleDarkMode() {
             document.body.classList.toggle('dark');
