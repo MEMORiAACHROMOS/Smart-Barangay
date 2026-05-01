@@ -262,3 +262,89 @@
         text-align: center;
     }
 }
+
+/* =========================
+   DARK MODE SUPPORT - MATCHING ADMIN SIDE
+========================= */
+body.dark .profile-header-card {
+    background: linear-gradient(135deg, #064e3b, #0a7a58);
+}
+
+body.dark .profile-card {
+    background: #1e293b;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+body.dark .profile-card h3 {
+    color: #a7f3d0;
+    border-bottom-color: rgba(255, 255, 255, 0.1);
+}
+
+body.dark .info-label {
+    color: #94a3b8;
+}
+
+body.dark .info-label i {
+    color: #a7f3d0;
+}
+
+body.dark .info-value {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: #334155;
+    color: #e2e8f0;
+}
+
+body.dark .tab-btn {
+    border-color: #a7f3d0;
+    background: transparent;
+    color: #a7f3d0;
+}
+
+body.dark .tab-btn:hover,
+body.dark .tab-btn.active {
+    background: #a7f3d0;
+    color: #000;
+}
+
+body.dark .form-group label {
+    color: #94a3b8;
+}
+
+body.dark .form-group input,
+body.dark .form-group textarea {
+    background: #1e293b;
+    border-color: #334155;
+    color: #e2e8f0;
+}
+
+body.dark .form-group input:focus,
+body.dark .form-group textarea:focus {
+    border-color: #10b981;
+}
+
+body.dark .input-icon input {
+    background: #1e293b;
+    border-color: #334155;
+    color: #e2e8f0;
+}
+
+body.dark .input-icon input:focus {
+    border-color: #10b981;
+}
+
+body.dark .toggle-pw {
+    color: #94a3b8;
+}
+
+body.dark .save-btn {
+    background: #065f46;
+    color: #fff;
+}
+
+body.dark .save-btn:hover {
+    background: #0a7a58;
+}
+
+body.dark .form-msg {
+    color: #e2e8f0;
+}
