@@ -9,6 +9,9 @@ const supabase = window.supabase.createClient(
 let currentUser = null;
 let userRecord  = null;
 
+// ADDED: Store full name globally for bell
+let currentFullName = '';
+
 // =========================
 // INIT
 // =========================
@@ -18,11 +21,118 @@ document.addEventListener('DOMContentLoaded', async () => {
         window.location.href = 'login.html';
         return;
     }
+
+    currentFullName = `${currentUser.firstname} ${currentUser.lastname}`;
+    loadBellNotifications(); // ADDED
+
+    // ADDED: Close dropdown when clicking outside
+    document.addEventListener('click', function (e) {
+        const wrapper = document.getElementById('notifBellWrapper');
+        if (wrapper && !wrapper.contains(e.target)) {
+            document.getElementById('notifDropdown')?.classList.remove('open');
+        }
+    });
+
     await loadProfile();
 });
 
 // =========================
-// LOAD profile from UserRegistrationTbl
+// ADDED: NOTIFICATION BELL
+// =========================
+function toggleNotifDropdown() {
+    document.getElementById('notifDropdown')?.classList.toggle('open');
+}
+
+async function loadBellNotifications() {
+    const dropdownBody = document.getElementById('notifDropdownBody');
+    const dropClearBtn = document.getElementById('dropdownClearBtn');
+    const badge        = document.getElementById('notifBadge');
+
+    const { data, error } = await supabase
+        .from('AppointmentsTbl')
+        .select('Appointment_ID, Purpose, AppointmentDate, AppointmentTime, Status, Updated_At')
+        .eq('Notes', currentFullName)
+        .in('Status', ['Approved', 'Cancelled'])
+        .order('Updated_At', { ascending: false });
+
+    if (error || !data || !data.length) {
+        if (dropdownBody) dropdownBody.innerHTML = '<p class="notif-empty">No notifications</p>';
+        if (badge) badge.style.display = 'none';
+        return;
+    }
+
+    const readKey  = `readNotifs_${currentFullName}`;
+    const readList = JSON.parse(localStorage.getItem(readKey) || '[]');
+    const unread   = data.filter(n => !readList.includes(n.Appointment_ID));
+
+    if (unread.length > 0) {
+        badge.textContent   = unread.length > 9 ? '9+' : unread.length;
+        badge.style.display = 'flex';
+        if (dropClearBtn) dropClearBtn.style.display = 'inline-block';
+    } else {
+        badge.style.display = 'none';
+        if (dropClearBtn) dropClearBtn.style.display = 'none';
+    }
+
+    if (dropdownBody) {
+        dropdownBody.innerHTML = data.map(notif => {
+            const isRead     = readList.includes(notif.Appointment_ID);
+            const isApproved = notif.Status === 'Approved';
+            const date = notif.Updated_At
+                ? new Date(notif.Updated_At).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
+                : '';
+            return `
+                <div class="notif-item ${isRead ? 'notif-read' : 'notif-unread'}"
+                     onclick="markOneBellRead(${notif.Appointment_ID})">
+                    <div class="notif-icon ${isApproved ? 'notif-icon-approved' : 'notif-icon-cancelled'}">
+                        ${isApproved ? '✅' : '❌'}
+                    </div>
+                    <div class="notif-body">
+                        <div class="notif-title">
+                            Appointment ${isApproved ? 'Approved' : 'Cancelled'}
+                            ${!isRead ? '<span class="notif-dot"></span>' : ''}
+                        </div>
+                        <div class="notif-desc">
+                            Your <strong>${notif.Purpose || 'appointment'}</strong> on
+                            <strong>${notif.AppointmentDate}</strong> has been
+                            <span style="color:${isApproved ? '#00c267' : '#ef4444'}; font-weight:600;">
+                                ${notif.Status.toLowerCase()}
+                            </span>.
+                        </div>
+                        <div class="notif-time">${date}</div>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+}
+
+function markOneBellRead(id) {
+    const readKey  = `readNotifs_${currentFullName}`;
+    const readList = JSON.parse(localStorage.getItem(readKey) || '[]');
+    if (!readList.includes(id)) {
+        readList.push(id);
+        localStorage.setItem(readKey, JSON.stringify(readList));
+        loadBellNotifications();
+    }
+}
+
+async function markAllRead() {
+    const readKey = `readNotifs_${currentFullName}`;
+    const { data } = await supabase
+        .from('AppointmentsTbl')
+        .select('Appointment_ID')
+        .eq('Notes', currentFullName)
+        .in('Status', ['Approved', 'Cancelled']);
+
+    if (data) {
+        localStorage.setItem(readKey, JSON.stringify(data.map(d => d.Appointment_ID)));
+        loadBellNotifications();
+    }
+}
+
+// =========================
+// LOAD PROFILE
 // =========================
 async function loadProfile() {
     const { data, error } = await supabase
@@ -31,10 +141,7 @@ async function loadProfile() {
         .eq('Registration_ID', currentUser.id)
         .single();
 
-    if (error || !data) {
-        console.error('Failed to load profile:', error);
-        return;
-    }
+    if (error || !data) { console.error('Failed to load profile:', error); return; }
 
     userRecord = data;
     renderProfile(data);
@@ -42,17 +149,15 @@ async function loadProfile() {
 }
 
 // =========================
-// RENDER personal info tab
+// RENDER PROFILE
 // =========================
 function renderProfile(data) {
     const fullName = `${data.FirstName || ''} ${data.MiddleName ? data.MiddleName + ' ' : ''}${data.LastName || ''} ${data.Suffix || ''}`.trim();
 
-    // Header
     document.getElementById('profileFullName').textContent = fullName || '—';
     document.getElementById('profileEmail').textContent    = data.Email || '—';
     document.getElementById('profileStatus').textContent   = data.Status || 'Active';
 
-    // Info grid
     document.getElementById('infoFirstName').textContent  = data.FirstName  || '—';
     document.getElementById('infoLastName').textContent   = data.LastName   || '—';
     document.getElementById('infoMiddleName').textContent = data.MiddleName || '—';
@@ -69,7 +174,7 @@ function renderProfile(data) {
 }
 
 // =========================
-// FILL edit form with current data
+// FILL EDIT FORM
 // =========================
 function fillEditForm(data) {
     document.getElementById('editFirstName').value  = data.FirstName    || '';
@@ -83,7 +188,7 @@ function fillEditForm(data) {
 }
 
 // =========================
-// SAVE profile changes
+// SAVE PROFILE
 // =========================
 async function saveProfile() {
     const msg = document.getElementById('editMsg');
@@ -117,7 +222,6 @@ async function saveProfile() {
         return;
     }
 
-    // Update sessionStorage name too
     currentUser.firstname = updates.FirstName;
     currentUser.lastname  = updates.LastName;
     currentUser.email     = updates.Email;
@@ -125,40 +229,22 @@ async function saveProfile() {
 
     msg.textContent = '✓ Profile updated successfully!';
     msg.style.color = 'green';
-
-    // Reload profile display
     await loadProfile();
 }
 
 // =========================
 // CHANGE PASSWORD
-// Uses Supabase RPC verify_password + update PasswordHash
 // =========================
 async function changePassword() {
-    const msg         = document.getElementById('pwMsg');
-    const newPw       = document.getElementById('newPassword').value;
-    const confirmPw   = document.getElementById('confirmPassword').value;
-    msg.textContent   = '';
+    const msg       = document.getElementById('pwMsg');
+    const newPw     = document.getElementById('newPassword').value;
+    const confirmPw = document.getElementById('confirmPassword').value;
+    msg.textContent = '';
 
-    if (!newPw || !confirmPw) {
-        msg.textContent = 'Please fill in both fields.';
-        msg.style.color = 'red';
-        return;
-    }
+    if (!newPw || !confirmPw) { msg.textContent = 'Please fill in both fields.'; msg.style.color = 'red'; return; }
+    if (newPw !== confirmPw)  { msg.textContent = 'Passwords do not match.';     msg.style.color = 'red'; return; }
+    if (newPw.length < 6)    { msg.textContent = 'Password must be at least 6 characters.'; msg.style.color = 'red'; return; }
 
-    if (newPw !== confirmPw) {
-        msg.textContent = 'Passwords do not match.';
-        msg.style.color = 'red';
-        return;
-    }
-
-    if (newPw.length < 6) {
-        msg.textContent = 'Password must be at least 6 characters.';
-        msg.style.color = 'red';
-        return;
-    }
-
-    // Hash new password using Supabase RPC (same bcrypt function used at register)
     const { data: hashed, error: hashError } = await supabase
         .rpc('hash_password', { password: newPw });
 
@@ -189,18 +275,11 @@ async function changePassword() {
 // TAB SWITCHER
 // =========================
 function switchTab(tab) {
-    // Hide all tabs
     document.getElementById('tab-info').style.display     = 'none';
     document.getElementById('tab-edit').style.display     = 'none';
     document.getElementById('tab-password').style.display = 'none';
-
-    // Remove active from all buttons
     document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-
-    // Show selected tab
     document.getElementById(`tab-${tab}`).style.display = 'block';
-
-    // Set active button
     const btnIndex = { info: 0, edit: 1, password: 2 };
     document.querySelectorAll('.tab-btn')[btnIndex[tab]].classList.add('active');
 }

@@ -6,11 +6,19 @@ const supabase = window.supabase.createClient(
     'sb_publishable_LMKNlKJ7lXXZIvbUllHPjA_Xi7cwKGH'
 );
 
-// ADDED: Store all events for filtering
 let allEvents = [];
+let currentFullName = '';
 
 document.addEventListener("DOMContentLoaded", () => {
     loadDashboard();
+
+    // ADDED: Close bell dropdown when clicking outside
+    document.addEventListener('click', function (e) {
+        const wrapper = document.getElementById('notifBellWrapper');
+        if (wrapper && !wrapper.contains(e.target)) {
+            document.getElementById('notifDropdown')?.classList.remove('open');
+        }
+    });
 });
 
 async function loadDashboard() {
@@ -21,11 +29,12 @@ async function loadDashboard() {
             return;
         }
 
-        const fullName = `${currentUser.firstname} ${currentUser.lastname}`;
-        document.querySelector('#greetingCard h2').textContent = `Good day, ${fullName} 👋`;
+        currentFullName = `${currentUser.firstname} ${currentUser.lastname}`;
+        document.querySelector('#greetingCard h2').textContent = `Good day, ${currentFullName} 👋`;
 
-        loadNextAppointment(fullName);
-        loadAllEvents(); // CHANGED: now loads all active events
+        loadNextAppointment(currentFullName);
+        loadAllEvents();
+        loadNotifications(currentFullName);
     } catch (error) {
         console.error("Dashboard error:", error);
     }
@@ -47,10 +56,7 @@ async function loadNextAppointment(fullName) {
         .order('AppointmentDate', { ascending: true })
         .limit(1);
 
-    if (error) {
-        container.innerHTML = '<p>Failed to load appointment.</p>';
-        return;
-    }
+    if (error) { container.innerHTML = '<p>Failed to load appointment.</p>'; return; }
 
     if (!data || !data.length) {
         container.innerHTML = '<p>No upcoming appointments.</p>';
@@ -66,18 +72,17 @@ async function loadNextAppointment(fullName) {
     if (status === 'completed') statusColor = '#2563eb';
 
     container.innerHTML = `
-        <p><i class="fa-solid fa-stethoscope"></i><strong>Service:</strong> ${appt.Purpose || '—'}</p>
-        <p><i class="fa-solid fa-calendar-days"></i><strong>Date:</strong> ${appt.AppointmentDate} — ${formatTime(appt.AppointmentTime)}</p>
-        <p><i class="fa-solid fa-hospital"></i><strong>Type:</strong> ${appt.AppointmentType || '—'}</p>
-        <p><i class="fa-solid fa-circle-info"></i><strong>Status:</strong>
+        <p><i class="fa-solid fa-stethoscope"></i><strong> Service:</strong> ${appt.Purpose || '—'}</p>
+        <p><i class="fa-solid fa-calendar-days"></i><strong> Date:</strong> ${appt.AppointmentDate} — ${formatTime(appt.AppointmentTime)}</p>
+        <p><i class="fa-solid fa-hospital"></i><strong> Type:</strong> ${appt.AppointmentType || '—'}</p>
+        <p><i class="fa-solid fa-circle-info"></i><strong> Status:</strong>
             <span style="color:${statusColor}; font-weight:600;">${appt.Status || 'Pending'}</span>
         </p>
     `;
 }
 
 // =========================
-// ADDED: LOAD ALL ACTIVE EVENTS
-// Fetches Upcoming, Scheduled, Ongoing — no limit, scrollable
+// LOAD ALL ACTIVE EVENTS
 // =========================
 async function loadAllEvents() {
     const container = document.getElementById('eventsContent');
@@ -88,24 +93,15 @@ async function loadAllEvents() {
         .in('Status', ['Upcoming', 'Scheduled', 'Ongoing'])
         .order('Date', { ascending: true });
 
-    if (error) {
-        container.innerHTML = '<p style="color:#ef4444;">Failed to load events.</p>';
-        console.error(error);
-        return;
-    }
+    if (error) { container.innerHTML = '<p style="color:#ef4444;">Failed to load events.</p>'; return; }
+    if (!data || !data.length) { container.innerHTML = '<p>No active events at the moment.</p>'; return; }
 
-    if (!data || !data.length) {
-        container.innerHTML = '<p>No active events at the moment.</p>';
-        return;
-    }
-
-    // ADDED: Store globally for filtering
     allEvents = data;
     renderEvents(allEvents);
 }
 
 // =========================
-// ADDED: RENDER EVENTS as clickable cards
+// RENDER EVENTS
 // =========================
 function renderEvents(events) {
     const container = document.getElementById('eventsContent');
@@ -115,7 +111,6 @@ function renderEvents(events) {
         return;
     }
 
-    // ADDED: Status config for colors and icons
     const statusConfig = {
         'Upcoming':  { color: '#3b82f6', bg: 'rgba(59,130,246,0.1)',  icon: '🗓️' },
         'Scheduled': { color: '#f59e0b', bg: 'rgba(245,158,11,0.1)',  icon: '📋' },
@@ -123,28 +118,26 @@ function renderEvents(events) {
     };
 
     container.innerHTML = '';
-    events.forEach(event => {
-        const config = statusConfig[event.Status] || { color: '#6b7280', bg: 'rgba(107,114,128,0.1)', icon: '📌' };
-
+    events.forEach(ev => {
+        const config = statusConfig[ev.Status] || { color: '#6b7280', bg: 'rgba(107,114,128,0.1)', icon: '📌' };
         const card = document.createElement('div');
         card.className = 'event-item-card';
         card.style.borderLeftColor = config.color;
         card.style.background = config.bg;
-        card.onclick = () => openEventModal(event);
-
+        card.onclick = () => openEventModal(ev);
         card.innerHTML = `
             <div class="event-item-header">
                 <span class="event-item-icon">${config.icon}</span>
                 <div class="event-item-info">
-                    <span class="event-item-name">${event.EventName || '—'}</span>
-                    <span class="event-item-type">${event.TypeOfEvent || ''}</span>
+                    <span class="event-item-name">${ev.EventName || '—'}</span>
+                    <span class="event-item-type">${ev.TypeOfEvent || ''}</span>
                 </div>
-                <span class="event-item-status" style="background:${config.color};">${event.Status}</span>
+                <span class="event-item-status" style="background:${config.color};">${ev.Status}</span>
             </div>
             <div class="event-item-meta">
-                <span>📅 ${event.Date || '—'}</span>
-                <span>📍 ${event.Location || '—'}</span>
-                <span>👥 ${event.Participants_Count ?? '—'} participants</span>
+                <span>📅 ${ev.Date || '—'}</span>
+                <span>📍 ${ev.Location || '—'}</span>
+                <span>👥 ${ev.Participants_Count ?? '—'} participants</span>
             </div>
         `;
         container.appendChild(card);
@@ -152,60 +145,169 @@ function renderEvents(events) {
 }
 
 // =========================
-// ADDED: FILTER EVENTS by status
+// FILTER EVENTS
 // =========================
-function filterEvents(status) {
-    // Update active tab
+function filterEvents(status, e) {
     document.querySelectorAll('.events-tab').forEach(t => t.classList.remove('active'));
-    event.target.classList.add('active');
-
-    if (status === 'all') {
-        renderEvents(allEvents);
-    } else {
-        renderEvents(allEvents.filter(e => e.Status === status));
-    }
+    e.target.classList.add('active');
+    renderEvents(status === 'all' ? allEvents : allEvents.filter(ev => ev.Status === status));
 }
 
 // =========================
-// ADDED: OPEN EVENT DETAIL MODAL
+// EVENT MODAL
 // =========================
-function openEventModal(event) {
+function openEventModal(ev) {
     const statusConfig = {
         'Upcoming':  { color: '#3b82f6', icon: '🗓️' },
         'Scheduled': { color: '#f59e0b', icon: '📋' },
         'Ongoing':   { color: '#10b981', icon: '🔄' },
     };
-    const config = statusConfig[event.Status] || { color: '#6b7280', icon: '📌' };
+    const config = statusConfig[ev.Status] || { color: '#6b7280', icon: '📌' };
 
-    document.getElementById('modalIcon').textContent          = config.icon;
-    document.getElementById('modalEventName').textContent     = event.EventName || '—';
-    document.getElementById('modalStatus').textContent        = event.Status || '—';
-    document.getElementById('modalStatus').style.background   = config.color;
-    document.getElementById('modalDate').textContent          = event.Date || '—';
-    document.getElementById('modalLocation').textContent      = event.Location || '—';
-    document.getElementById('modalType').textContent          = event.TypeOfEvent || '—';
-    document.getElementById('modalParticipants').textContent  = event.Participants_Count ?? '—';
-    document.getElementById('modalNotes').textContent         = event.Notes || 'No notes.';
-
+    document.getElementById('modalIcon').textContent         = config.icon;
+    document.getElementById('modalEventName').textContent    = ev.EventName || '—';
+    document.getElementById('modalStatus').textContent       = ev.Status || '—';
+    document.getElementById('modalStatus').style.background  = config.color;
+    document.getElementById('modalDate').textContent         = ev.Date || '—';
+    document.getElementById('modalLocation').textContent     = ev.Location || '—';
+    document.getElementById('modalType').textContent         = ev.TypeOfEvent || '—';
+    document.getElementById('modalParticipants').textContent = ev.Participants_Count ?? '—';
+    document.getElementById('modalNotes').textContent        = ev.Notes || 'No notes.';
     document.getElementById('eventDetailModal').style.display = 'flex';
     document.body.style.overflow = 'hidden';
 }
 
-// =========================
-// ADDED: CLOSE EVENT MODAL
-// =========================
 function closeEventModal() {
     document.getElementById('eventDetailModal').style.display = 'none';
     document.body.style.overflow = '';
 }
 
-// Close modal on overlay click
 document.getElementById('eventDetailModal')?.addEventListener('click', function (e) {
     if (e.target === this) closeEventModal();
 });
 
 // =========================
-// HELPER: format time
+// LOAD NOTIFICATIONS
+// Shared function — updates BOTH the card section and the bell dropdown
+// =========================
+async function loadNotifications(fullName) {
+    const cardContainer  = document.getElementById('notificationsContent');
+    const dropdownBody   = document.getElementById('notifDropdownBody');
+    const clearBtn       = document.getElementById('clearNotifsBtn');
+    const dropClearBtn   = document.getElementById('dropdownClearBtn');
+    const badge          = document.getElementById('notifBadge');
+
+    const { data, error } = await supabase
+        .from('AppointmentsTbl')
+        .select('Appointment_ID, Purpose, AppointmentDate, AppointmentTime, Status, Updated_At')
+        .eq('Notes', fullName)
+        .in('Status', ['Approved', 'Cancelled'])
+        .order('Updated_At', { ascending: false });
+
+    if (error || !data || !data.length) {
+        const empty = '<p class="notif-empty">No new notifications</p>';
+        cardContainer.innerHTML = empty;
+        dropdownBody.innerHTML  = empty;
+        badge.style.display     = 'none';
+        return;
+    }
+
+    const readKey  = `readNotifs_${fullName}`;
+    const readList = JSON.parse(localStorage.getItem(readKey) || '[]');
+    const unread   = data.filter(n => !readList.includes(n.Appointment_ID));
+    const unreadCount = unread.length;
+
+    // Update badge
+    if (unreadCount > 0) {
+        badge.textContent    = unreadCount > 9 ? '9+' : unreadCount;
+        badge.style.display  = 'flex';
+        clearBtn.style.display    = 'inline-block';
+        dropClearBtn.style.display = 'inline-block';
+    } else {
+        badge.style.display       = 'none';
+        clearBtn.style.display    = 'none';
+        dropClearBtn.style.display = 'none';
+    }
+
+    // Build notification HTML — same for both card and dropdown
+    const buildNotifHTML = (notif) => {
+        const isRead     = readList.includes(notif.Appointment_ID);
+        const isApproved = notif.Status === 'Approved';
+        const updatedDate = new Date(notif.Updated_At).toLocaleDateString('en-US', {
+            month: 'short', day: 'numeric', year: 'numeric'
+        });
+        return `
+            <div class="notif-item ${isRead ? 'notif-read' : 'notif-unread'}"
+                 onclick="markOneRead(${notif.Appointment_ID}, '${fullName}')">
+                <div class="notif-icon ${isApproved ? 'notif-icon-approved' : 'notif-icon-cancelled'}">
+                    ${isApproved ? '✅' : '❌'}
+                </div>
+                <div class="notif-body">
+                    <div class="notif-title">
+                        Appointment ${isApproved ? 'Approved' : 'Cancelled'}
+                        ${!isRead ? '<span class="notif-dot"></span>' : ''}
+                    </div>
+                    <div class="notif-desc">
+                        Your <strong>${notif.Purpose || 'appointment'}</strong> on
+                        <strong>${notif.AppointmentDate}</strong> at
+                        <strong>${formatTime(notif.AppointmentTime)}</strong> has been
+                        <span style="color:${isApproved ? '#00c267' : '#ef4444'}; font-weight:600;">
+                            ${notif.Status.toLowerCase()}
+                        </span>.
+                    </div>
+                    <div class="notif-time">${updatedDate}</div>
+                </div>
+            </div>
+        `;
+    };
+
+    // ADDED: Render in BOTH card and dropdown
+    const html = data.map(buildNotifHTML).join('');
+    cardContainer.innerHTML = html;
+    dropdownBody.innerHTML  = html;
+}
+
+// =========================
+// ADDED: Toggle bell dropdown open/close
+// =========================
+function toggleNotifDropdown() {
+    const dropdown = document.getElementById('notifDropdown');
+    dropdown?.classList.toggle('open');
+}
+
+// =========================
+// ADDED: Mark one notification as read
+// =========================
+function markOneRead(id, fullName) {
+    const readKey  = `readNotifs_${fullName}`;
+    const readList = JSON.parse(localStorage.getItem(readKey) || '[]');
+    if (!readList.includes(id)) {
+        readList.push(id);
+        localStorage.setItem(readKey, JSON.stringify(readList));
+        loadNotifications(fullName);
+    }
+}
+
+// =========================
+// MARK ALL AS READ
+// =========================
+async function markAllRead() {
+    const readKey = `readNotifs_${currentFullName}`;
+    const { data } = await supabase
+        .from('AppointmentsTbl')
+        .select('Appointment_ID')
+        .eq('Notes', currentFullName)
+        .in('Status', ['Approved', 'Cancelled']);
+
+    if (data) {
+        const allIds = data.map(d => d.Appointment_ID);
+        localStorage.setItem(readKey, JSON.stringify(allIds));
+        loadNotifications(currentFullName);
+    }
+}
+
+// =========================
+// HELPER
 // =========================
 function formatTime(timeStr) {
     if (!timeStr) return '—';

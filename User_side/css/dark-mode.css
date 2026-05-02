@@ -1,8 +1,6 @@
 /* =========================
-   DARK MODE STYLES - MATCHING ADMIN SIDE
+   DARK MODE STYLES
 ========================= */
-
-/* Dark mode enabled */
 body.dark {
     background-color: #0f172a;
     background-image: none;
@@ -10,124 +8,59 @@ body.dark {
     transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* Header in dark mode */
-body.dark .main-header {
-    background: #064e3b;
-}
+body.dark .main-header { background: #064e3b; }
+body.dark .main-footer { background: #064e3b; }
 
-/* Footer in dark mode */
-body.dark .main-footer {
-    background: #064e3b;
-}
-
-/* Sidebar in dark mode */
 body.dark .sidebar {
     background: #1e293b;
     box-shadow: 2px 0 10px rgba(0,0,0,0.5);
 }
 
-/* Sidebar links in dark mode */
-body.dark .sidebar ul li a {
-    color: #e2e8f0;
-}
+body.dark .sidebar ul li a { color: #e2e8f0; }
 
-/* Sidebar hover in dark mode */
 body.dark .sidebar ul li a:hover,
 body.dark .sidebar ul li a.active {
-    background: rgba(100, 200, 150, 0.15);
+    background: rgba(100,200,150,0.15);
     color: #a7f3d0;
 }
 
-/* Sidebar logout button in dark mode */
-body.dark .sidebar ul li.logout-btn {
-    background: #1e293b;
-}
-
-body.dark .sidebar ul li.logout-btn a {
-    background: #1e293b;
-}
+body.dark .sidebar ul li.logout-btn,
+body.dark .sidebar ul li.logout-btn a { background: #1e293b; }
 
 body.dark .sidebar ul li.logout-btn a:hover {
-    background: rgba(100, 200, 150, 0.15);
+    background: rgba(100,200,150,0.15);
 }
 
-/* Cards in dark mode */
 body.dark .card {
     background: #1e293b;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
     color: #e2e8f0;
-    border: 1px solid rgba(100, 200, 150, 0.1);
+    border: 1px solid rgba(100,200,150,0.1);
 }
 
-/* Card headings in dark mode */
 body.dark .card h2,
-body.dark .card h3 {
-    color: #a7f3d0;
-}
+body.dark .card h3 { color: #a7f3d0; }
 
-/* Card paragraphs in dark mode */
-body.dark .card p {
-    color: #e2e8f0;
-}
+body.dark .card p { color: #e2e8f0; }
 
-/* Card background in dark mode */
 body.dark #appointmentContent p,
 body.dark #eventsContent p {
-    background: rgba(16, 185, 129, 0.1);
+    background: rgba(16,185,129,0.1);
     color: #e2e8f0;
 }
 
-/* Icons in dark mode */
 body.dark .card p i,
-body.dark .card h3 i {
-    color: #a7f3d0;
-}
+body.dark .card h3 i { color: #a7f3d0; }
 
-/* Dark mode toggle button */
-.dark-mode-toggle {
-    position: absolute;
-    right: 20px;
-    top: 50%;
-    transform: translateY(-50%);
-    background: transparent;
-    border: 2px solid rgba(255, 255, 255, 0.7);
-    color: #fff;
-    font-size: 16px;
-    cursor: pointer;
-    padding: 6px 12px;
-    border-radius: 20px;
-    transition: background 0.3s ease, border-color 0.3s ease;
-    z-index: 999;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.dark-mode-toggle:hover {
-    background: rgba(255, 255, 255, 0.15);
-}
-
-/* Overlay in dark mode */
-body.dark .sidebar-overlay {
-    background: rgba(0, 0, 0, 0.8);
-}
-
-/* Main content area background in dark mode */
-body.dark main {
-    background-color: #0f172a;
-}
-
-/* Additional dark mode adjustments for better visibility */
-body.dark a {
-    color: #a7f3d0;
-}
+body.dark .sidebar-overlay { background: rgba(0,0,0,0.8); }
+body.dark main { background-color: #0f172a; }
+body.dark a { color: #a7f3d0; }
 
 body.dark .card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 12px 24px rgba(16, 185, 129, 0.15);
+    box-shadow: 0 12px 24px rgba(16,185,129,0.15);
 }
 
-/* Forms in dark mode */
 body.dark input,
 body.dark select,
 body.dark textarea {
@@ -140,89 +73,43 @@ body.dark input:focus,
 body.dark select:focus,
 body.dark textarea:focus {
     border-color: #10b981;
-    box-shadow: 0 0 6px rgba(16, 185, 129, 0.2);
+    box-shadow: 0 0 6px rgba(16,185,129,0.2);
 }
 
-body.dark label {
-    color: #94a3b8;
-}
+body.dark label { color: #94a3b8; }
 
-/* Buttons in dark mode */
-body.dark button {
-    background: #065f46;
-    color: #fff;
-}
+body.dark table { background: #1e293b; }
+body.dark table td { color: #e2e8f0; border-bottom: 1px solid #334155; }
+body.dark table th { background: #064e3b; color: #a7f3d0; }
 
-body.dark button:hover {
-    background: #0a7a58;
-}
-
-/* Status colors in dark mode */
-body.dark .status {
-    background: rgba(255, 255, 255, 0.1);
-    color: #e2e8f0;
-}
-
-/* Table styles in dark mode */
-body.dark table {
-    background: #1e293b;
-}
-
-body.dark table td {
-    color: #e2e8f0;
-    border-bottom: 1px solid #334155;
-}
-
-body.dark table th {
-    background: #064e3b;
-    color: #a7f3d0;
-}
-
-/* Modal in dark mode */
-body.dark .modal {
-    background: rgba(0, 0, 0, 0.8);
-}
-
+body.dark .modal { background: rgba(0,0,0,0.8); }
 body.dark .modal-content {
     background: #1e293b;
-    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
+    box-shadow: 0 30px 70px rgba(0,0,0,0.6);
 }
 
-body.dark .modal-body h2 {
-    color: #a7f3d0;
-}
+body.dark #greetingCard p { color: #e2e8f0; }
 
-body.dark .modal-body p {
-    color: #e2e8f0;
-}
-
-/* Greeting card in dark mode */
-body.dark #greetingCard p {
-    color: #e2e8f0;
-}
-
-/* Profile styles in dark mode */
 body.dark .profile-header-card {
     background: linear-gradient(135deg, #064e3b, #0a7a58);
 }
 
 body.dark .profile-card {
     background: #1e293b;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.5);
 }
 
 body.dark .profile-card h3 {
     color: #a7f3d0;
-    border-bottom-color: rgba(255, 255, 255, 0.1);
+    border-bottom-color: rgba(255,255,255,0.1);
 }
 
 body.dark .info-value {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.1);
+    background: rgba(255,255,255,0.05);
+    border-color: rgba(255,255,255,0.1);
     color: #e2e8f0;
 }
 
-/* Tab buttons in dark mode */
 body.dark .tab-btn {
     border-color: #a7f3d0;
     background: transparent;
@@ -235,15 +122,14 @@ body.dark .tab-btn.active {
     color: #000;
 }
 
-/* Calendar in dark mode */
 body.dark .day {
-    background: rgba(255, 255, 255, 0.08);
+    background: rgba(255,255,255,0.08);
     color: #e2e8f0;
 }
 
 body.dark .day.disabled {
-    background: rgba(0, 0, 0, 0.3);
-    color: rgba(255, 255, 255, 0.3);
+    background: rgba(0,0,0,0.3);
+    color: rgba(255,255,255,0.3);
 }
 
 body.dark .day.event {
@@ -251,11 +137,286 @@ body.dark .day.event {
     color: #000;
 }
 
-body.dark .nav-btn {
-    background: #10b981;
-    color: #000;
+body.dark .nav-btn { background: #10b981; color: #000; }
+body.dark .nav-btn:hover { background: #a7f3d0; }
+
+/* =========================
+   DARK MODE TOGGLE BUTTON
+   FIXED: moved to LEFT side so it doesn't overlap bell
+========================= */
+.dark-mode-toggle {
+    position: absolute;
+    /* FIXED: left side instead of right */
+    left: 60px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: transparent;
+    border: 2px solid rgba(255,255,255,0.7);
+    color: #fff;
+    font-size: 13px;
+    cursor: pointer;
+    padding: 5px 12px;
+    border-radius: 20px;
+    transition: background 0.3s ease, border-color 0.3s ease;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
 }
 
-body.dark .nav-btn:hover {
-    background: #a7f3d0;
+.dark-mode-toggle:hover {
+    background: rgba(255,255,255,0.15);
 }
+
+/* FIXED: dark mode button stays white in dark mode */
+body.dark .dark-mode-toggle {
+    border-color: rgba(255,255,255,0.5);
+    color: #fff;
+    background: rgba(255,255,255,0.08);
+}
+
+/* =========================
+   NOTIFICATION BELL
+   FIXED: stays visible in dark mode
+========================= */
+.notif-bell-wrapper {
+    position: absolute;
+    right: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1001;
+}
+
+#notifBell {
+    font-size: 20px;
+    color: white;
+    transition: transform 0.2s ease;
+}
+
+#notifBell:hover { transform: rotate(15deg) scale(1.1); }
+
+.notif-badge {
+    position: absolute;
+    top: -6px;
+    right: -8px;
+    background: #ef4444;
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    min-width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 4px;
+    /* FIXED: border matches both light and dark header */
+    border: 2px solid #065f46;
+}
+
+body.dark .notif-badge { border-color: #064e3b; }
+
+/* =========================
+   ADDED: NOTIFICATION DROPDOWN
+   Clicking the bell shows a dropdown panel
+========================= */
+.notif-dropdown {
+    position: absolute;
+    top: 60px;
+    right: 10px;
+    width: 340px;
+    max-height: 420px;
+    overflow-y: auto;
+    background: #ffffff;
+    border-radius: 14px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+    z-index: 9999;
+    display: none;
+    flex-direction: column;
+    border: 1px solid #e2e8f0;
+}
+
+.notif-dropdown.open { display: flex; }
+
+.notif-dropdown-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 16px 10px 16px;
+    border-bottom: 1px solid #e2e8f0;
+    position: sticky;
+    top: 0;
+    background: #ffffff;
+    z-index: 1;
+    border-radius: 14px 14px 0 0;
+}
+
+.notif-dropdown-header h4 {
+    font-size: 14px;
+    font-weight: 700;
+    color: #065f46;
+    margin: 0;
+}
+
+.notif-dropdown-clear {
+    font-size: 11px;
+    color: #00b894;
+    background: none;
+    border: 1px solid #00b894;
+    border-radius: 20px;
+    padding: 3px 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s;
+}
+
+.notif-dropdown-clear:hover {
+    background: #00b894;
+    color: white;
+}
+
+.notif-dropdown-body { padding: 10px 12px; }
+
+.notif-dropdown::-webkit-scrollbar { width: 5px; }
+.notif-dropdown::-webkit-scrollbar-thumb {
+    background: #00b894;
+    border-radius: 10px;
+}
+
+/* ADDED: Dark mode dropdown */
+body.dark .notif-dropdown {
+    background: #1e293b;
+    border-color: #334155;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+}
+
+body.dark .notif-dropdown-header {
+    background: #1e293b;
+    border-bottom-color: #334155;
+}
+
+body.dark .notif-dropdown-header h4 { color: #a7f3d0; }
+
+/* =========================
+   NOTIFICATION ITEMS
+========================= */
+.notif-item {
+    display: flex;
+    gap: 10px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-left: 4px solid transparent;
+}
+
+.notif-unread {
+    background: rgba(0,184,148,0.07);
+    border-left-color: #00b894;
+}
+
+.notif-read {
+    background: #f8fafc;
+    border-left-color: #e2e8f0;
+    opacity: 0.75;
+}
+
+.notif-item:hover { transform: translateX(2px); opacity: 1; }
+
+.notif-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+    width: 34px;
+    height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.notif-icon-approved  { background: rgba(0,194,103,0.12); }
+.notif-icon-cancelled { background: rgba(239,68,68,0.12); }
+
+.notif-body { flex: 1; }
+
+.notif-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 3px;
+}
+
+.notif-dot {
+    width: 7px;
+    height: 7px;
+    background: #00b894;
+    border-radius: 50%;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.notif-desc {
+    font-size: 11px;
+    color: #475569;
+    line-height: 1.5;
+    margin-bottom: 3px;
+}
+
+.notif-time {
+    font-size: 10px;
+    color: #94a3b8;
+}
+
+.notif-empty {
+    text-align: center;
+    color: #94a3b8;
+    font-size: 13px;
+    padding: 20px 0;
+}
+
+/* ADDED: Dark mode notification items */
+body.dark .notif-unread  { background: rgba(16,185,129,0.1); }
+body.dark .notif-read    { background: #0f172a; }
+body.dark .notif-title   { color: #e2e8f0; }
+body.dark .notif-desc    { color: #94a3b8; }
+body.dark .notif-dropdown-clear { color: #10b981; border-color: #10b981; }
+body.dark .notif-dropdown-clear:hover { background: #10b981; color: white; }
+
+/* =========================
+   NOTIFICATION CARD IN MAIN (kept for dashboard card)
+========================= */
+.notif-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 14px;
+}
+
+.notif-card-header h3 { margin-bottom: 0; }
+
+.notif-clear-btn {
+    font-size: 12px;
+    color: #00b894;
+    background: none;
+    border: 1px solid #00b894;
+    border-radius: 20px;
+    padding: 4px 12px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.notif-clear-btn:hover { background: #00b894; color: white; }
+
+body.dark .notif-clear-btn { color: #10b981; border-color: #10b981; }
+body.dark .notif-clear-btn:hover { background: #10b981; color: white; }
+body.dark .notif-card-header h3 { color: #a7f3d0; }

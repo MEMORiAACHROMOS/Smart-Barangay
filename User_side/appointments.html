@@ -4,14 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Appointments - Barangay Baesa Health System</title>
-
     <link rel="stylesheet" href="css/global.css">
     <link rel="stylesheet" href="css/sidebar.css">
     <link rel="stylesheet" href="css/appointments.css">
     <link rel="stylesheet" href="css/dark-mode.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-
-    <!-- ADDED: Supabase CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.38.0"></script>
 </head>
 
@@ -21,6 +18,23 @@
         <i class="fa-solid fa-bars" id="menuToggle"
            style="position:absolute; left:20px; top:50%; transform:translateY(-50%); cursor:pointer;"></i>
         <h2>My Appointments</h2>
+
+        <!-- ADDED: Notification bell -->
+        <div class="notif-bell-wrapper" id="notifBellWrapper">
+            <i class="fa-solid fa-bell" id="notifBell" onclick="toggleNotifDropdown()"></i>
+            <span class="notif-badge" id="notifBadge" style="display:none;">0</span>
+            <div class="notif-dropdown" id="notifDropdown">
+                <div class="notif-dropdown-header">
+                    <h4>🔔 Notifications</h4>
+                    <button class="notif-dropdown-clear" id="dropdownClearBtn" onclick="markAllRead()" style="display:none;">
+                        Mark all read
+                    </button>
+                </div>
+                <div class="notif-dropdown-body" id="notifDropdownBody">
+                    <p class="notif-empty">Loading...</p>
+                </div>
+            </div>
+        </div>
     </header>
 
     <aside class="sidebar" id="sidebar">
@@ -35,8 +49,8 @@
                 <i class="fa-solid fa-calendar"></i> Events
             </a></li>
             <li><a href="profile.html">
-    <i class="fa-solid fa-user"></i> Profile
-</a></li>
+                <i class="fa-solid fa-user"></i> Profile
+            </a></li>
             <li class="logout-btn">
                 <a href="login.html">
                     <i class="fa-solid fa-right-from-bracket"></i> Logout
@@ -48,17 +62,14 @@
     <main>
         <div class="container">
 
-            <!-- GREETING -->
             <section class="card" id="greetingCard">
                 <h2>Good day 👋</h2>
                 <p id="greetingText">Track and manage your appointments here</p>
             </section>
 
-            <!-- BOOK APPOINTMENT -->
             <section class="card highlight" id="bookAppointmentCard">
                 <h3>Book New Appointment</h3>
                 <form id="appointmentForm">
-
                     <p>Service / Purpose</p>
                     <select id="service">
                         <option>Dental Checkup</option>
@@ -67,7 +78,6 @@
                         <option>Pediatric Consultation</option>
                     </select>
 
-                    <!-- ADDED: Appointment Type field -->
                     <p>Type</p>
                     <select id="apptType">
                         <option value="Walk-in">Walk-in</option>
@@ -80,14 +90,10 @@
                     <p>Time</p>
                     <input type="time" id="time">
 
-                    <button type="submit" style="margin-top:10px;">
-                        Submit Appointment
-                    </button>
-
+                    <button type="submit" style="margin-top:10px;">Submit Appointment</button>
                 </form>
             </section>
 
-            <!-- MY APPOINTMENTS LIST -->
             <section class="card" id="appointmentCard">
                 <h3>My Appointments</h3>
                 <div id="appointmentContent">
@@ -95,7 +101,6 @@
                 </div>
             </section>
 
-            <!-- JOINED EVENTS -->
             <section class="card" id="eventsCard">
                 <h3>Joined Programs / Events</h3>
                 <div id="eventsContent">
@@ -103,7 +108,6 @@
                 </div>
             </section>
 
-            <!-- HISTORY -->
             <section class="card" id="historyCard">
                 <h3>Past Appointments (Records)</h3>
                 <div id="historyContent">
@@ -129,6 +133,8 @@
     <script src="js/dark-mode.js"></script>
     <script src="js/sidebar-script.js"></script>
     <script src="js/appointments-script.js"></script>
+    <!-- ADDED: Bell notification script -->
+    <script src="js/notif-bell.js"></script>
 
 </body>
 </html>
