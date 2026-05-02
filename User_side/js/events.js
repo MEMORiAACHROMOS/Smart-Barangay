@@ -18,33 +18,30 @@ document.addEventListener("DOMContentLoaded", async () => {
     renderCalendar();
     setupUI();
     updateMonthTitle();
-
-    // ADDED: Auto-fill registration form from sessionStorage
     autoFillForm();
 });
 
 // =========================
-// ADDED: Auto-fill registration form using logged-in user info
+// AUTO FILL
 // =========================
 function autoFillForm() {
     const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
     if (!currentUser) return;
 
-    // Fill fields with user's info — user can still edit them
-    if (document.getElementById('firstname'))
-        document.getElementById('firstname').value = currentUser.firstname || '';
-    if (document.getElementById('lastname'))
-        document.getElementById('lastname').value = currentUser.lastname || '';
-    if (document.getElementById('email'))
-        document.getElementById('email').value = currentUser.email || '';
-    if (document.getElementById('phone'))
-        document.getElementById('phone').value = currentUser.MobileNumber || currentUser.phone || '';
-    if (document.getElementById('address'))
-        document.getElementById('address').value = currentUser.Address || currentUser.address || '';
+    setVal('firstname', currentUser.firstname);
+    setVal('lastname', currentUser.lastname);
+    setVal('email', currentUser.email);
+    setVal('phone', currentUser.MobileNumber || currentUser.phone);
+    setVal('address', currentUser.Address || currentUser.address);
+}
+
+function setVal(id, val) {
+    const el = document.getElementById(id);
+    if (el) el.value = val || '';
 }
 
 // =========================
-// LOAD EVENTS from Supabase
+// LOAD EVENTS
 // =========================
 async function loadEvents() {
     const { data, error } = await supabase
@@ -53,39 +50,37 @@ async function loadEvents() {
         .order('Date', { ascending: true });
 
     if (error) {
-        console.error('Failed to load events:', error);
+        console.error(error);
         events = [];
         return;
     }
 
     events = (data || []).map(e => ({
-        id:           e.Programs_ID,
-        title:        e.EventName,
-        date:         e.Date,
-        description:  e.Notes || '—',
-        duration:     '—',
-        location:     e.Location || '—',
-        type:         e.TypeOfEvent || '—',
-        status:       e.Status || '—',
+        id: e.Programs_ID,
+        title: e.EventName,
+        date: e.Date,
+        description: e.Notes || '—',
+        duration: '—',
+        location: e.Location || '—',
+        type: e.TypeOfEvent || '—',
+        status: e.Status || '—',
         participants: e.Participants_Count || 0,
-        imageUrl:     'assets/default-event.jpg'
+        imageUrl: 'assets/default-event.jpg'
     }));
 }
 
 // =========================
-// RENDER CALENDAR
+// CALENDAR
 // =========================
 function renderCalendar() {
     const calendar = document.getElementById("calendar");
-    if (!calendar) return;
-
     calendar.innerHTML = "";
 
-    const year  = currentDate.getFullYear();
+    const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
 
     const firstDayIndex = new Date(year, month, 1).getDay();
-    const daysInMonth   = new Date(year, month + 1, 0).getDate();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
 
     const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -103,7 +98,7 @@ function renderCalendar() {
     }
 
     for (let day = 1; day <= daysInMonth; day++) {
-        const dateStr   = formatDate(year, month + 1, day);
+        const dateStr = formatDate(year, month + 1, day);
         const dayEvents = events.filter(e => e.date === dateStr);
 
         const cell = document.createElement("div");
@@ -112,7 +107,7 @@ function renderCalendar() {
 
         if (dayEvents.length > 0) {
             cell.classList.add("event");
-            cell.onclick = () => openEvent(dayEvents[0]);
+            cell.onclick = () => handleDayClick(dayEvents);
 
             if (dayEvents.length > 1) {
                 const badge = document.createElement("span");
@@ -129,14 +124,71 @@ function renderCalendar() {
 }
 
 // =========================
-// DATE FORMAT
+// HANDLE MULTIPLE EVENTS
 // =========================
-function formatDate(y, m, d) {
-    return `${y}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+function handleDayClick(dayEvents) {
+    if (dayEvents.length === 1) {
+        openEvent(dayEvents[0]);
+    } else {
+        openEventList(dayEvents);
+    }
 }
 
 // =========================
-// MONTH NAVIGATION
+// EVENT LIST MODAL
+// =========================
+function openEventList(dayEvents) {
+    const container = document.getElementById("eventListContainer");
+    container.innerHTML = "";
+
+    dayEvents.forEach(event => {
+        const item = document.createElement("div");
+        item.className = "event-list-item";
+
+        item.innerHTML = `
+            <div class="event-list-title">${event.title}</div>
+            <div class="event-list-meta">${event.date} • ${event.location}</div>
+        `;
+
+        item.onclick = () => {
+            closeEventList();
+            openEvent(event);
+        };
+
+        container.appendChild(item);
+    });
+
+    document.getElementById("eventListModal").classList.add("show");
+}
+
+function closeEventList() {
+    document.getElementById("eventListModal").classList.remove("show");
+}
+
+// =========================
+// EVENT MODAL
+// =========================
+function openEvent(event) {
+    selectedEvent = event;
+
+    setText("eventTitle", event.title);
+    setText("eventDesc", event.description);
+    setText("eventDate", event.date);
+    setText("eventDuration", event.duration);
+    setText("eventLocation", event.location);
+    setText("eventType", event.type);
+    setText("eventStatus", event.status);
+    setText("eventParticipants", event.participants);
+
+    document.getElementById("eventModal").classList.add("show");
+}
+
+function closeModal() {
+    document.getElementById("eventModal").classList.remove("show");
+}
+
+// =========================
+// NAVIGATION
 // =========================
 function nextMonth() {
     currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
@@ -154,90 +206,45 @@ function refreshCalendar() {
 }
 
 function updateMonthTitle() {
-    const el = document.getElementById("monthTitle");
-    if (!el) return;
-    el.textContent = currentDate.toLocaleDateString("en-US", {
-        month: "long",
-        year: "numeric"
-    });
+    document.getElementById("monthTitle").textContent =
+        currentDate.toLocaleDateString("en-US", { month: "long", year: "numeric" });
 }
 
 // =========================
-// OPEN EVENT MODAL
-// =========================
-function openEvent(event) {
-    selectedEvent = event;
-
-    setText("eventTitle",        event.title);
-    setText("eventDesc",         event.description);
-    setText("eventDate",         event.date);
-    setText("eventDuration",     event.duration);
-    setText("eventLocation",     event.location);
-    setText("eventType",         event.type);
-    setText("eventStatus",       event.status);
-    setText("eventParticipants", event.participants);
-
-    const img = document.getElementById("eventImage");
-    if (img) img.src = event.imageUrl || "assets/default-event.jpg";
-
-    document.getElementById("eventModal")?.classList.add("show");
-}
-
-function closeModal() {
-    document.getElementById("eventModal")?.classList.remove("show");
-}
-
-// =========================
-// UI / REGISTRATION
+// REGISTER
 // =========================
 function setupUI() {
     document.getElementById("openRegisterBtn")?.addEventListener("click", () => {
-        document.getElementById("eventModal")?.classList.remove("show");
-        // ADDED: Re-fill form every time register modal opens
+        closeModal();
         autoFillForm();
-        document.getElementById("registerModal")?.classList.add("show");
+        document.getElementById("registerModal").classList.add("show");
     });
 
-    window.closeRegister = function () {
-        document.getElementById("registerModal")?.classList.remove("show");
+    window.closeRegister = () => {
+        document.getElementById("registerModal").classList.remove("show");
     };
 
     const form = document.getElementById("registerForm");
-    if (!form) return;
 
-    // CHANGED: Now saves to EventRegistrationsTbl in Supabase
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
-        if (!selectedEvent) return alert("No event selected.");
-
-        const submitBtn = form.querySelector('button[type="submit"]');
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Submitting...';
 
         const { error } = await supabase.from('EventRegistrationsTbl').insert([{
-            Event_ID:      selectedEvent.id,
-            LastName:      document.getElementById('lastname').value.trim(),
-            FirstName:     document.getElementById('firstname').value.trim(),
-            MiddleInitial: document.getElementById('middleinitial').value.trim(),
-            Gender:        document.getElementById('gender').value,
-            PhoneNumber:   document.getElementById('phone').value.trim(),
-            Email:         document.getElementById('email').value.trim(),
-            Address:       document.getElementById('address').value.trim()
+            Event_ID: selectedEvent.id,
+            LastName: value('lastname'),
+            FirstName: value('firstname'),
+            MiddleInitial: value('middleinitial'),
+            Gender: value('gender'),
+            PhoneNumber: value('phone'),
+            Email: value('email'),
+            Address: value('address')
         }]);
 
-        if (error) {
-            alert('Failed to register: ' + error.message);
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Submit Registration';
-            return;
-        }
+        if (error) return alert(error.message);
 
-        alert(`Successfully registered for ${selectedEvent.title}!`);
+        alert("Registered!");
         form.reset();
-        // ADDED: Re-fill after reset so info stays
         autoFillForm();
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Submit Registration';
         closeRegister();
     });
 }
@@ -245,12 +252,15 @@ function setupUI() {
 // =========================
 // HELPERS
 // =========================
+function formatDate(y, m, d) {
+    return `${y}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
+}
+
 function setText(id, val) {
     const el = document.getElementById(id);
     if (el) el.textContent = val || "—";
 }
 
 function value(id) {
-    const el = document.getElementById(id);
-    return el ? el.value : "";
+    return document.getElementById(id)?.value || "";
 }

@@ -6,10 +6,8 @@
     <title>User Login - Smart Barangay Health Information System</title>
     <link rel="stylesheet" href="css/login-styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
-    <!-- ADDED: Supabase CDN for database connection -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.38.0"></script>
 </head>
-
 <body>
 
     <header class="main-header">
@@ -37,7 +35,12 @@
                     <i class="fa fa-eye" id="togglePassword"></i>
                 </div>
 
-                <button type="button" id="loginButton">Login</button>
+               <button type="button" id="loginButton">Login</button>
+
+<!-- ADDED: Forgot password link — moved below login button -->
+<div class="forgot-link">
+    <a href="forgot-password.html">Forgot Password?</a>
+</div>
 
                 <div class="signup-link">
                     <p>Don't have an account? <a href="register.html">Register here</a></p>
