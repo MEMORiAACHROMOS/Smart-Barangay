@@ -245,8 +245,9 @@ async function changePassword() {
     if (newPw !== confirmPw)  { msg.textContent = 'Passwords do not match.';     msg.style.color = 'red'; return; }
     if (newPw.length < 6)    { msg.textContent = 'Password must be at least 6 characters.'; msg.style.color = 'red'; return; }
 
+    // FIXED: correct parameter name is input_password (matches register-script.js)
     const { data: hashed, error: hashError } = await supabase
-        .rpc('hash_password', { password: newPw });
+        .rpc('hash_password', { input_password: newPw });
 
     if (hashError || !hashed) {
         msg.textContent = 'Failed to hash password. Try again.';

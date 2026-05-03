@@ -140,13 +140,8 @@ body.dark .day.event {
 body.dark .nav-btn { background: #10b981; color: #000; }
 body.dark .nav-btn:hover { background: #a7f3d0; }
 
-/* =========================
-   DARK MODE TOGGLE BUTTON
-   FIXED: moved to LEFT side so it doesn't overlap bell
-========================= */
 .dark-mode-toggle {
     position: absolute;
-    /* FIXED: left side instead of right */
     left: 60px;
     top: 50%;
     transform: translateY(-50%);
@@ -157,6 +152,7 @@ body.dark .nav-btn:hover { background: #a7f3d0; }
     cursor: pointer;
     padding: 5px 12px;
     border-radius: 20px;
+    /* FIXED: only transition background and border, no transform */
     transition: background 0.3s ease, border-color 0.3s ease;
     z-index: 999;
     display: flex;
@@ -165,8 +161,10 @@ body.dark .nav-btn:hover { background: #a7f3d0; }
     font-weight: 600;
 }
 
+/* FIXED: removed transform on hover so button stays still */
 .dark-mode-toggle:hover {
     background: rgba(255,255,255,0.15);
+    transform: translateY(-50%); /* keeps it vertically centered, no movement */
 }
 
 /* FIXED: dark mode button stays white in dark mode */

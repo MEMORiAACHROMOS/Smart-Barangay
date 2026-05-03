@@ -6,30 +6,33 @@ const supabase = window.supabase.createClient(
     'sb_publishable_LMKNlKJ7lXXZIvbUllHPjA_Xi7cwKGH'
 );
 
-let selectedEvent = null;
-let events = [];
-let currentDate = new Date();
-
-// ADDED: Store full name globally for bell
+let selectedEvent  = null;
+let events         = [];
+let currentDate    = new Date();
+let currentUser    = null;
 let currentFullName = '';
+
+// ADDED: Store which event IDs this user is registered for
+let registeredEventIds = new Set();
 
 // =========================
 // INIT
 // =========================
 document.addEventListener("DOMContentLoaded", async () => {
-    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
+    currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
     if (currentUser) {
         currentFullName = `${currentUser.firstname} ${currentUser.lastname}`;
-        loadBellNotifications(); // ADDED
+        loadBellNotifications();
     }
 
     await loadEvents();
+    // ADDED: Load user's registered events before rendering calendar
+    await loadRegisteredEvents();
     renderCalendar();
     setupUI();
     updateMonthTitle();
     autoFillForm();
 
-    // ADDED: Close dropdown when clicking outside
     document.addEventListener('click', function (e) {
         const wrapper = document.getElementById('notifBellWrapper');
         if (wrapper && !wrapper.contains(e.target)) {
@@ -39,7 +42,25 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 // =========================
-// ADDED: NOTIFICATION BELL
+// ADDED: LOAD REGISTERED EVENTS
+// Checks which events the current user's email is already registered for
+// =========================
+async function loadRegisteredEvents() {
+    if (!currentUser || !currentUser.email) return;
+
+    const { data, error } = await supabase
+        .from('EventRegistrationsTbl')
+        .select('Event_ID')
+        .eq('Email', currentUser.email);
+
+    if (error) { console.error('Failed to load registrations:', error); return; }
+
+    // ADDED: Store as a Set for fast lookup
+    registeredEventIds = new Set((data || []).map(r => r.Event_ID));
+}
+
+// =========================
+// NOTIFICATION BELL
 // =========================
 function toggleNotifDropdown() {
     document.getElementById('notifDropdown')?.classList.toggle('open');
@@ -134,16 +155,15 @@ async function markAllRead() {
 }
 
 // =========================
-// AUTO FILL
+// AUTO FILL FORM
 // =========================
 function autoFillForm() {
-    const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
     if (!currentUser) return;
     setVal('firstname', currentUser.firstname);
-    setVal('lastname', currentUser.lastname);
-    setVal('email', currentUser.email);
-    setVal('phone', currentUser.MobileNumber || currentUser.phone);
-    setVal('address', currentUser.Address || currentUser.address);
+    setVal('lastname',  currentUser.lastname);
+    setVal('email',     currentUser.email);
+    setVal('phone',     currentUser.MobileNumber || currentUser.phone || '');
+    setVal('address',   currentUser.Address || currentUser.address || '');
 }
 
 function setVal(id, val) {
@@ -167,17 +187,16 @@ async function loadEvents() {
         title:        e.EventName,
         date:         e.Date,
         description:  e.Notes || '—',
-        duration:     '—',
         location:     e.Location || '—',
         type:         e.TypeOfEvent || '—',
         status:       e.Status || '—',
-        participants: e.Participants_Count || 0,
-        imageUrl:     'assets/default-event.jpg'
+        participants: e.Participants_Count || 0
     }));
 }
 
 // =========================
-// CALENDAR
+// CALENDAR RENDER
+// ADDED: Registered events show in different color (blue/teal)
 // =========================
 function renderCalendar() {
     const calendar = document.getElementById("calendar");
@@ -213,8 +232,18 @@ function renderCalendar() {
         cell.innerHTML = `<span>${day}</span>`;
 
         if (dayEvents.length > 0) {
-            cell.classList.add("event");
+            // ADDED: Check if user is registered for ANY event on this day
+            const isRegistered = dayEvents.some(ev => registeredEventIds.has(ev.id));
+
+            if (isRegistered) {
+                // ADDED: Show blue/teal color for registered events
+                cell.classList.add("event", "event-registered");
+            } else {
+                cell.classList.add("event");
+            }
+
             cell.onclick = () => handleDayClick(dayEvents);
+
             if (dayEvents.length > 1) {
                 const badge = document.createElement("span");
                 badge.className = "event-badge";
@@ -240,14 +269,18 @@ function handleDayClick(dayEvents) {
 function openEventList(dayEvents) {
     const container = document.getElementById("eventListContainer");
     container.innerHTML = "";
-    dayEvents.forEach(event => {
-        const item = document.createElement("div");
-        item.className = "event-list-item";
+    dayEvents.forEach(ev => {
+        const isReg  = registeredEventIds.has(ev.id);
+        const item   = document.createElement("div");
+        item.className = `event-list-item${isReg ? ' event-list-registered' : ''}`;
         item.innerHTML = `
-            <div class="event-list-title">${event.title}</div>
-            <div class="event-list-meta">${event.date} • ${event.location}</div>
+            <div class="event-list-title">
+                ${ev.title}
+                ${isReg ? '<span class="reg-tag">✅ Registered</span>' : ''}
+            </div>
+            <div class="event-list-meta">${ev.date} • ${ev.location}</div>
         `;
-        item.onclick = () => { closeEventList(); openEvent(event); };
+        item.onclick = () => { closeEventList(); openEvent(ev); };
         container.appendChild(item);
     });
     document.getElementById("eventListModal").classList.add("show");
@@ -257,16 +290,37 @@ function closeEventList() {
     document.getElementById("eventListModal").classList.remove("show");
 }
 
-function openEvent(event) {
-    selectedEvent = event;
-    setText("eventTitle",       event.title);
-    setText("eventDesc",        event.description);
-    setText("eventDate",        event.date);
-    setText("eventDuration",    event.duration);
-    setText("eventLocation",    event.location);
-    setText("eventType",        event.type);
-    setText("eventStatus",      event.status);
-    setText("eventParticipants", event.participants);
+// =========================
+// OPEN EVENT MODAL
+// ADDED: Shows "Already Registered" badge and disables register button if registered
+// =========================
+function openEvent(ev) {
+    selectedEvent = ev;
+    setText("eventTitle",        ev.title);
+    setText("eventDesc",         ev.description);
+    setText("eventDate",         ev.date);
+    setText("eventLocation",     ev.location);
+    setText("eventType",         ev.type);
+    setText("eventStatus",       ev.status);
+    setText("eventParticipants", ev.participants);
+
+    const isRegistered = registeredEventIds.has(ev.id);
+    const badge        = document.getElementById('alreadyRegisteredBadge');
+    const registerBtn  = document.getElementById('openRegisterBtn');
+
+    // ADDED: Show/hide registered badge and disable register button
+    if (isRegistered) {
+        badge.style.display   = 'flex';
+        registerBtn.disabled  = true;
+        registerBtn.innerHTML = '<i class="fa-solid fa-check"></i> Already Registered';
+        registerBtn.classList.add('btn-registered');
+    } else {
+        badge.style.display   = 'none';
+        registerBtn.disabled  = false;
+        registerBtn.innerHTML = '<i class="fa-solid fa-user-plus"></i> Register';
+        registerBtn.classList.remove('btn-registered');
+    }
+
     document.getElementById("eventModal").classList.add("show");
 }
 
@@ -274,6 +328,9 @@ function closeModal() {
     document.getElementById("eventModal").classList.remove("show");
 }
 
+// =========================
+// NAVIGATION
+// =========================
 function nextMonth() {
     currentDate = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1);
     refreshCalendar();
@@ -291,6 +348,9 @@ function updateMonthTitle() {
         currentDate.toLocaleDateString("en-US", { month: "long", year: "numeric" });
 }
 
+// =========================
+// SETUP UI
+// =========================
 function setupUI() {
     document.getElementById("openRegisterBtn")?.addEventListener("click", () => {
         closeModal();
@@ -305,6 +365,11 @@ function setupUI() {
     const form = document.getElementById("registerForm");
     form.addEventListener("submit", async (e) => {
         e.preventDefault();
+
+        const submitBtn = form.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Submitting...';
+
         const { error } = await supabase.from('EventRegistrationsTbl').insert([{
             Event_ID:      selectedEvent.id,
             LastName:      value('lastname'),
@@ -315,14 +380,41 @@ function setupUI() {
             Email:         value('email'),
             Address:       value('address')
         }]);
-        if (error) return alert(error.message);
-        alert("Registered!");
+
+        if (error) {
+            alert(error.message);
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = '<i class="fa-solid fa-check"></i> Submit Registration';
+            return;
+        }
+
+        // ADDED: Add to registered set immediately
+        registeredEventIds.add(selectedEvent.id);
+
+        // ADDED: Re-render calendar to update colors
+        renderCalendar();
+
+        // ADDED: Show success modal instead of alert
+        document.getElementById('regSuccessEventName').textContent = selectedEvent.title;
+        closeRegister();
+        document.getElementById('regSuccessModal').classList.add('show');
+
         form.reset();
         autoFillForm();
-        closeRegister();
+
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fa-solid fa-check"></i> Submit Registration';
     });
 }
 
+// ADDED: Close success modal
+function closeRegSuccess() {
+    document.getElementById('regSuccessModal').classList.remove('show');
+}
+
+// =========================
+// HELPERS
+// =========================
 function formatDate(y, m, d) {
     return `${y}-${String(m).padStart(2, "0")}-${String(d).padStart(2, "0")}`;
 }

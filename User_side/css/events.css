@@ -11,19 +11,19 @@
    CARD
 ========================= */
 .card {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.95) 100%);
+    background: linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(248,250,252,0.95) 100%);
     padding: 32px;
     border-radius: 20px;
-    box-shadow: 0 20px 50px rgba(6, 95, 70, 0.15), 0 0 1px rgba(0, 0, 0, 0.05);
+    box-shadow: 0 20px 50px rgba(6,95,70,0.15), 0 0 1px rgba(0,0,0,0.05);
     backdrop-filter: blur(10px);
     animation: fadeIn 0.45s ease;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    border: 1px solid rgba(0, 184, 148, 0.1);
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
+    border: 1px solid rgba(0,184,148,0.1);
 }
 
 .card:hover {
     transform: translateY(-6px);
-    box-shadow: 0 30px 60px rgba(6, 95, 70, 0.2), 0 0 1px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 30px 60px rgba(6,95,70,0.2), 0 0 1px rgba(0,0,0,0.08);
 }
 
 @keyframes fadeIn {
@@ -53,7 +53,7 @@
     display: grid;
     grid-template-columns: 50px 1fr 50px;
     align-items: center;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
 }
 
 .nav-btn {
@@ -68,15 +68,48 @@
     color: white;
     cursor: pointer;
     transition: all 0.2s ease;
-    box-shadow: 0 4px 12px rgba(0, 184, 148, 0.3);
+    box-shadow: 0 4px 12px rgba(0,184,148,0.3);
     font-weight: 600;
 }
 
 .nav-btn:hover {
     background: linear-gradient(135deg, #00a870, #008859);
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 184, 148, 0.4);
+    box-shadow: 0 6px 16px rgba(0,184,148,0.4);
 }
+
+/* =========================
+   ADDED: CALENDAR LEGEND
+========================= */
+.calendar-legend {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 14px;
+    padding: 8px 12px;
+    background: rgba(0,184,148,0.05);
+    border-radius: 10px;
+    border: 1px solid rgba(0,184,148,0.1);
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.legend-dot {
+    width: 14px;
+    height: 14px;
+    border-radius: 4px;
+    display: inline-block;
+}
+
+.legend-event      { background: linear-gradient(135deg, #00b894, #00a870); }
+/* ADDED: Blue/teal color for registered events legend */
+.legend-registered { background: linear-gradient(135deg, #3b82f6, #2563eb); }
 
 /* =========================
    CALENDAR GRID
@@ -85,7 +118,7 @@
     display: grid;
     grid-template-columns: repeat(7, 1fr);
     gap: 12px;
-    margin-top: 20px;
+    margin-top: 10px;
 }
 
 .weekday {
@@ -109,30 +142,36 @@
     align-items: center;
     justify-content: center;
     border-radius: 14px;
-    background: linear-gradient(135deg, rgba(248, 250, 252, 0.5), rgba(245, 249, 248, 0.5));
+    background: linear-gradient(135deg, rgba(248,250,252,0.5), rgba(245,249,248,0.5));
     font-weight: 600;
     font-size: 15px;
     cursor: default;
     position: relative;
     transition: all 0.25s ease;
-    border: 1px solid rgba(0, 184, 148, 0.08);
+    border: 1px solid rgba(0,184,148,0.08);
     color: #374151;
 }
 
 .day:hover {
     transform: translateY(-3px);
-    box-shadow: 0 10px 20px rgba(0, 184, 148, 0.15);
-    border-color: rgba(0, 184, 148, 0.2);
+    box-shadow: 0 10px 20px rgba(0,184,148,0.15);
+    border-color: rgba(0,184,148,0.2);
 }
 
-/* Event day lights up green */
+/* Event day — green */
 .day.event {
     background: linear-gradient(135deg, #00b894, #00a870);
     color: white;
     cursor: pointer;
-    box-shadow: 0 12px 28px rgba(0, 184, 148, 0.35);
+    box-shadow: 0 12px 28px rgba(0,184,148,0.35);
     border: 0;
     font-weight: 700;
+}
+
+/* ADDED: Registered event day — blue */
+.day.event.event-registered {
+    background: linear-gradient(135deg, #3b82f6, #2563eb);
+    box-shadow: 0 12px 28px rgba(59,130,246,0.35);
 }
 
 .day.event::after {
@@ -145,12 +184,23 @@
     border-radius: 50%;
 }
 
+/* ADDED: Registered day gets a checkmark dot */
+.day.event-registered::after {
+    content: "✓";
+    font-size: 10px;
+    font-weight: 700;
+    background: transparent;
+    color: white;
+    width: auto;
+    height: auto;
+}
+
 .day.event::before {
     content: "";
     position: absolute;
     inset: 0;
     border-radius: 14px;
-    border: 2px solid rgba(255, 255, 255, 0.4);
+    border: 2px solid rgba(255,255,255,0.4);
     opacity: 0;
     transition: 0.2s ease;
 }
@@ -161,12 +211,11 @@
 }
 
 .day.disabled {
-    background: rgba(209, 213, 219, 0.3);
+    background: rgba(209,213,219,0.3);
     color: #9ca3af;
     cursor: not-allowed;
 }
 
-/* Badge for multiple events on same day */
 .event-badge {
     position: absolute;
     top: 6px;
@@ -181,7 +230,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
 }
 
 /* =========================
@@ -191,8 +240,8 @@
     display: none;
     position: fixed;
     inset: 0;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(10px);
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(8px);
     justify-content: center;
     align-items: center;
     z-index: 1000;
@@ -201,47 +250,49 @@
 .modal.show { display: flex; }
 
 /* =========================
-   MODAL CARD
+   MODAL CONTENT
 ========================= */
 .modal-content {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.95) 100%);
-    width: 450px;
+    background: #ffffff;
+    width: 460px;
     max-width: 92%;
     border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 40px 80px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 40px 80px rgba(0,0,0,0.25);
     animation: popIn 0.25s ease;
-    border: 1px solid rgba(0, 184, 148, 0.1);
+    max-height: 90vh;
+    overflow-y: auto;
 }
 
 @keyframes popIn {
     from { transform: scale(0.94); opacity: 0; }
-    to   { transform: scale(1); opacity: 1; }
+    to   { transform: scale(1);    opacity: 1; }
 }
 
 /* =========================
-   EVENT BANNER
+   EVENT BANNER — ADDED: no broken image
 ========================= */
 .event-banner {
     width: 100%;
-    height: 160px;
+    height: 140px;
+    background: linear-gradient(135deg, #00b894, #065f46);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     position: relative;
-    overflow: hidden;
-    background: linear-gradient(135deg, #00b894, #00a870);
 }
 
-.event-banner img {
+.event-banner-overlay {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 100%;
     height: 100%;
-    object-fit: cover;
 }
 
-.event-banner::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(135deg, rgba(0, 184, 148, 0.3), rgba(0, 168, 112, 0.3));
-    z-index: 1;
+.event-banner-icon {
+    font-size: 56px;
+    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
 }
 
 /* =========================
@@ -253,210 +304,263 @@
 
 .modal-body h2 {
     color: #065f46;
-    margin-bottom: 8px;
+    margin-bottom: 6px;
     font-size: 1.3em;
     font-weight: 700;
 }
 
-.modal-body p {
-    font-size: 14px;
+.event-desc-text {
+    font-size: 13px;
+    color: #64748b;
+    margin-bottom: 16px;
+    line-height: 1.5;
+}
+
+/* ADDED: Event info rows */
+.event-info {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.event-info-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    background: #f0fdf4;
+    border-radius: 8px;
+    font-size: 13px;
     color: #374151;
-    margin: 8px 0;
+    border-left: 3px solid #00b894;
 }
 
 /* =========================
-   INPUTS
+   ADDED: ALREADY REGISTERED BADGE
 ========================= */
-.modal-content input,
-.modal-content select,
-.modal-content textarea {
-    width: 100%;
-    padding: 12px 14px;
-    margin: 8px 0;
-    border: 2px solid rgba(0, 184, 148, 0.2);
+.already-registered-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(59,130,246,0.1);
+    border: 2px solid #3b82f6;
+    color: #1d4ed8;
     border-radius: 10px;
-    outline: none;
-    transition: all 0.2s ease;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(248, 250, 252, 0.8));
-    font-family: inherit;
-}
-
-.modal-content input:focus,
-.modal-content select:focus,
-.modal-content textarea:focus {
-    border-color: #00b894;
-    box-shadow: 0 0 12px rgba(0, 184, 148, 0.4);
-    background: white;
+    padding: 10px 14px;
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 16px;
 }
 
 /* =========================
-   BUTTONS
+   MODAL ACTIONS
 ========================= */
-button {
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 16px;
+}
+
+.primary-btn {
+    flex: 1;
     padding: 12px 18px;
     background: linear-gradient(135deg, #00b894, #00a870);
     color: white;
     border: none;
     border-radius: 10px;
     cursor: pointer;
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 14px;
     transition: all 0.2s ease;
-    box-shadow: 0 4px 12px rgba(0, 184, 148, 0.3);
+    box-shadow: 0 4px 12px rgba(0,184,148,0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
 }
 
-.nav-btn { margin: 0; }
-
-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 18px rgba(0, 184, 148, 0.4);
+.primary-btn:hover:not(:disabled) {
     background: linear-gradient(135deg, #00a870, #008859);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 18px rgba(0,184,148,0.4);
 }
 
-button.secondary {
-    background: linear-gradient(135deg, rgba(0, 184, 148, 0.15), rgba(0, 194, 103, 0.1));
+.primary-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.8;
+}
+
+/* ADDED: Already registered button style */
+.btn-registered {
+    background: linear-gradient(135deg, #3b82f6, #2563eb) !important;
+    box-shadow: 0 4px 12px rgba(59,130,246,0.3) !important;
+}
+
+.secondary-btn {
+    padding: 12px 18px;
+    background: rgba(0,184,148,0.1);
     color: #065f46;
-    border: 1px solid rgba(0, 184, 148, 0.3);
-    box-shadow: none;
+    border: 1px solid rgba(0,184,148,0.3);
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
 }
 
-button.secondary:hover {
-    background: linear-gradient(135deg, rgba(0, 184, 148, 0.25), rgba(0, 194, 103, 0.15));
+.secondary-btn:hover {
+    background: rgba(0,184,148,0.2);
     transform: translateY(-2px);
 }
 
 /* =========================
-   REGISTER MODAL
+   ADDED: REGISTRATION MODAL REDESIGN
 ========================= */
 .register-modal {
-    padding: 24px;
+    padding: 28px;
     max-height: 90vh;
     overflow-y: auto;
 }
 
-.register-modal h2 {
-    color: #065f46;
-    margin-bottom: 16px;
-    font-size: 1.3em;
-    font-weight: 700;
+.reg-modal-header {
+    text-align: center;
+    margin-bottom: 24px;
 }
 
-.form-grid {
+.reg-modal-icon {
+    font-size: 40px;
+    display: block;
+    margin-bottom: 8px;
+}
+
+.reg-modal-header h2 {
+    color: #065f46;
+    font-size: 1.4em;
+    font-weight: 800;
+    margin-bottom: 4px;
+}
+
+.reg-modal-subtitle {
+    font-size: 13px;
+    color: #64748b;
+    margin: 0;
+}
+
+.reg-form-section {
+    margin-bottom: 16px;
+}
+
+.reg-form-label {
+    display: block;
+    font-size: 12px;
+    font-weight: 700;
+    color: #065f46;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+}
+
+.reg-form-group { display: flex; flex-direction: column; }
+
+.form-grid-3 {
+    display: grid;
+    grid-template-columns: 1fr 1fr 80px;
+    gap: 10px;
+}
+
+.form-grid-2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 12px;
+    gap: 10px;
+}
+
+.register-modal input,
+.register-modal select,
+.register-modal textarea {
+    width: 100%;
+    padding: 11px 14px;
+    border: 2px solid rgba(0,184,148,0.2);
+    border-radius: 10px;
+    outline: none;
+    transition: all 0.2s ease;
+    background: #f8fafc;
+    font-family: inherit;
+    font-size: 14px;
+    color: #1e293b;
+}
+
+.register-modal input:focus,
+.register-modal select:focus,
+.register-modal textarea:focus {
+    border-color: #00b894;
+    box-shadow: 0 0 10px rgba(0,184,148,0.3);
+    background: white;
+}
+
+.register-modal textarea {
+    resize: vertical;
+    min-height: 70px;
+}
+
+.reg-form-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.reg-form-actions .primary-btn { flex: 1; }
+
+/* =========================
+   ADDED: SUCCESS MODAL
+========================= */
+.reg-success-modal {
+    padding: 40px 32px;
+    text-align: center;
+    max-width: 360px;
+}
+
+.reg-success-check {
+    width: 72px;
+    height: 72px;
+    background: linear-gradient(135deg, #00b894, #00c267);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px auto;
+    font-size: 32px;
+    color: white;
+    font-weight: 800;
+    box-shadow: 0 8px 24px rgba(0,184,148,0.4);
+    animation: popIn 0.4s cubic-bezier(0.4,0,0.2,1) 0.1s both;
+}
+
+.reg-success-modal h3 {
+    font-size: 20px;
+    font-weight: 800;
+    color: #065f46;
+    margin-bottom: 10px;
+}
+
+.reg-success-modal p {
+    font-size: 14px;
+    color: #475569;
+    line-height: 1.6;
+    margin-bottom: 24px;
 }
 
 /* =========================
-   RESPONSIVE
+   EVENT LIST MODAL
 ========================= */
-@media (max-width: 600px) {
-    #calendar { grid-template-columns: repeat(3, 1fr); }
-    .day { height: 54px; }
-    .calendar-header { grid-template-columns: 40px 1fr 40px; }
-    .modal-content { width: 95%; }
-    .form-grid { grid-template-columns: 1fr; }
+.event-list-modal {
+    padding: 24px;
 }
 
-/* =========================
-   DARK MODE SUPPORT - MATCHING ADMIN SIDE
-========================= */
-body.dark .weekday {
-    color: #94a3b8;
-}
-
-body.dark .day {
-    background: rgba(255, 255, 255, 0.08);
-    color: #e2e8f0;
-}
-
-body.dark .day.disabled {
-    background: rgba(0, 0, 0, 0.3);
-    color: rgba(255, 255, 255, 0.3);
-}
-
-body.dark .day.event {
-    background: linear-gradient(135deg, #a7f3d0, #10b981);
-    color: #000;
-}
-
-body.dark .event-badge {
-    background: rgba(255, 255, 255, 0.2);
-    color: #a7f3d0;
-}
-
-body.dark #monthTitle {
-    color: #a7f3d0;
-}
-
-body.dark .nav-btn {
-    background: #10b981;
-    color: #000;
-}
-
-body.dark .nav-btn:hover {
-    background: #a7f3d0;
-}
-
-body.dark .modal {
-    background: rgba(0, 0, 0, 0.8);
-}
-
-body.dark .modal-content {
-    background: #1e293b;
-    box-shadow: 0 30px 70px rgba(0, 0, 0, 0.6);
-}
-
-body.dark .event-banner {
-    background: #10b981;
-}
-
-body.dark .modal-body h2 {
-    color: #a7f3d0;
-}
-
-body.dark .modal-body p {
-    color: #e2e8f0;
-}
-
-body.dark .modal-content input,
-body.dark .modal-content select,
-body.dark .modal-content textarea {
-    background: #1e293b;
-    border-color: #334155;
-    color: #e2e8f0;
-}
-
-body.dark .modal-content input:focus,
-body.dark .modal-content select:focus,
-body.dark .modal-content textarea:focus {
-    border-color: #10b981;
-    box-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
-}
-
-body.dark button {
-    background: linear-gradient(135deg, #10b981, #059669);
-    color: #000;
-}
-
-body.dark button:hover {
-    background: linear-gradient(135deg, #a7f3d0, #10b981);
-    box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
-}
-
-body.dark button.secondary {
-    background: rgba(255, 255, 255, 0.1);
-    color: #e2e8f0;
-}
-
-body.dark button.secondary:hover {
-    background: rgba(255, 255, 255, 0.15);
-}
-
-body.dark .primary-btn {
-    background: #10b981;
-    color: #000;
-}
-/* EVENT LIST */
 .event-list-container {
     display: flex;
     flex-direction: column;
@@ -470,6 +574,7 @@ body.dark .primary-btn {
     background: rgba(0,184,148,0.08);
     border: 1px solid rgba(0,184,148,0.2);
     cursor: pointer;
+    transition: all 0.2s ease;
 }
 
 .event-list-item:hover {
@@ -477,11 +582,161 @@ body.dark .primary-btn {
     background: rgba(0,184,148,0.15);
 }
 
+/* ADDED: Registered item in list */
+.event-list-registered {
+    background: rgba(59,130,246,0.08) !important;
+    border-color: rgba(59,130,246,0.3) !important;
+}
+
+.event-list-registered:hover {
+    background: rgba(59,130,246,0.15) !important;
+}
+
 .event-list-title {
     font-weight: 700;
+    font-size: 14px;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 4px;
+}
+
+/* ADDED: Registered tag in list */
+.reg-tag {
+    font-size: 11px;
+    background: #3b82f6;
+    color: white;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 600;
 }
 
 .event-list-meta {
     font-size: 12px;
-    opacity: 0.7;
+    color: #64748b;
 }
+
+/* =========================
+   RESPONSIVE
+========================= */
+@media (max-width: 600px) {
+    #calendar { grid-template-columns: repeat(7, 1fr); gap: 6px; }
+    .day { height: 46px; font-size: 13px; }
+    .calendar-header { grid-template-columns: 40px 1fr 40px; }
+    .modal-content { width: 95%; }
+    .form-grid-3 { grid-template-columns: 1fr 1fr; }
+    .form-grid-2 { grid-template-columns: 1fr; }
+    .reg-form-actions { flex-direction: column; }
+}
+
+/* =========================
+   DARK MODE
+========================= */
+body.dark .card {
+    background: #1e293b;
+    border-color: rgba(100,200,150,0.1);
+}
+
+body.dark .weekday { color: #94a3b8; }
+
+body.dark .day {
+    background: rgba(255,255,255,0.06);
+    color: #e2e8f0;
+    border-color: rgba(255,255,255,0.05);
+}
+
+body.dark .day.disabled {
+    background: rgba(0,0,0,0.3);
+    color: rgba(255,255,255,0.3);
+}
+
+body.dark .day.event {
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: white;
+}
+
+/* ADDED: Dark mode registered event */
+body.dark .day.event.event-registered {
+    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+}
+
+body.dark .calendar-legend {
+    background: rgba(255,255,255,0.05);
+    border-color: rgba(255,255,255,0.1);
+}
+
+body.dark .legend-item { color: #94a3b8; }
+
+body.dark .modal-content {
+    background: #1e293b;
+    box-shadow: 0 30px 70px rgba(0,0,0,0.6);
+}
+
+body.dark .event-banner { background: linear-gradient(135deg, #10b981, #064e3b); }
+
+body.dark .modal-body h2 { color: #a7f3d0; }
+
+body.dark .event-desc-text { color: #94a3b8; }
+
+body.dark .event-info-row {
+    background: rgba(16,185,129,0.08);
+    color: #e2e8f0;
+    border-left-color: #10b981;
+}
+
+body.dark .already-registered-badge {
+    background: rgba(59,130,246,0.15);
+    border-color: #3b82f6;
+    color: #93c5fd;
+}
+
+body.dark .secondary-btn {
+    background: rgba(255,255,255,0.08);
+    color: #a7f3d0;
+    border-color: rgba(255,255,255,0.1);
+}
+
+body.dark .secondary-btn:hover { background: rgba(255,255,255,0.12); }
+
+body.dark .register-modal input,
+body.dark .register-modal select,
+body.dark .register-modal textarea {
+    background: #0f172a;
+    border-color: #334155;
+    color: #e2e8f0;
+}
+
+body.dark .register-modal input:focus,
+body.dark .register-modal select:focus,
+body.dark .register-modal textarea:focus {
+    border-color: #10b981;
+    background: #1e293b;
+}
+
+body.dark .reg-modal-header h2 { color: #a7f3d0; }
+body.dark .reg-modal-subtitle  { color: #94a3b8; }
+body.dark .reg-form-label      { color: #6ee7b7; }
+
+body.dark .event-list-item {
+    background: rgba(16,185,129,0.08);
+    border-color: rgba(16,185,129,0.2);
+}
+
+body.dark .event-list-registered {
+    background: rgba(59,130,246,0.1) !important;
+    border-color: rgba(59,130,246,0.25) !important;
+}
+
+body.dark .event-list-title { color: #e2e8f0; }
+body.dark .event-list-meta  { color: #94a3b8; }
+
+body.dark .reg-success-modal h3 { color: #a7f3d0; }
+body.dark .reg-success-modal p  { color: #94a3b8; }
+
+body.dark .nav-btn {
+    background: #10b981;
+    color: #000;
+}
+
+body.dark .nav-btn:hover { background: #a7f3d0; }

@@ -7,41 +7,40 @@
     display: flex;
     flex-direction: column;
     gap: 24px;
-    padding: 20px 0;
+    padding: 20px 16px; /* FIXED: added horizontal padding for mobile */
+    box-sizing: border-box;
+    width: 100%;
 }
 
 /* =========================
-   CARDS (BASE STYLE)
+   CARDS
 ========================= */
 .card {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.98) 0%, rgba(248, 250, 252, 0.95) 100%);
+    background: linear-gradient(135deg, rgba(255,255,255,0.98) 0%, rgba(248,250,252,0.95) 100%);
     padding: 28px 32px;
     border-radius: 18px;
-
-    box-shadow: 0 15px 40px rgba(6, 95, 70, 0.12), 0 0 1px rgba(0, 0, 0, 0.05);
-
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 15px 40px rgba(6,95,70,0.12), 0 0 1px rgba(0,0,0,0.05);
+    transition: all 0.3s cubic-bezier(0.4,0,0.2,1);
     backdrop-filter: blur(10px);
-    border: 1px solid rgba(0, 184, 148, 0.08);
+    border: 1px solid rgba(0,184,148,0.08);
+    box-sizing: border-box;
+    width: 100%;
 }
 
 .card:hover {
     transform: translateY(-6px);
-    box-shadow: 0 25px 50px rgba(6, 95, 70, 0.18), 0 0 1px rgba(0, 0, 0, 0.08);
+    box-shadow: 0 25px 50px rgba(6,95,70,0.18), 0 0 1px rgba(0,0,0,0.08);
 }
 
-/* Highlight (booking section) */
 .card.highlight {
-    border: 0;
-    background: linear-gradient(135deg, rgba(0, 184, 148, 0.1) 0%, rgba(0, 194, 103, 0.06) 100%);
-    border: 2px solid rgba(0, 184, 148, 0.3);
+    background: linear-gradient(135deg, rgba(0,184,148,0.1) 0%, rgba(0,194,103,0.06) 100%);
+    border: 2px solid rgba(0,184,148,0.3);
 }
 
 /* =========================
    HEADINGS
 ========================= */
-.card h2,
-.card h3 {
+.card h2, .card h3 {
     color: #065f46;
     margin-bottom: 16px;
     font-size: 1.3em;
@@ -50,7 +49,7 @@
 }
 
 /* =========================
-   GREETING TEXT
+   GREETING
 ========================= */
 #greetingCard p {
     color: #374151;
@@ -58,7 +57,7 @@
 }
 
 /* =========================
-   FORM STYLING
+   FORM
 ========================= */
 #appointmentForm {
     display: flex;
@@ -74,89 +73,84 @@
 }
 
 #appointmentForm select,
-#appointmentForm input {
+#appointmentForm input,
+#appointmentForm textarea {
     width: 100%;
     padding: 12px 14px;
-
-    border: 2px solid rgba(0, 184, 148, 0.2);
+    border: 2px solid rgba(0,184,148,0.2);
     border-radius: 10px;
-
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(248, 250, 252, 0.8) 100%);
+    background: linear-gradient(135deg, rgba(255,255,255,0.8) 0%, rgba(248,250,252,0.8) 100%);
     outline: none;
     transition: all 0.2s ease;
     font-size: 0.9em;
+    box-sizing: border-box; /* FIXED: prevents overflow on mobile */
 }
 
-/* focus effect */
 #appointmentForm select:focus,
-#appointmentForm input:focus {
+#appointmentForm input:focus,
+#appointmentForm textarea:focus {
     border-color: #00b894;
-    box-shadow: 0 0 12px rgba(0, 184, 148, 0.4);
+    box-shadow: 0 0 12px rgba(0,184,148,0.4);
     background: white;
 }
 
 /* =========================
-   BUTTONS (NEW UPGRADE)
+   BUTTONS
 ========================= */
 button {
     padding: 11px 20px;
     border: none;
     border-radius: 10px;
-
     cursor: pointer;
     font-size: 13px;
     font-weight: 600;
-
     transition: all 0.2s ease;
+    box-sizing: border-box;
 }
 
-/* primary button (submit) */
 #appointmentForm button {
     background: linear-gradient(135deg, #00b894, #00a870);
     color: white;
-    box-shadow: 0 4px 15px rgba(0, 184, 148, 0.3);
+    box-shadow: 0 4px 15px rgba(0,184,148,0.3);
+    width: 100%; /* FIXED: full width on all screens */
 }
 
 #appointmentForm button:hover {
     background: linear-gradient(135deg, #00a870, #008859);
     transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(0, 184, 148, 0.4);
+    box-shadow: 0 6px 20px rgba(0,184,148,0.4);
 }
 
-/* action buttons */
 #appointmentContent button {
     margin-right: 8px;
-    background: linear-gradient(135deg, rgba(0, 184, 148, 0.15), rgba(0, 194, 103, 0.1));
-    border: 1px solid rgba(0, 184, 148, 0.3);
+    background: linear-gradient(135deg, rgba(0,184,148,0.15), rgba(0,194,103,0.1));
+    border: 1px solid rgba(0,184,148,0.3);
     color: #065f46;
 }
 
 #appointmentContent button:hover {
-    background: linear-gradient(135deg, rgba(0, 184, 148, 0.25), rgba(0, 194, 103, 0.15));
+    background: linear-gradient(135deg, rgba(0,184,148,0.25), rgba(0,194,103,0.15));
     transform: translateY(-2px);
 }
 
 /* =========================
-   APPOINTMENT CARD STYLE
+   APPOINTMENT CARDS
 ========================= */
 #appointmentContent div {
     padding: 16px;
     border-radius: 12px;
-
-    background: linear-gradient(135deg, rgba(0, 184, 148, 0.08) 0%, rgba(0, 194, 103, 0.05) 100%);
-
+    background: linear-gradient(135deg, rgba(0,184,148,0.08) 0%, rgba(0,194,103,0.05) 100%);
     margin-bottom: 12px;
-
     display: flex;
     flex-direction: column;
     gap: 6px;
-
     border-left: 3px solid #00b894;
     transition: all 0.2s ease;
+    box-sizing: border-box;
 }
 
 #appointmentContent div:hover {
-    background: linear-gradient(135deg, rgba(0, 184, 148, 0.15) 0%, rgba(0, 194, 103, 0.1) 100%);
+    background: linear-gradient(135deg, rgba(0,184,148,0.15) 0%, rgba(0,194,103,0.1) 100%);
     transform: translateX(4px);
 }
 
@@ -173,169 +167,147 @@ button {
     font-weight: 600;
 }
 
-.status.pending {
-    background: linear-gradient(135deg, rgba(245, 158, 11, 0.15), rgba(245, 158, 11, 0.1));
-    color: #b45309;
-    border: 1px solid rgba(245, 158, 11, 0.3);
-}
-
-.status.confirmed {
-    background: linear-gradient(135deg, rgba(34, 197, 94, 0.15), rgba(34, 197, 94, 0.1));
-    color: #16a34a;
-    border: 1px solid rgba(34, 197, 94, 0.3);
-}
-
-.status.cancelled {
-    background: linear-gradient(135deg, rgba(239, 68, 68, 0.15), rgba(239, 68, 68, 0.1));
-    color: #dc2626;
-    border: 1px solid rgba(239, 68, 68, 0.3);
-}
-
-.status.rescheduled {
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(59, 130, 246, 0.1));
-    color: #2563eb;
-    border: 1px solid rgba(59, 130, 246, 0.3);
-}
+.status.pending    { background: rgba(245,158,11,0.15);  color: #b45309; border: 1px solid rgba(245,158,11,0.3); }
+.status.confirmed  { background: rgba(34,197,94,0.15);   color: #16a34a; border: 1px solid rgba(34,197,94,0.3); }
+.status.cancelled  { background: rgba(239,68,68,0.15);   color: #dc2626; border: 1px solid rgba(239,68,68,0.3); }
+.status.rescheduled{ background: rgba(59,130,246,0.15);  color: #2563eb; border: 1px solid rgba(59,130,246,0.3); }
+.status.approved   { background: rgba(34,197,94,0.15);   color: #16a34a; border: 1px solid rgba(34,197,94,0.3); }
+.status.completed  { background: rgba(59,130,246,0.15);  color: #2563eb; border: 1px solid rgba(59,130,246,0.3); }
 
 /* =========================
-   HISTORY SECTION (NEW)
+   HISTORY
 ========================= */
 #historyContent div {
     padding: 14px;
     border-radius: 10px;
-
-    background: linear-gradient(135deg, rgba(107, 114, 128, 0.08) 0%, rgba(107, 114, 128, 0.05) 100%);
-
+    background: linear-gradient(135deg, rgba(107,114,128,0.08) 0%, rgba(107,114,128,0.05) 100%);
     margin-bottom: 12px;
     border-left: 4px solid #6b7280;
     transition: all 0.2s ease;
+    box-sizing: border-box;
 }
 
 #historyContent div:hover {
-    background: linear-gradient(135deg, rgba(107, 114, 128, 0.15) 0%, rgba(107, 114, 128, 0.1) 100%);
+    background: linear-gradient(135deg, rgba(107,114,128,0.15) 0%, rgba(107,114,128,0.1) 100%);
     transform: translateX(4px);
 }
 
-#historyContent p {
-    margin: 4px 0;
-    color: #374151;
-    font-size: 14px;
-}
+#historyContent p { margin: 4px 0; color: #374151; font-size: 14px; }
 
 /* =========================
-   EVENTS SECTION
+   EVENTS
 ========================= */
 #eventsContent p {
     padding: 12px 14px;
-    background: linear-gradient(135deg, rgba(0, 184, 148, 0.08) 0%, rgba(0, 194, 103, 0.05) 100%);
+    background: linear-gradient(135deg, rgba(0,184,148,0.08) 0%, rgba(0,194,103,0.05) 100%);
     border-radius: 10px;
-
     margin-bottom: 10px;
-
     color: #374151;
     border-left: 3px solid #00b894;
     transition: all 0.2s ease;
 }
 
 #eventsContent p:hover {
-    background: linear-gradient(135deg, rgba(0, 184, 148, 0.15) 0%, rgba(0, 194, 103, 0.1) 100%);
+    background: linear-gradient(135deg, rgba(0,184,148,0.15) 0%, rgba(0,194,103,0.1) 100%);
     transform: translateX(4px);
 }
 
 /* =========================
-   RESPONSIVE
+   RESPONSIVE — MOBILE
 ========================= */
 @media (max-width: 768px) {
     .container {
-        padding: 0 10px;
+        padding: 12px 14px;
+        gap: 16px;
     }
 
     .card {
-        padding: 16px;
+        padding: 18px 16px; /* FIXED: tighter padding on mobile */
+        border-radius: 14px;
+    }
+
+    .card h2, .card h3 {
+        font-size: 1.1em;
+    }
+
+    /* FIXED: inputs full width, no overflow */
+    #appointmentForm select,
+    #appointmentForm input,
+    #appointmentForm textarea {
+        font-size: 16px; /* prevents iOS zoom on focus */
+        padding: 10px 12px;
     }
 
     button {
         width: 100%;
         margin-top: 5px;
+        margin-right: 0;
+    }
+
+    #appointmentContent button {
+        width: auto;
+        margin-right: 6px;
     }
 }
 
 /* =========================
-   DARK MODE SUPPORT - MATCHING ADMIN SIDE
+   DARK MODE
 ========================= */
-body.dark #appointmentForm p {
-    color: #a7f3d0;
+body.dark .card {
+    background: #1e293b;
+    border-color: rgba(100,200,150,0.1);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.5);
+    color: #e2e8f0;
 }
 
+body.dark .card.highlight {
+    background: linear-gradient(135deg, rgba(16,185,129,0.1) 0%, rgba(6,95,70,0.08) 100%);
+    border-color: rgba(16,185,129,0.3);
+}
+
+body.dark .card h2,
+body.dark .card h3    { color: #a7f3d0; }
+body.dark .card p     { color: #e2e8f0; }
+body.dark #greetingCard p { color: #e2e8f0; }
+
+body.dark #appointmentForm p { color: #a7f3d0; }
+
 body.dark #appointmentForm select,
-body.dark #appointmentForm input {
-    background: #1e293b;
+body.dark #appointmentForm input,
+body.dark #appointmentForm textarea {
+    background: #0f172a;
     border-color: #334155;
     color: #e2e8f0;
 }
 
 body.dark #appointmentForm select:focus,
-body.dark #appointmentForm input:focus {
+body.dark #appointmentForm input:focus,
+body.dark #appointmentForm textarea:focus {
     border-color: #10b981;
-    box-shadow: 0 0 6px rgba(16, 185, 129, 0.2);
+    box-shadow: 0 0 6px rgba(16,185,129,0.2);
 }
 
 body.dark #appointmentForm button {
-    background: #065f46;
+    background: linear-gradient(135deg, #065f46, #0a7a58);
     color: #fff;
 }
 
-body.dark #appointmentForm button:hover {
-    background: #0a7a58;
-}
+body.dark #appointmentForm button:hover { background: linear-gradient(135deg, #0a7a58, #10b981); }
 
 body.dark #appointmentContent button {
-    background: rgba(255, 255, 255, 0.1);
+    background: rgba(255,255,255,0.08);
     color: #e2e8f0;
+    border-color: rgba(255,255,255,0.15);
 }
 
-body.dark #appointmentContent button:hover {
-    background: rgba(255, 255, 255, 0.15);
-}
+body.dark #appointmentContent div  { background: rgba(16,185,129,0.08); }
+body.dark #historyContent div      { border-left-color: #10b981; }
+body.dark #historyContent p        { color: #e2e8f0; }
+body.dark #eventsContent p         { background: rgba(16,185,129,0.08); color: #e2e8f0; }
 
-body.dark #appointmentContent div {
-    background: rgba(16, 185, 129, 0.1);
-    border-radius: 12px;
-}
-
-body.dark #historyContent div {
-    border-left-color: #10b981;
-}
-
-body.dark #historyContent p {
-    color: #e2e8f0;
-}
-
-body.dark #eventsContent p {
-    background: rgba(16, 185, 129, 0.1);
-    color: #e2e8f0;
-}
-
-body.dark #greetingCard p {
-    color: #e2e8f0;
-}
-
-body.dark .status {
-    background: rgba(255, 255, 255, 0.1);
-    color: #e2e8f0;
-}
-
-body.dark .status.pending {
-    background: rgba(245, 158, 11, 0.2);
-    color: #fbbf24;
-}
-
-body.dark .status.confirmed {
-    background: rgba(34, 197, 94, 0.2);
-    color: #86efac;
-}
-
-body.dark .status.cancelled {
-    background: rgba(239, 68, 68, 0.2);
-    color: #fca5a5;
-}
+body.dark .status.pending    { background: rgba(245,158,11,0.2);  color: #fbbf24; }
+body.dark .status.confirmed,
+body.dark .status.approved   { background: rgba(34,197,94,0.2);   color: #86efac; }
+body.dark .status.cancelled  { background: rgba(239,68,68,0.2);   color: #fca5a5; }
+body.dark .status.completed,
+body.dark .status.rescheduled{ background: rgba(59,130,246,0.2);  color: #93c5fd; }
