@@ -1,0 +1,160 @@
+/* =========================
+   ADDED: OTP OVERLAY
+========================= */
+.otp-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.55);
+    z-index: 9999;
+    align-items: center;
+    justify-content: center;
+    backdrop-filter: blur(4px);
+}
+
+.otp-overlay.active {
+    display: flex;
+}
+
+/* =========================
+   OTP BOX
+========================= */
+.otp-box {
+    background: rgba(7,130,81,0.97);
+    border-radius: 20px;
+    padding: 36px 32px;
+    width: 100%;
+    max-width: 380px;
+    text-align: center;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    animation: otpSlideIn 0.3s ease;
+}
+
+@keyframes otpSlideIn {
+    from { transform: translateY(-20px); opacity: 0; }
+    to   { transform: translateY(0);     opacity: 1; }
+}
+
+.otp-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+}
+
+.otp-box h3 {
+    color: #fff;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.otp-box p {
+    color: #d1fae5;
+    font-size: 13px;
+    margin-bottom: 20px;
+    line-height: 1.6;
+}
+
+.otp-box p strong {
+    color: #fff;
+    font-size: 14px;
+}
+
+/* =========================
+   OTP INPUT
+========================= */
+.otp-input-field {
+    width: 100%;
+    padding: 14px;
+    border-radius: 10px;
+    border: 2px solid rgba(255,255,255,0.4);
+    background: rgba(255,255,255,0.15);
+    color: #fff;
+    font-size: 28px;
+    font-weight: 700;
+    text-align: center;
+    letter-spacing: 10px;
+    margin-bottom: 16px;
+    outline: none;
+    transition: border-color 0.2s;
+}
+
+.otp-input-field::placeholder {
+    color: rgba(255,255,255,0.35);
+    letter-spacing: 4px;
+    font-size: 20px;
+}
+
+.otp-input-field:focus {
+    border-color: #00e6a8;
+    background: rgba(255,255,255,0.2);
+}
+
+/* =========================
+   OTP VERIFY BUTTON
+========================= */
+.otp-verify-btn {
+    width: 100%;
+    padding: 13px;
+    background: #00c267;
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-size: 15px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s, transform 0.2s;
+    margin-bottom: 14px;
+}
+
+.otp-verify-btn:hover {
+    background: #00a558;
+    transform: scale(1.02);
+}
+
+.otp-verify-btn:disabled {
+    background: #059651;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* =========================
+   RESEND ROW
+========================= */
+.otp-resend-row {
+    font-size: 13px;
+    color: #d1fae5;
+    margin-bottom: 12px;
+}
+
+.otp-resend-btn {
+    background: none;
+    border: none;
+    color: #00e6a8;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 13px;
+    text-decoration: underline;
+    padding: 0;
+    transition: color 0.2s;
+}
+
+.otp-resend-btn:disabled {
+    color: rgba(255,255,255,0.4);
+    cursor: not-allowed;
+    text-decoration: none;
+}
+
+/* =========================
+   CANCEL LINK
+========================= */
+.otp-cancel-link {
+    display: block;
+    color: rgba(255,255,255,0.55);
+    font-size: 12px;
+    cursor: pointer;
+    margin-top: 4px;
+    text-decoration: underline;
+    transition: color 0.2s;
+}
+
+.otp-cancel-link:hover { color: #fff; }

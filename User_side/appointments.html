@@ -19,7 +19,6 @@
            style="position:absolute; left:20px; top:50%; transform:translateY(-50%); cursor:pointer;"></i>
         <h2>My Appointments</h2>
 
-        <!-- ADDED: Notification bell -->
         <div class="notif-bell-wrapper" id="notifBellWrapper">
             <i class="fa-solid fa-bell" id="notifBell" onclick="toggleNotifDropdown()"></i>
             <span class="notif-badge" id="notifBadge" style="display:none;">0</span>
@@ -90,6 +89,18 @@
                     <p>Time</p>
                     <input type="time" id="time">
 
+                    <!-- ADDED: User note/description field -->
+                    <p>Add Note <span style="font-size:12px; opacity:0.7;">(optional — describe your concern)</span></p>
+                    <textarea 
+                        id="userNote" 
+                        placeholder="  e.g. I have a tooth pain on the lower left side, I also have fever since yesterday..."
+                        maxlength="300"
+                        oninput="updateNoteCount()"
+                        rows="3"
+                    ></textarea>
+                    <!-- ADDED: Character counter -->
+                    <small id="noteCount" style="display:block; text-align:right; margin-top:2px; margin-bottom:10px; color:#a7f3d0;">0 / 300</small>
+
                     <button type="submit" style="margin-top:10px;">Submit Appointment</button>
                 </form>
             </section>
@@ -133,8 +144,9 @@
     <script src="js/dark-mode.js"></script>
     <script src="js/sidebar-script.js"></script>
     <script src="js/appointments-script.js"></script>
-    <!-- ADDED: Bell notification script -->
     <script src="js/notif-bell.js"></script>
+
+    
 
 </body>
 </html>

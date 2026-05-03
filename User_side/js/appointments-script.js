@@ -27,9 +27,8 @@ document.addEventListener("DOMContentLoaded", () => {
     setupAppointmentForm(currentUser);
     loadMyAppointments(currentUser);
     renderEvents();
-    loadBellNotifications(); // ADDED: load bell on page load
+    loadBellNotifications();
 
-    // ADDED: Close dropdown when clicking outside
     document.addEventListener('click', function (e) {
         const wrapper = document.getElementById('notifBellWrapper');
         if (wrapper && !wrapper.contains(e.target)) {
@@ -39,7 +38,21 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // =========================
-// ADDED: NOTIFICATION BELL
+// ADDED: NOTE CHARACTER COUNTER
+// Updates the counter below the note textarea
+// =========================
+function updateNoteCount() {
+    const textarea = document.getElementById('userNote');
+    const counter  = document.getElementById('noteCount');
+    if (!textarea || !counter) return;
+    const len = textarea.value.length;
+    counter.textContent = `${len} / 300`;
+    // ADDED: Turn red when near limit
+    counter.style.color = len >= 280 ? '#ef4444' : '#a7f3d0';
+}
+
+// =========================
+// NOTIFICATION BELL
 // =========================
 function toggleNotifDropdown() {
     document.getElementById('notifDropdown')?.classList.toggle('open');
@@ -135,6 +148,7 @@ async function markAllRead() {
 
 // =========================
 // LOAD MY APPOINTMENTS
+// ADDED: Now shows UserNote in each appointment card
 // =========================
 async function loadMyAppointments(currentUser) {
     const container = document.getElementById('appointmentContent');
@@ -177,10 +191,18 @@ async function loadMyAppointments(currentUser) {
 
     active.forEach(appt => {
         const div = document.createElement('div');
+        div.className = 'appt-card';
+
+        // ADDED: Show UserNote if it exists
+        const noteHtml = appt.UserNote
+            ? `<p class="appt-user-note"><i class="fa-solid fa-note-sticky"></i> <em>${appt.UserNote}</em></p>`
+            : '';
+
         div.innerHTML = `
             <p><strong>${appt.Purpose || '—'}</strong></p>
             <p>${appt.AppointmentDate} — ${formatTime(appt.AppointmentTime)}</p>
             <p>Type: ${appt.AppointmentType || '—'}</p>
+            ${noteHtml}
             <span class="status ${(appt.Status || 'pending').toLowerCase()}">${appt.Status || 'Pending'}</span>
             <div style="margin-top:10px;">
                 <button onclick="cancelAppointment(${appt.Appointment_ID})">Cancel</button>
@@ -194,9 +216,10 @@ async function loadMyAppointments(currentUser) {
 
 // =========================
 // BOOK NEW APPOINTMENT
+// ADDED: Now saves UserNote to AppointmentsTbl
 // =========================
 function setupAppointmentForm(currentUser) {
-    const form = document.getElementById('appointmentForm');
+    const form      = document.getElementById('appointmentForm');
     const timeInput = document.getElementById('time');
     const dateInput = document.getElementById('date');
 
@@ -219,17 +242,30 @@ function setupAppointmentForm(currentUser) {
         const apptType = document.getElementById('apptType').value;
         const date     = document.getElementById('date').value;
         const time     = document.getElementById('time').value;
+        // ADDED: Get user note value
+        const userNote = document.getElementById('userNote').value.trim();
 
-        if (!service || !date || !time) { alert('Please complete all fields.'); return; }
+        if (!service || !date || !time) {
+            alert('Please complete all required fields.');
+            return;
+        }
 
         const hour = parseInt(time.split(':')[0]);
-        if (hour < 7 || hour >= 15) { alert('Appointments allowed only 7AM - 3PM.'); return; }
-        if (blockedDates.includes(date)) { alert('No doctor available on this date.'); return; }
+        if (hour < 7 || hour >= 15) {
+            alert('Appointments allowed only 7AM - 3PM.');
+            return;
+        }
+
+        if (blockedDates.includes(date)) {
+            alert('No doctor available on this date.');
+            return;
+        }
 
         const submitBtn = form.querySelector('button[type="submit"]');
         submitBtn.disabled = true;
         submitBtn.textContent = 'Submitting...';
 
+        // ADDED: Include UserNote in the insert
         const { error } = await supabase.from('AppointmentsTbl').insert([{
             CreatedBy_User_ID: null,
             AppointmentDate:   date,
@@ -237,7 +273,8 @@ function setupAppointmentForm(currentUser) {
             AppointmentType:   apptType,
             Purpose:           service,
             Status:            'Pending',
-            Notes:             `${currentUser.firstname} ${currentUser.lastname}`
+            Notes:             `${currentUser.firstname} ${currentUser.lastname}`,
+            UserNote:          userNote || null  // ADDED: save note, null if empty
         }]);
 
         if (error) {
@@ -249,6 +286,8 @@ function setupAppointmentForm(currentUser) {
 
         alert('Appointment successfully booked!');
         form.reset();
+        // ADDED: Reset note counter after submit
+        updateNoteCount();
         submitBtn.disabled = false;
         submitBtn.textContent = 'Submit Appointment';
         await loadMyAppointments(currentUser);
@@ -270,11 +309,12 @@ async function cancelAppointment(id) {
 
     const currentUser = JSON.parse(sessionStorage.getItem('currentUser'));
     await loadMyAppointments(currentUser);
-    loadBellNotifications(); // ADDED: refresh bell after cancel
+    loadBellNotifications();
 }
 
 // =========================
 // RENDER HISTORY
+// ADDED: Also shows UserNote in history records
 // =========================
 function renderHistory(historyData) {
     const container = document.getElementById('historyContent');
@@ -287,9 +327,17 @@ function renderHistory(historyData) {
 
     historyData.forEach(h => {
         const div = document.createElement('div');
+        div.className = 'appt-card';
+
+        // ADDED: Show note in history too
+        const noteHtml = h.UserNote
+            ? `<p class="appt-user-note"><i class="fa-solid fa-note-sticky"></i> <em>${h.UserNote}</em></p>`
+            : '';
+
         div.innerHTML = `
             <p><strong>${h.Purpose || '—'}</strong></p>
             <p>${h.AppointmentDate} — ${formatTime(h.AppointmentTime)}</p>
+            ${noteHtml}
             <span class="status ${(h.Status || '').toLowerCase()}">${h.Status || '—'}</span>
         `;
         container.appendChild(div);
@@ -314,7 +362,7 @@ function renderEvents() {
 }
 
 // =========================
-// HELPER
+// HELPER: format time
 // =========================
 function formatTime(timeStr) {
     if (!timeStr) return '—';
@@ -323,4 +371,4 @@ function formatTime(timeStr) {
     const ampm = hour >= 12 ? 'PM' : 'AM';
     hour = hour % 12 || 12;
     return `${hour}:${m} ${ampm}`;
-}
+}   
