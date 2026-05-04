@@ -6,13 +6,13 @@ const supabase = window.supabase.createClient(
     'sb_publishable_LMKNlKJ7lXXZIvbUllHPjA_Xi7cwKGH'
 );
 
-let selectedEvent  = null;
-let events         = [];
-let currentDate    = new Date();
-let currentUser    = null;
+let selectedEvent   = null;
+let events          = [];
+let currentDate     = new Date();
+let currentUser     = null;
 let currentFullName = '';
 
-// ADDED: Store which event IDs this user is registered for
+// Stores event IDs the user is registered for
 let registeredEventIds = new Set();
 
 // =========================
@@ -26,7 +26,6 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     await loadEvents();
-    // ADDED: Load user's registered events before rendering calendar
     await loadRegisteredEvents();
     renderCalendar();
     setupUI();
@@ -42,8 +41,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 });
 
 // =========================
-// ADDED: LOAD REGISTERED EVENTS
-// Checks which events the current user's email is already registered for
+// LOAD REGISTERED EVENTS
 // =========================
 async function loadRegisteredEvents() {
     if (!currentUser || !currentUser.email) return;
@@ -54,8 +52,6 @@ async function loadRegisteredEvents() {
         .eq('Email', currentUser.email);
 
     if (error) { console.error('Failed to load registrations:', error); return; }
-
-    // ADDED: Store as a Set for fast lookup
     registeredEventIds = new Set((data || []).map(r => r.Event_ID));
 }
 
@@ -105,23 +101,11 @@ async function loadBellNotifications() {
                 ? new Date(notif.Updated_At).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })
                 : '';
             return `
-                <div class="notif-item ${isRead ? 'notif-read' : 'notif-unread'}"
-                     onclick="markOneBellRead(${notif.Appointment_ID})">
-                    <div class="notif-icon ${isApproved ? 'notif-icon-approved' : 'notif-icon-cancelled'}">
-                        ${isApproved ? '✅' : '❌'}
-                    </div>
+                <div class="notif-item ${isRead ? 'notif-read' : 'notif-unread'}" onclick="markOneBellRead(${notif.Appointment_ID})">
+                    <div class="notif-icon ${isApproved ? 'notif-icon-approved' : 'notif-icon-cancelled'}">${isApproved ? '✅' : '❌'}</div>
                     <div class="notif-body">
-                        <div class="notif-title">
-                            Appointment ${isApproved ? 'Approved' : 'Cancelled'}
-                            ${!isRead ? '<span class="notif-dot"></span>' : ''}
-                        </div>
-                        <div class="notif-desc">
-                            Your <strong>${notif.Purpose || 'appointment'}</strong> on
-                            <strong>${notif.AppointmentDate}</strong> has been
-                            <span style="color:${isApproved ? '#00c267' : '#ef4444'}; font-weight:600;">
-                                ${notif.Status.toLowerCase()}
-                            </span>.
-                        </div>
+                        <div class="notif-title">Appointment ${isApproved ? 'Approved' : 'Cancelled'}${!isRead ? '<span class="notif-dot"></span>' : ''}</div>
+                        <div class="notif-desc">Your <strong>${notif.Purpose || 'appointment'}</strong> on <strong>${notif.AppointmentDate}</strong> has been <span style="color:${isApproved ? '#00c267' : '#ef4444'}; font-weight:600;">${notif.Status.toLowerCase()}</span>.</div>
                         <div class="notif-time">${date}</div>
                     </div>
                 </div>
@@ -147,7 +131,6 @@ async function markAllRead() {
         .select('Appointment_ID')
         .eq('Notes', currentFullName)
         .in('Status', ['Approved', 'Cancelled']);
-
     if (data) {
         localStorage.setItem(readKey, JSON.stringify(data.map(d => d.Appointment_ID)));
         loadBellNotifications();
@@ -196,7 +179,6 @@ async function loadEvents() {
 
 // =========================
 // CALENDAR RENDER
-// ADDED: Registered events show in different color (blue/teal)
 // =========================
 function renderCalendar() {
     const calendar = document.getElementById("calendar");
@@ -204,12 +186,10 @@ function renderCalendar() {
 
     const year  = currentDate.getFullYear();
     const month = currentDate.getMonth();
-
     const firstDayIndex = new Date(year, month, 1).getDay();
     const daysInMonth   = new Date(year, month + 1, 0).getDate();
 
     const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
     weekDays.forEach(day => {
         const el = document.createElement("div");
         el.className = "weekday";
@@ -226,27 +206,19 @@ function renderCalendar() {
     for (let day = 1; day <= daysInMonth; day++) {
         const dateStr   = formatDate(year, month + 1, day);
         const dayEvents = events.filter(e => e.date === dateStr);
-
-        const cell = document.createElement("div");
-        cell.className = "day";
-        cell.innerHTML = `<span>${day}</span>`;
+        const cell      = document.createElement("div");
+        cell.className  = "day";
+        cell.innerHTML  = `<span>${day}</span>`;
 
         if (dayEvents.length > 0) {
-            // ADDED: Check if user is registered for ANY event on this day
             const isRegistered = dayEvents.some(ev => registeredEventIds.has(ev.id));
-
-            if (isRegistered) {
-                // ADDED: Show blue/teal color for registered events
-                cell.classList.add("event", "event-registered");
-            } else {
-                cell.classList.add("event");
-            }
-
+            cell.classList.add("event");
+            if (isRegistered) cell.classList.add("event-registered");
             cell.onclick = () => handleDayClick(dayEvents);
 
             if (dayEvents.length > 1) {
                 const badge = document.createElement("span");
-                badge.className = "event-badge";
+                badge.className   = "event-badge";
                 badge.textContent = dayEvents.length;
                 cell.appendChild(badge);
             }
@@ -270,14 +242,11 @@ function openEventList(dayEvents) {
     const container = document.getElementById("eventListContainer");
     container.innerHTML = "";
     dayEvents.forEach(ev => {
-        const isReg  = registeredEventIds.has(ev.id);
-        const item   = document.createElement("div");
+        const isReg = registeredEventIds.has(ev.id);
+        const item  = document.createElement("div");
         item.className = `event-list-item${isReg ? ' event-list-registered' : ''}`;
         item.innerHTML = `
-            <div class="event-list-title">
-                ${ev.title}
-                ${isReg ? '<span class="reg-tag">✅ Registered</span>' : ''}
-            </div>
+            <div class="event-list-title">${ev.title}${isReg ? '<span class="reg-tag">✅ Registered</span>' : ''}</div>
             <div class="event-list-meta">${ev.date} • ${ev.location}</div>
         `;
         item.onclick = () => { closeEventList(); openEvent(ev); };
@@ -292,7 +261,6 @@ function closeEventList() {
 
 // =========================
 // OPEN EVENT MODAL
-// ADDED: Shows "Already Registered" badge and disables register button if registered
 // =========================
 function openEvent(ev) {
     selectedEvent = ev;
@@ -307,18 +275,22 @@ function openEvent(ev) {
     const isRegistered = registeredEventIds.has(ev.id);
     const badge        = document.getElementById('alreadyRegisteredBadge');
     const registerBtn  = document.getElementById('openRegisterBtn');
+    const cancelBtn    = document.getElementById('cancelRegBtn'); // ADDED
 
-    // ADDED: Show/hide registered badge and disable register button
     if (isRegistered) {
-        badge.style.display   = 'flex';
-        registerBtn.disabled  = true;
-        registerBtn.innerHTML = '<i class="fa-solid fa-check"></i> Already Registered';
+        badge.style.display      = 'flex';
+        registerBtn.disabled     = true;
+        registerBtn.innerHTML    = '<i class="fa-solid fa-check"></i> Already Registered';
         registerBtn.classList.add('btn-registered');
+        // ADDED: Show cancel registration button
+        cancelBtn.style.display  = 'inline-flex';
     } else {
-        badge.style.display   = 'none';
-        registerBtn.disabled  = false;
-        registerBtn.innerHTML = '<i class="fa-solid fa-user-plus"></i> Register';
+        badge.style.display      = 'none';
+        registerBtn.disabled     = false;
+        registerBtn.innerHTML    = '<i class="fa-solid fa-user-plus"></i> Register';
         registerBtn.classList.remove('btn-registered');
+        // ADDED: Hide cancel button if not registered
+        cancelBtn.style.display  = 'none';
     }
 
     document.getElementById("eventModal").classList.add("show");
@@ -326,6 +298,70 @@ function openEvent(ev) {
 
 function closeModal() {
     document.getElementById("eventModal").classList.remove("show");
+}
+
+// =========================
+// ADDED: CANCEL REGISTRATION
+// Shows confirmation modal before deleting from DB
+// =========================
+function cancelRegistration() {
+    if (!selectedEvent) return;
+    // Show event name in confirmation modal
+    document.getElementById('cancelEventName').textContent = selectedEvent.title;
+    document.getElementById('cancelRegModal').classList.add('show');
+}
+
+function closeCancelModal() {
+    document.getElementById('cancelRegModal').classList.remove('show');
+}
+
+async function confirmCancelRegistration() {
+    if (!selectedEvent || !currentUser) return;
+
+    const confirmBtn = document.querySelector('.confirm-cancel-btn');
+    confirmBtn.disabled     = true;
+    confirmBtn.textContent  = 'Cancelling...';
+
+    // ADDED: Delete from EventRegistrationsTbl by Event_ID and Email
+    const { error } = await supabase
+        .from('EventRegistrationsTbl')
+        .delete()
+        .eq('Event_ID', selectedEvent.id)
+        .eq('Email', currentUser.email);
+
+    if (error) {
+        alert('Failed to cancel registration: ' + error.message);
+        confirmBtn.disabled    = false;
+        confirmBtn.innerHTML   = '<i class="fa-solid fa-trash"></i> Yes, Cancel Registration';
+        return;
+    }
+
+    // ADDED: Remove from local set and re-render calendar
+    registeredEventIds.delete(selectedEvent.id);
+    renderCalendar();
+
+    confirmBtn.disabled    = false;
+    confirmBtn.innerHTML   = '<i class="fa-solid fa-trash"></i> Yes, Cancel Registration';
+
+    // Close both modals
+    closeCancelModal();
+    closeModal();
+
+    // ADDED: Show success toast
+    showCancelToast(`Registration for "${selectedEvent.title}" has been cancelled.`);
+}
+
+// ADDED: Simple toast for cancel confirmation
+function showCancelToast(message) {
+    const toast = document.createElement('div');
+    toast.className   = 'cancel-toast';
+    toast.textContent = message;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.classList.add('show'), 10);
+    setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+    }, 3000);
 }
 
 // =========================
@@ -353,6 +389,7 @@ function updateMonthTitle() {
 // =========================
 function setupUI() {
     document.getElementById("openRegisterBtn")?.addEventListener("click", () => {
+        if (document.getElementById("openRegisterBtn").disabled) return;
         closeModal();
         autoFillForm();
         document.getElementById("registerModal").classList.add("show");
@@ -367,7 +404,7 @@ function setupUI() {
         e.preventDefault();
 
         const submitBtn = form.querySelector('button[type="submit"]');
-        submitBtn.disabled = true;
+        submitBtn.disabled    = true;
         submitBtn.textContent = 'Submitting...';
 
         const { error } = await supabase.from('EventRegistrationsTbl').insert([{
@@ -383,31 +420,26 @@ function setupUI() {
 
         if (error) {
             alert(error.message);
-            submitBtn.disabled = false;
-            submitBtn.innerHTML = '<i class="fa-solid fa-check"></i> Submit Registration';
+            submitBtn.disabled    = false;
+            submitBtn.innerHTML   = '<i class="fa-solid fa-check"></i> Submit Registration';
             return;
         }
 
-        // ADDED: Add to registered set immediately
+        // Add to registered set and re-render
         registeredEventIds.add(selectedEvent.id);
-
-        // ADDED: Re-render calendar to update colors
         renderCalendar();
 
-        // ADDED: Show success modal instead of alert
         document.getElementById('regSuccessEventName').textContent = selectedEvent.title;
         closeRegister();
         document.getElementById('regSuccessModal').classList.add('show');
 
         form.reset();
         autoFillForm();
-
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = '<i class="fa-solid fa-check"></i> Submit Registration';
+        submitBtn.disabled    = false;
+        submitBtn.innerHTML   = '<i class="fa-solid fa-check"></i> Submit Registration';
     });
 }
 
-// ADDED: Close success modal
 function closeRegSuccess() {
     document.getElementById('regSuccessModal').classList.remove('show');
 }

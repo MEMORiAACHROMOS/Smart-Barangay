@@ -15,8 +15,11 @@
 <body>
 
     <header class="main-header">
-        <i class="fa-solid fa-bars" id="menuToggle"
-           style="position:absolute; left:20px; top:50%; transform:translateY(-50%); cursor:pointer;"></i>
+        <i class="fa-solid fa-bars" id="menuToggle"></i>
+        <button class="dark-mode-toggle" id="darkModeToggle">
+            <i class="fa-solid fa-sun"></i>
+            <span>Light</span>
+        </button>
         <h2>My Appointments</h2>
 
         <div class="notif-bell-wrapper" id="notifBellWrapper">
@@ -89,16 +92,14 @@
                     <p>Time</p>
                     <input type="time" id="time">
 
-                    <!-- ADDED: User note/description field -->
                     <p>Add Note <span style="font-size:12px; opacity:0.7;">(optional — describe your concern)</span></p>
-                    <textarea 
-                        id="userNote" 
-                        placeholder="  e.g. I have a tooth pain on the lower left side, I also have fever since yesterday..."
+                    <textarea
+                        id="userNote"
+                        placeholder="e.g. I have a tooth pain on the lower left side..."
                         maxlength="300"
                         oninput="updateNoteCount()"
                         rows="3"
                     ></textarea>
-                    <!-- ADDED: Character counter -->
                     <small id="noteCount" style="display:block; text-align:right; margin-top:2px; margin-bottom:10px; color:#a7f3d0;">0 / 300</small>
 
                     <button type="submit" style="margin-top:10px;">Submit Appointment</button>
@@ -129,6 +130,36 @@
         </div>
     </main>
 
+    <!-- ADDED: Success Modal -->
+    <div class="success-modal-overlay" id="successModal" onclick="closeSuccessModal(event)">
+        <div class="success-modal-box">
+            <div class="success-modal-check">✓</div>
+            <h3>Appointment Booked!</h3>
+            <p>Your appointment has been successfully submitted. Please wait for the admin to approve it.</p>
+            <div class="success-modal-details" id="successModalDetails"></div>
+            <button class="success-modal-close-btn" onclick="closeSuccessModal()">
+                <i class="fa-solid fa-check"></i> Got it!
+            </button>
+        </div>
+    </div>
+
+    <!-- ADDED: Cancel Confirm Modal -->
+    <div class="success-modal-overlay" id="cancelConfirmModal">
+        <div class="success-modal-box cancel-modal-box">
+            <div class="cancel-modal-icon">⚠️</div>
+            <h3>Cancel Appointment?</h3>
+            <p>Are you sure you want to cancel this appointment? This action cannot be undone.</p>
+            <div class="cancel-modal-actions">
+                <button class="cancel-confirm-btn" id="cancelConfirmBtn">
+                    <i class="fa-solid fa-xmark"></i> Yes, Cancel It
+                </button>
+                <button class="cancel-back-btn" onclick="closeCancelModal()">
+                    <i class="fa-solid fa-arrow-left"></i> Go Back
+                </button>
+            </div>
+        </div>
+    </div>
+
     <footer class="main-footer">
         <p>&copy; 2026 Smart Barangay Health Information System | All Rights Reserved</p>
         <div class="footer-contact">
@@ -144,9 +175,6 @@
     <script src="js/dark-mode.js"></script>
     <script src="js/sidebar-script.js"></script>
     <script src="js/appointments-script.js"></script>
-    <script src="js/notif-bell.js"></script>
-
-    
 
 </body>
 </html>

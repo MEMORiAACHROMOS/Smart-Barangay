@@ -15,13 +15,19 @@
 <body>
 
 <header class="main-header">
-    <i class="fa-solid fa-bars" id="menuToggle"
-       style="position:absolute; left:20px; top:50%; transform:translateY(-50%); cursor:pointer;"></i>
+    <i class="fa-solid fa-bars" id="menuToggle"></i>
+    <button class="dark-mode-toggle" id="darkModeToggle">
+        <i class="fa-solid fa-sun"></i>
+        <span>Light</span>
+    </button>
     <h2>Events Calendar</h2>
 
+    <!-- Notification Bell -->
     <div class="notif-bell-wrapper" id="notifBellWrapper">
         <i class="fa-solid fa-bell" id="notifBell" onclick="toggleNotifDropdown()"></i>
         <span class="notif-badge" id="notifBadge" style="display:none;">0</span>
+
+        <!-- Dropdown panel -->
         <div class="notif-dropdown" id="notifDropdown">
             <div class="notif-dropdown-header">
                 <h4>🔔 Notifications</h4>
@@ -38,23 +44,11 @@
 
 <aside class="sidebar" id="sidebar">
     <ul>
-        <li><a href="dashboard.html">
-            <i class="fa-solid fa-house"></i> Dashboard
-        </a></li>
-        <li><a href="appointments.html">
-            <i class="fa-solid fa-calendar-check"></i> My Appointments
-        </a></li>
-        <li><a href="events.html" class="active">
-            <i class="fa-solid fa-calendar"></i> Events
-        </a></li>
-        <li><a href="profile.html">
-            <i class="fa-solid fa-user"></i> Profile
-        </a></li>
-        <li class="logout-btn">
-            <a href="login.html">
-                <i class="fa-solid fa-right-from-bracket"></i> Logout
-            </a>
-        </li>
+        <li><a href="dashboard.html"><i class="fa-solid fa-house"></i> Dashboard</a></li>
+        <li><a href="appointments.html"><i class="fa-solid fa-calendar-check"></i> My Appointments</a></li>
+        <li><a href="events.html" class="active"><i class="fa-solid fa-calendar"></i> Events</a></li>
+        <li><a href="profile.html"><i class="fa-solid fa-user"></i> Profile</a></li>
+        <li class="logout-btn"><a href="login.html"><i class="fa-solid fa-right-from-bracket"></i> Logout</a></li>
     </ul>
 </aside>
 
@@ -62,25 +56,14 @@
     <div class="container">
         <section class="card calendar-card">
             <div class="calendar-header">
-                <button onclick="prevMonth()" class="nav-btn nav-left">
-                    <i class="fa-solid fa-chevron-left"></i>
-                </button>
+                <button onclick="prevMonth()" class="nav-btn nav-left"><i class="fa-solid fa-chevron-left"></i></button>
                 <h3 id="monthTitle"></h3>
-                <button onclick="nextMonth()" class="nav-btn nav-right">
-                    <i class="fa-solid fa-chevron-right"></i>
-                </button>
+                <button onclick="nextMonth()" class="nav-btn nav-right"><i class="fa-solid fa-chevron-right"></i></button>
             </div>
-
-            <!-- ADDED: Legend for calendar colors -->
             <div class="calendar-legend">
-                <span class="legend-item">
-                    <span class="legend-dot legend-event"></span> Has Event
-                </span>
-                <span class="legend-item">
-                    <span class="legend-dot legend-registered"></span> Registered
-                </span>
+                <span class="legend-item"><span class="legend-dot legend-event"></span> Has Event</span>
+                <span class="legend-item"><span class="legend-dot legend-registered"></span> Registered</span>
             </div>
-
             <div id="calendar" class="calendar-grid"></div>
         </section>
     </div>
@@ -98,29 +81,14 @@
             <h2 id="eventTitle"></h2>
             <p id="eventDesc" class="event-desc-text"></p>
             <div class="event-info">
-                <div class="event-info-row">
-                    <span>📅</span>
-                    <span><strong>Date:</strong> <span id="eventDate"></span></span>
-                </div>
-                <div class="event-info-row">
-                    <span>📍</span>
-                    <span><strong>Location:</strong> <span id="eventLocation"></span></span>
-                </div>
-                <div class="event-info-row">
-                    <span>🏥</span>
-                    <span><strong>Type:</strong> <span id="eventType"></span></span>
-                </div>
-                <div class="event-info-row">
-                    <span>📋</span>
-                    <span><strong>Status:</strong> <span id="eventStatus"></span></span>
-                </div>
-                <div class="event-info-row">
-                    <span>👥</span>
-                    <span><strong>Participants:</strong> <span id="eventParticipants"></span></span>
-                </div>
+                <div class="event-info-row"><span>📅</span><span><strong>Date:</strong> <span id="eventDate"></span></span></div>
+                <div class="event-info-row"><span>📍</span><span><strong>Location:</strong> <span id="eventLocation"></span></span></div>
+                <div class="event-info-row"><span>🏥</span><span><strong>Type:</strong> <span id="eventType"></span></span></div>
+                <div class="event-info-row"><span>📋</span><span><strong>Status:</strong> <span id="eventStatus"></span></span></div>
+                <div class="event-info-row"><span>👥</span><span><strong>Participants:</strong> <span id="eventParticipants"></span></span></div>
             </div>
 
-            <!-- ADDED: Already registered badge -->
+            <!-- Already registered badge -->
             <div id="alreadyRegisteredBadge" class="already-registered-badge" style="display:none;">
                 ✅ You are already registered for this event!
             </div>
@@ -128,6 +96,10 @@
             <div class="modal-actions">
                 <button id="openRegisterBtn" class="primary-btn">
                     <i class="fa-solid fa-user-plus"></i> Register
+                </button>
+                <!-- ADDED: Cancel Registration button — hidden by default, shown when registered -->
+                <button id="cancelRegBtn" class="cancel-reg-btn" style="display:none;" onclick="cancelRegistration()">
+                    <i class="fa-solid fa-user-minus"></i> Cancel Registration
                 </button>
                 <button onclick="closeModal()" class="secondary-btn">
                     <i class="fa-solid fa-xmark"></i> Close
@@ -137,34 +109,23 @@
     </div>
 </div>
 
-<!-- REGISTRATION MODAL — ADDED: improved design -->
+<!-- REGISTRATION MODAL -->
 <div class="modal" id="registerModal">
     <div class="modal-content register-modal">
-        <!-- ADDED: Modal header with icon -->
         <div class="reg-modal-header">
             <span class="reg-modal-icon">📝</span>
             <h2>Event Registration</h2>
             <p class="reg-modal-subtitle">Fill in your details to register for this event</p>
         </div>
-
         <form id="registerForm">
-            <!-- ADDED: Name row -->
             <div class="reg-form-section">
                 <label class="reg-form-label">Full Name</label>
                 <div class="form-grid-3">
-                    <div class="reg-form-group">
-                        <input id="firstname" placeholder="First Name" required>
-                    </div>
-                    <div class="reg-form-group">
-                        <input id="lastname" placeholder="Last Name" required>
-                    </div>
-                    <div class="reg-form-group">
-                        <input id="middleinitial" placeholder="M.I." maxlength="1">
-                    </div>
+                    <div class="reg-form-group"><input id="firstname" placeholder="First Name" required></div>
+                    <div class="reg-form-group"><input id="lastname" placeholder="Last Name" required></div>
+                    <div class="reg-form-group"><input id="middleinitial" placeholder="M.I." maxlength="1"></div>
                 </div>
             </div>
-
-            <!-- ADDED: Gender row -->
             <div class="reg-form-section">
                 <label class="reg-form-label">Gender</label>
                 <select id="gender" required>
@@ -174,33 +135,20 @@
                     <option>Other</option>
                 </select>
             </div>
-
-            <!-- ADDED: Contact row -->
             <div class="reg-form-section">
                 <label class="reg-form-label">Contact Details</label>
                 <div class="form-grid-2">
-                    <div class="reg-form-group">
-                        <input id="phone" placeholder="Phone Number" required>
-                    </div>
-                    <div class="reg-form-group">
-                        <input id="email" placeholder="Email Address" required>
-                    </div>
+                    <div class="reg-form-group"><input id="phone" placeholder="Phone Number" required></div>
+                    <div class="reg-form-group"><input id="email" placeholder="Email Address" required></div>
                 </div>
             </div>
-
-            <!-- ADDED: Address -->
             <div class="reg-form-section">
                 <label class="reg-form-label">Complete Physical Address</label>
                 <textarea id="address" placeholder="e.g. 57 Baesa Road, Barangay Baesa" required rows="2"></textarea>
             </div>
-
             <div class="reg-form-actions">
-                <button type="submit" class="primary-btn">
-                    <i class="fa-solid fa-check"></i> Submit Registration
-                </button>
-                <button type="button" onclick="closeRegister()" class="secondary-btn">
-                    <i class="fa-solid fa-xmark"></i> Cancel
-                </button>
+                <button type="submit" class="primary-btn"><i class="fa-solid fa-check"></i> Submit Registration</button>
+                <button type="button" onclick="closeRegister()" class="secondary-btn"><i class="fa-solid fa-xmark"></i> Cancel</button>
             </div>
         </form>
     </div>
@@ -212,34 +160,43 @@
         <div class="modal-body">
             <h2>📅 Select an Event</h2>
             <div id="eventListContainer" class="event-list-container"></div>
-            <button onclick="closeEventList()" class="secondary-btn" style="margin-top:10px;">
-                <i class="fa-solid fa-xmark"></i> Close
-            </button>
+            <button onclick="closeEventList()" class="secondary-btn" style="margin-top:10px;"><i class="fa-solid fa-xmark"></i> Close</button>
         </div>
     </div>
 </div>
 
-<!-- ADDED: Success Modal for registration -->
+<!-- SUCCESS MODAL -->
 <div class="modal" id="regSuccessModal">
     <div class="modal-content reg-success-modal">
         <div class="reg-success-check">✓</div>
         <h3>Successfully Registered!</h3>
         <p>You have been registered for <strong id="regSuccessEventName"></strong>. We look forward to seeing you!</p>
-        <button class="primary-btn" onclick="closeRegSuccess()">
-            <i class="fa-solid fa-check"></i> Got it!
-        </button>
+        <button class="primary-btn" onclick="closeRegSuccess()"><i class="fa-solid fa-check"></i> Got it!</button>
+    </div>
+</div>
+
+<!-- ADDED: Cancel Confirmation Modal -->
+<div class="modal" id="cancelRegModal">
+    <div class="modal-content cancel-reg-modal">
+        <div class="cancel-reg-icon">⚠️</div>
+        <h3>Cancel Registration?</h3>
+        <p>Are you sure you want to cancel your registration for <strong id="cancelEventName"></strong>?</p>
+        <div class="cancel-reg-actions">
+            <button class="confirm-cancel-btn" onclick="confirmCancelRegistration()">
+                <i class="fa-solid fa-trash"></i> Yes, Cancel Registration
+            </button>
+            <button class="secondary-btn" onclick="closeCancelModal()">
+                <i class="fa-solid fa-arrow-left"></i> Go Back
+            </button>
+        </div>
     </div>
 </div>
 
 <footer class="main-footer">
     <p>&copy; 2026 Smart Barangay Health Information System | All Rights Reserved</p>
     <div class="footer-contact">
-        <p onclick="copyText('57 Baesa Road, Barangay Baesa, District 6')">
-            57 Baesa Road, Barangay Baesa, District 6
-        </p>
-        <p onclick="copyText('(02) 7148 4458')">
-            (02) 7148 4458
-        </p>
+        <p onclick="copyText('57 Baesa Road, Barangay Baesa, District 6')">57 Baesa Road, Barangay Baesa, District 6</p>
+        <p onclick="copyText('(02) 7148 4458')">(02) 7148 4458</p>
     </div>
 </footer>
 

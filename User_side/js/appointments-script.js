@@ -8,8 +8,9 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 const blockedDates = ["2026-05-20", "2026-05-25"];
 
-// ADDED: Store full name globally for bell notifications
 let currentFullName = '';
+// ADDED: Store pending cancel ID
+let pendingCancelId = null;
 
 // =========================
 // INIT
@@ -38,8 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 // =========================
-// ADDED: NOTE CHARACTER COUNTER
-// Updates the counter below the note textarea
+// NOTE CHARACTER COUNTER
 // =========================
 function updateNoteCount() {
     const textarea = document.getElementById('userNote');
@@ -47,8 +47,54 @@ function updateNoteCount() {
     if (!textarea || !counter) return;
     const len = textarea.value.length;
     counter.textContent = `${len} / 300`;
-    // ADDED: Turn red when near limit
     counter.style.color = len >= 280 ? '#ef4444' : '#a7f3d0';
+}
+
+// =========================
+// ADDED: SUCCESS MODAL FUNCTIONS
+// =========================
+function showSuccessModal(service, date, time, apptType, note) {
+    const details = document.getElementById('successModalDetails');
+    details.innerHTML = `
+        <p><strong>Service:</strong> ${service}</p>
+        <p><strong>Date:</strong> ${date}</p>
+        <p><strong>Time:</strong> ${formatTime(time)}</p>
+        <p><strong>Type:</strong> ${apptType}</p>
+        ${note ? `<p><strong>Note:</strong> ${note}</p>` : ''}
+    `;
+    const modal = document.getElementById('successModal');
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeSuccessModal(e) {
+    if (e && e.target !== document.getElementById('successModal') && e.type === 'click') {
+        if (!e.target.classList.contains('success-modal-overlay')) return;
+    }
+    document.getElementById('successModal').classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// =========================
+// ADDED: CANCEL CONFIRM MODAL FUNCTIONS
+// Replaces browser confirm() with custom modal
+// =========================
+function showCancelModal(id) {
+    pendingCancelId = id;
+    document.getElementById('cancelConfirmModal').classList.add('active');
+    document.body.style.overflow = 'hidden';
+
+    // ADDED: Wire up the confirm button
+    document.getElementById('cancelConfirmBtn').onclick = async () => {
+        await doCancel(pendingCancelId);
+        closeCancelModal();
+    };
+}
+
+function closeCancelModal() {
+    document.getElementById('cancelConfirmModal').classList.remove('active');
+    document.body.style.overflow = '';
+    pendingCancelId = null;
 }
 
 // =========================
@@ -148,7 +194,6 @@ async function markAllRead() {
 
 // =========================
 // LOAD MY APPOINTMENTS
-// ADDED: Now shows UserNote in each appointment card
 // =========================
 async function loadMyAppointments(currentUser) {
     const container = document.getElementById('appointmentContent');
@@ -164,7 +209,6 @@ async function loadMyAppointments(currentUser) {
 
     if (error) {
         container.innerHTML = '<p>Failed to load appointments.</p>';
-        console.error(error);
         return;
     }
 
@@ -193,7 +237,6 @@ async function loadMyAppointments(currentUser) {
         const div = document.createElement('div');
         div.className = 'appt-card';
 
-        // ADDED: Show UserNote if it exists
         const noteHtml = appt.UserNote
             ? `<p class="appt-user-note"><i class="fa-solid fa-note-sticky"></i> <em>${appt.UserNote}</em></p>`
             : '';
@@ -205,7 +248,8 @@ async function loadMyAppointments(currentUser) {
             ${noteHtml}
             <span class="status ${(appt.Status || 'pending').toLowerCase()}">${appt.Status || 'Pending'}</span>
             <div style="margin-top:10px;">
-                <button onclick="cancelAppointment(${appt.Appointment_ID})">Cancel</button>
+                <!-- ADDED: Uses custom modal instead of confirm() -->
+                <button onclick="showCancelModal(${appt.Appointment_ID})">Cancel</button>
             </div>
         `;
         container.appendChild(div);
@@ -216,7 +260,7 @@ async function loadMyAppointments(currentUser) {
 
 // =========================
 // BOOK NEW APPOINTMENT
-// ADDED: Now saves UserNote to AppointmentsTbl
+// ADDED: Uses custom success modal instead of alert()
 // =========================
 function setupAppointmentForm(currentUser) {
     const form      = document.getElementById('appointmentForm');
@@ -242,7 +286,6 @@ function setupAppointmentForm(currentUser) {
         const apptType = document.getElementById('apptType').value;
         const date     = document.getElementById('date').value;
         const time     = document.getElementById('time').value;
-        // ADDED: Get user note value
         const userNote = document.getElementById('userNote').value.trim();
 
         if (!service || !date || !time) {
@@ -265,7 +308,6 @@ function setupAppointmentForm(currentUser) {
         submitBtn.disabled = true;
         submitBtn.textContent = 'Submitting...';
 
-        // ADDED: Include UserNote in the insert
         const { error } = await supabase.from('AppointmentsTbl').insert([{
             CreatedBy_User_ID: null,
             AppointmentDate:   date,
@@ -274,7 +316,7 @@ function setupAppointmentForm(currentUser) {
             Purpose:           service,
             Status:            'Pending',
             Notes:             `${currentUser.firstname} ${currentUser.lastname}`,
-            UserNote:          userNote || null  // ADDED: save note, null if empty
+            UserNote:          userNote || null
         }]);
 
         if (error) {
@@ -284,9 +326,10 @@ function setupAppointmentForm(currentUser) {
             return;
         }
 
-        alert('Appointment successfully booked!');
+        // ADDED: Show custom success modal instead of alert()
+        showSuccessModal(service, date, time, apptType, userNote);
+
         form.reset();
-        // ADDED: Reset note counter after submit
         updateNoteCount();
         submitBtn.disabled = false;
         submitBtn.textContent = 'Submit Appointment';
@@ -296,10 +339,9 @@ function setupAppointmentForm(currentUser) {
 
 // =========================
 // CANCEL APPOINTMENT
+// ADDED: Now called from modal confirm button
 // =========================
-async function cancelAppointment(id) {
-    if (!confirm('Are you sure you want to cancel this appointment?')) return;
-
+async function doCancel(id) {
     const { error } = await supabase
         .from('AppointmentsTbl')
         .update({ Status: 'Cancelled' })
@@ -312,9 +354,13 @@ async function cancelAppointment(id) {
     loadBellNotifications();
 }
 
+// ADDED: Keep old function name for backward compatibility
+async function cancelAppointment(id) {
+    showCancelModal(id);
+}
+
 // =========================
 // RENDER HISTORY
-// ADDED: Also shows UserNote in history records
 // =========================
 function renderHistory(historyData) {
     const container = document.getElementById('historyContent');
@@ -329,7 +375,6 @@ function renderHistory(historyData) {
         const div = document.createElement('div');
         div.className = 'appt-card';
 
-        // ADDED: Show note in history too
         const noteHtml = h.UserNote
             ? `<p class="appt-user-note"><i class="fa-solid fa-note-sticky"></i> <em>${h.UserNote}</em></p>`
             : '';
@@ -345,7 +390,7 @@ function renderHistory(historyData) {
 }
 
 // =========================
-// RENDER EVENTS (static)
+// RENDER EVENTS
 // =========================
 function renderEvents() {
     const container = document.getElementById('eventsContent');
@@ -371,4 +416,4 @@ function formatTime(timeStr) {
     const ampm = hour >= 12 ? 'PM' : 'AM';
     hour = hour % 12 || 12;
     return `${hour}:${m} ${ampm}`;
-}   
+}
